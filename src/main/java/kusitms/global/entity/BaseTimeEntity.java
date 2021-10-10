@@ -1,4 +1,4 @@
-package kusitms.entity;
+package kusitms.global.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
