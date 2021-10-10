@@ -18,7 +18,7 @@ public class SignUpRequest {
 
     @NotBlank(message = "이름을 입력해주세요.")
     @Size(min = 2, max = 10, message = "이름은 최소 2글자 이상 10글자 이하여야 합니다.")
-    private String name;
+    private String username;
 
     @NotBlank(message = "패스워드를 입력해주세요.")
     @Size(min = 7, max = 20, message = "패스워드는 7글자 이상 20글자 이하여야 합니다.")
@@ -33,7 +33,7 @@ public class SignUpRequest {
     public User toEntity() {
         return User.builder()
                 .email(this.email)
-                .name(this.name)
+                .username(this.username)
                 .password(this.password)
                 .phoneNumber(this.phoneNumber)
                 .address(this.address)
