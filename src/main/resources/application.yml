@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mariadb://127.0.0.1:4500/auction
+    url: jdbc:mariadb://127.0.0.1:4500/auction?useUnicode=true&characterEncoding=utf8
     username: root
     password: root
     driver-class-name: org.mariadb.jdbc.Driver
