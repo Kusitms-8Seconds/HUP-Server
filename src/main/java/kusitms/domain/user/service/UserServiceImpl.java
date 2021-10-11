@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User saveUser(SignUpRequest signUpRequest) {
-        if (userRepository.findOneWithAuthoritiesByUsername(signUpRequest.getUsername()).orElse(null) != null) {
+        if (userRepository.findOneWithAuthoritiesByEmail(signUpRequest.getEmail()).orElse(null) != null) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
 
@@ -52,10 +52,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(final String username) {
-        return userRepository.findOneWithAuthoritiesByUsername(username)
-                .map(user -> createUser(username, user))
-                .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
+    public UserDetails loadUserByUsername(final String email) {
+        return userRepository.findOneWithAuthoritiesByEmail(email)
+                .map(user -> createUser(email, user))
+                .orElseThrow(() -> new UsernameNotFoundException(email + " -> 데이터베이스에서 찾을 수 없습니다."));
     }
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
@@ -71,12 +71,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Transactional()
-    public Optional<User> getUserWithAuthorities(String username) { // username을 기준으로 정보를 가져옴
-        return userRepository.findOneWithAuthoritiesByUsername(username);
+    public Optional<User> getUserWithAuthorities(String email) { // email을 기준으로 정보를 가져옴
+        return userRepository.findOneWithAuthoritiesByEmail(email);
     }
 
     @Transactional()
-    public Optional<User> getMyUserWithAuthorities() { // SecurityContext에 저장된 username의 정보만 가져온다.
-        return SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByUsername);
+    public Optional<User> getMyUserWithAuthorities() { // SecurityContext에 저장된 email의 정보만 가져온다.
+        return SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByEmail);
     }
 }
