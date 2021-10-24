@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = User.builder()
                 .email(signUpRequest.getEmail())
                 .username(signUpRequest.getUsername())
-                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .password(passwordEncoder.encode(signUpRequest.getPassword())) // 개인정보 보호로, 비밀번호는 단방향 암호화
                 .phoneNumber(signUpRequest.getPhoneNumber())
                 .address(signUpRequest.getAddress())
                 .authorities(Collections.singleton(authority))
