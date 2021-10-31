@@ -18,14 +18,14 @@
 #    initialization-mode: always
 
 #정우
-#spring:
-#  datasource:
-#    url: jdbc:mariadb://127.0.0.1:4500/auction?useUnicode=true&characterEncoding=utf8
-#    username: root
-#    password: root
-#    driver-class-name: org.mariadb.jdbc.Driver
-#    initialize: true
-#    initialization-mode: always
+spring:
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:4500/auction?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
+    driver-class-name: org.mariadb.jdbc.Driver
+    initialize: true
+    initialization-mode: always
 
 #상준
 #spring:
