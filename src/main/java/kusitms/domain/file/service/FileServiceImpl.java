@@ -23,7 +23,7 @@ public class FileServiceImpl implements FileService {
     private final FileRepository fileRepository;
 
     public List<MyFile> save(List<MultipartFile> files) throws IOException {
-        if (files.isEmpty()) throw new FileToSaveNotExistException(EFileServiceImpl.FILE_TO_SAVE_NOT_EXIST_EXCEPTION_MESSAGE.getMessage());
+        //if (files.isEmpty()) throw new FileToSaveNotExistException(EFileServiceImpl.FILE_TO_SAVE_NOT_EXIST_EXCEPTION_MESSAGE.getMessage());
         List<MyFile> savedFiles = new ArrayList<>();
         for (MultipartFile file : files) {
             String originFilename = file.getOriginalFilename();
