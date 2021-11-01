@@ -30,12 +30,14 @@ public class ItemApiController {
     private final FileService fileService;
 
     @PostMapping
-    public ResponseEntity<RegisterItemResponse> registerItem(@RequestPart(value = "files", required = false) List<MultipartFile> files,
+    public ResponseEntity<RegisterItemResponse> registerItem(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
                                                        @Valid @RequestPart(value = "registerItemRequest")
                                                                RegisterItemRequest registerItemRequest) throws IOException {
-        List<MyFile> saveFiles = fileService.save(files);
         Item item = itemService.saveItem(SecurityUtil.getCurrentEmail().get(), registerItemRequest);
-        itemService.addFiles(item, saveFiles);
+        if(files != null ){
+            List<MyFile> saveFiles = fileService.save(files);
+            itemService.addFiles(item, saveFiles);
+        }
         return ResponseEntity.ok(RegisterItemResponse.from(item));
     }
 }
