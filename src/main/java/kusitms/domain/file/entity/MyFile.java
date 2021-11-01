@@ -1,17 +1,16 @@
 package kusitms.domain.file.entity;
 
 import kusitms.domain.item.entity.Item;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import kusitms.global.entity.BaseEntity;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
 @Entity(name = "file")
-public class MyFile {
+public class MyFile extends BaseEntity {
 
     @Getter(AccessLevel.NONE)
     @Id
