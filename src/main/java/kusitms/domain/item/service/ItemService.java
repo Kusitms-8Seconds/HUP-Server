@@ -13,4 +13,6 @@ public interface ItemService{
     void addFiles(Item item, List<MyFile> saveFiles);
     void deleteByItemId(Long id);
     void validationItemId(Long id);
+    Item getItem(Long id);
+    void validationUserAndItem(List<Item> items, Long id);
 }

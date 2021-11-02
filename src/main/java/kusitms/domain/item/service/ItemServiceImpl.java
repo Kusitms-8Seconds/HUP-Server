@@ -44,10 +44,28 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
-    public void validationItemId(Long id){
-        if (itemRepository.findById(id).isEmpty() == true) {
-            throw new IllegalArgumentException("해당 아이디로 상품을 찾을 수 없습니다.");
-        }
+    public Item getItem(Long id) {
+        Item item = itemRepository.getById(id);
+        return item;
+    }
 
+    /**
+     * validation
+     */
+    @Override
+    public void validationItemId(Long itemId){
+        if (itemRepository.findById(itemId).isEmpty() == true) {
+            throw new IllegalArgumentException("해당 아이디로 상품을 찾을 수 없습니다."); }
+    }
+
+    @Override
+    public void validationUserAndItem(List<Item> items, Long id) {
+        boolean check = false;
+        for (Item item : items) {
+            if(item.getId() == id){
+                check = true; } }
+        if (check == false) {
+            throw new IllegalArgumentException("해당 상품에 대한 유저 권한이 없습니다.");
+        }
     }
 }
