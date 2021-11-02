@@ -7,6 +7,8 @@ import kusitms.domain.item.repository.ItemRepository;
 import kusitms.domain.user.entity.User;
 import kusitms.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +49,11 @@ public class ItemServiceImpl implements ItemService{
     public Item getItem(Long id) {
         Item item = itemRepository.getById(id);
         return item;
+    }
+
+    @Override
+    public Page<Item> getItemsByUserId(Pageable pageable, Long userId) {
+        return itemRepository.findAllByUserId(pageable, userId);
     }
 
     /**

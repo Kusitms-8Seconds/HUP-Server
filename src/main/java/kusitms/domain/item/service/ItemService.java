@@ -3,9 +3,12 @@ package kusitms.domain.item.service;
 import kusitms.domain.file.entity.MyFile;
 import kusitms.domain.item.dto.RegisterItemRequest;
 import kusitms.domain.item.entity.Item;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 public interface ItemService{
 
@@ -15,4 +18,5 @@ public interface ItemService{
     void validationItemId(Long id);
     Item getItem(Long id);
     void validationUserAndItem(List<Item> items, Long id);
+    Page<Item> getItemsByUserId(Pageable pageable, Long userId);
 }
