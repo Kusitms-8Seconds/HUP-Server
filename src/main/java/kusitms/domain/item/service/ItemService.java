@@ -11,4 +11,6 @@ public interface ItemService{
 
     Item saveItem(String email, @Valid RegisterItemRequest registerItemRequest);
     void addFiles(Item item, List<MyFile> saveFiles);
+    void deleteByItemId(Long id);
+    void validationItemId(Long id);
 }
