@@ -11,6 +11,9 @@ import kusitms.domain.user.service.UserService;
 import kusitms.global.dto.DefaultResponse;
 import kusitms.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,5 +58,12 @@ public class ItemApiController {
         itemService.validationUserAndItem(userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get().getItems(), id);
         Item item = itemService.getItem(id);
         return ResponseEntity.ok(ItemDetailsResponse.from(item));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<Page<ItemDetailsResponse>> getAllItems(@PageableDefault Pageable pageable) { ;
+        return ResponseEntity.ok(itemService
+                .getItemsByUserId(pageable, userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get().getId())
+                .map(ItemDetailsResponse::from));
     }
 }

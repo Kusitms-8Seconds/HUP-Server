@@ -8,14 +8,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Pagination<T> {
 
-    @SerializedName("currentCount")
     public int currentCount;
-    @SerializedName("page")
     public int page;
-    @SerializedName("perPage")
     public int perPage;
-    @SerializedName("totalCount")
     public int totalCount;
-    @SerializedName("data")
     private T data;
 }
