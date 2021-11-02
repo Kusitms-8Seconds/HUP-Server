@@ -23,9 +23,9 @@ public class ItemServiceImpl implements ItemService{
 
     @Override
     @Transactional
-    public Item saveItem(String email, @Valid RegisterItemRequest registerItemRequest) {
+    public Item saveItem(String loginId, @Valid RegisterItemRequest registerItemRequest) {
         Item item = registerItemRequest.toEntity();
-        Optional<User> user = userRepository.findUserByEmail(email);
+        Optional<User> user = userRepository.findUserByLoginId(loginId);
         Item savedItem = itemRepository.save(item);
         savedItem.setUser(user.get());
         return savedItem;

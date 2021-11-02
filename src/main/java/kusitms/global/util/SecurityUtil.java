@@ -13,7 +13,7 @@ public class SecurityUtil {
     private SecurityUtil() {
     }
 
-    public static Optional<String> getCurrentEmail() {
+    public static Optional<String> getCurrentLoginId() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             log.debug("Security Context에 인증 정보가 없습니다.");

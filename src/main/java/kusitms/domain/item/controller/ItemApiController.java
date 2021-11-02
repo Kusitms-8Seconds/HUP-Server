@@ -33,7 +33,7 @@ public class ItemApiController {
     public ResponseEntity<RegisterItemResponse> registerItem(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
                                                        @Valid @RequestPart(value = "registerItemRequest")
                                                                RegisterItemRequest registerItemRequest) throws IOException {
-        Item item = itemService.saveItem(SecurityUtil.getCurrentEmail().get(), registerItemRequest);
+        Item item = itemService.saveItem(SecurityUtil.getCurrentLoginId().get(), registerItemRequest);
         if(files != null ){
             List<MyFile> saveFiles = fileService.save(files);
             itemService.addFiles(item, saveFiles);
@@ -52,7 +52,7 @@ public class ItemApiController {
     @GetMapping("{id}")
     public ResponseEntity<ItemDetailsResponse> getItem(@PathVariable Long id) { ;
         itemService.validationItemId(id);
-        itemService.validationUserAndItem(userService.getUserWithAuthorities(SecurityUtil.getCurrentEmail().get()).get().getItems(), id);
+        itemService.validationUserAndItem(userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get().getItems(), id);
         Item item = itemService.getItem(id);
         return ResponseEntity.ok(ItemDetailsResponse.from(item));
     }

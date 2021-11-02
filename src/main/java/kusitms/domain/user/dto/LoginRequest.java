@@ -1,5 +1,7 @@
 package kusitms.domain.user.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +16,10 @@ import javax.validation.constraints.Size;
 public class LoginRequest {
 
     @NotNull
-    @Email(message = "이메일 형식에 맞춰 입력해주세요.")
-    private String email;
+    @Size(min = 5, max = 11)
+    private String loginId;
 
     @NotNull
-    @Size(min = 3, max = 100)
+    @Size(min = 8, max = 16)
     private String password;
 }

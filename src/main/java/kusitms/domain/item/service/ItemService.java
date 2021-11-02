@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ItemService{
 
-    Item saveItem(String email, @Valid RegisterItemRequest registerItemRequest);
+    Item saveItem(String loginId, @Valid RegisterItemRequest registerItemRequest);
     void addFiles(Item item, List<MyFile> saveFiles);
     void deleteByItemId(Long id);
     void validationItemId(Long id);
