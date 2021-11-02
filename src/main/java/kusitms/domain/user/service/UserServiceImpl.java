@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User saveUser(SignUpRequest signUpRequest) {
-        if (userRepository.findOneWithAuthoritiesByEmail(signUpRequest.getEmail()).orElse(null) != null) {
+        if (userRepository.findOneWithAuthoritiesByLoginId(signUpRequest.getLoginId()).orElse(null) != null) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
         Authority authority = Authority.builder()
@@ -37,11 +37,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .build();
 
         User user = User.builder()
+                .loginId(signUpRequest.getLoginId())
                 .email(signUpRequest.getEmail())
                 .username(signUpRequest.getUsername())
                 .password(passwordEncoder.encode(signUpRequest.getPassword())) // 개인정보 보호로, 비밀번호는 단방향 암호화
                 .phoneNumber(signUpRequest.getPhoneNumber())
-                .address(signUpRequest.getAddress())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();
@@ -51,10 +51,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(final String email) {
-        return userRepository.findOneWithAuthoritiesByEmail(email)
-                .map(user -> createUser(email, user))
-                .orElseThrow(() -> new UsernameNotFoundException(email + " -> 데이터베이스에서 찾을 수 없습니다."));
+    public UserDetails loadUserByUsername(final String loginId) {
+        return userRepository.findOneWithAuthoritiesByLoginId(loginId)
+                .map(user -> createUser(loginId, user))
+                .orElseThrow(() -> new UsernameNotFoundException(loginId + " -> 데이터베이스에서 찾을 수 없습니다."));
     }
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
@@ -64,18 +64,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
                 .collect(Collectors.toList());
-        return new org.springframework.security.core.userdetails.User(user.getEmail(),
+        return new org.springframework.security.core.userdetails.User(user.getLoginId(),
                 user.getPassword(),
                 grantedAuthorities);
     }
 
     @Transactional()
-    public Optional<User> getUserWithAuthorities(String email) { // email을 기준으로 정보를 가져옴
-        return userRepository.findOneWithAuthoritiesByEmail(email);
+    public Optional<User> getUserWithAuthorities(String loginId) { // loginId을 기준으로 정보를 가져옴
+        return userRepository.findOneWithAuthoritiesByLoginId(loginId);
     }
 
     @Transactional()
-    public Optional<User> getMyUserWithAuthorities() { // SecurityContext에 저장된 email의 정보만 가져온다.
-        return SecurityUtil.getCurrentEmail().flatMap(userRepository::findOneWithAuthoritiesByEmail);
+    public Optional<User> getMyUserWithAuthorities() { // SecurityContext에 저장된 loginId의 정보만 가져온다.
+        return SecurityUtil.getCurrentLoginId().flatMap(userRepository::findOneWithAuthoritiesByLoginId);
     }
 }

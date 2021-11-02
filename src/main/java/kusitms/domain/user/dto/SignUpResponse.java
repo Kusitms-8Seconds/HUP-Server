@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SignUpResponse {
 
-    private String email;
+    private String loginId;
     private String message;
 
-    public static SignUpResponse of(String email, String message) {
+    public static SignUpResponse of(String loginId, String message) {
         return SignUpResponse.builder()
-                .email(email)
+                .loginId(loginId)
                 .message(message)
                 .build();
     }

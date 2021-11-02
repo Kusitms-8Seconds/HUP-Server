@@ -34,14 +34,13 @@ public class UserApiController {
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
         User saved = userService.saveUser(signUpRequest);
-        return ResponseEntity.ok(SignUpResponse.of(saved.getEmail(), UserConstants.SUCCESS_SIGN_UP.getMessage()));
+        return ResponseEntity.ok(SignUpResponse.of(saved.getLoginId(), UserConstants.SUCCESS_SIGN_UP.getMessage()));
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
+                new UsernamePasswordAuthenticationToken(loginRequest.getLoginId(), loginRequest.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.createToken(authentication);

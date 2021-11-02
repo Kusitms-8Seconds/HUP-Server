@@ -25,6 +25,8 @@ public class User extends BaseEntity{
     @Column(name = "user_id")
     private Long id;
 
+    private String loginId;
+
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -34,8 +36,6 @@ public class User extends BaseEntity{
     private String password;
 
     private String phoneNumber;
-
-    private String address;
 
     @Column(name = "activated")
     private boolean activated;
