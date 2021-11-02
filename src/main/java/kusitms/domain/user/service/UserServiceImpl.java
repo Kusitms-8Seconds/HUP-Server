@@ -32,7 +32,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (userRepository.findOneWithAuthoritiesByEmail(signUpRequest.getEmail()).orElse(null) != null) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
-
         Authority authority = Authority.builder()
                 .authorityName("ROLE_USER")
                 .build();
@@ -65,7 +64,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
                 .collect(Collectors.toList());
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+        return new org.springframework.security.core.userdetails.User(user.getEmail(),
                 user.getPassword(),
                 grantedAuthorities);
     }
@@ -77,6 +76,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Transactional()
     public Optional<User> getMyUserWithAuthorities() { // SecurityContext에 저장된 email의 정보만 가져온다.
-        return SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByEmail);
+        return SecurityUtil.getCurrentEmail().flatMap(userRepository::findOneWithAuthoritiesByEmail);
     }
 }

@@ -9,6 +9,7 @@ import kusitms.domain.user.entity.User;
 import kusitms.domain.user.service.UserServiceImpl;
 import kusitms.global.jwt.JwtFilter;
 import kusitms.global.jwt.TokenProvider;
+import kusitms.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,29 +42,26 @@ public class UserApiController {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
-
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String jwt = tokenProvider.createToken(authentication);
-
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
         return new ResponseEntity<>(new LoginResponse(jwt), httpHeaders, HttpStatus.OK);
     }
 
-    @GetMapping("/user")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<User> getMyUserInfo() {
-        return ResponseEntity.ok(userService.getMyUserWithAuthorities().get());
-    }
-
-    @GetMapping("/user/{username}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<User> getUserInfo(@PathVariable String username) {
-        return ResponseEntity.ok(userService.getUserWithAuthorities(username).get());
-    }
+//    @GetMapping("/user")
+//    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+//    public ResponseEntity<User> getMyUserInfo() {
+//        return ResponseEntity.ok(userService.getMyUserWithAuthorities().get());
+//    }
+//
+//    @GetMapping("/user/{username}")
+//    @PreAuthorize("hasAnyRole('ADMIN')")
+//    public ResponseEntity<User> getUserInfo(@PathVariable String username) {
+//        return ResponseEntity.ok(userService.getUserWithAuthorities(username).get());
+//    }
 
     @GetMapping("/api/tokenTest")
     public String test() {
