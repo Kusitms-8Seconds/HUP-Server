@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,7 +20,7 @@ public class FileApiController {
     private final FileService fileService;
 
     @PostMapping("file-save")
-    public ResponseEntity<?> fileSave(@RequestPart MultipartFile files) throws Exception {
+    public ResponseEntity<?> fileSave(@RequestPart List<MultipartFile> files) throws Exception {
         fileService.save(files);
         return ResponseEntity.ok(null);
     }
