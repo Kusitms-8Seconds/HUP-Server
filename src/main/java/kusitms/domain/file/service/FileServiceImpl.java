@@ -7,6 +7,7 @@ import kusitms.domain.file.constant.FileConstants.EFileServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -45,5 +46,11 @@ public class FileServiceImpl implements FileService {
                 savedFiles.add(savedFile);
             }
             return savedFiles;
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllByItemId(Long id) {
+        fileRepository.deleteAllByItemId(id);
     }
 }

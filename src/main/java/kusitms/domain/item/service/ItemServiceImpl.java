@@ -36,4 +36,18 @@ public class ItemServiceImpl implements ItemService{
     public void addFiles(Item item, List<MyFile> saveFiles) {
         item.addFiles(saveFiles);
     }
+
+    @Override
+    @Transactional
+    public void deleteByItemId(Long id) {
+        itemRepository.deleteById(id);
+    }
+
+    @Override
+    public void validationItemId(Long id){
+        if (itemRepository.findById(id).isEmpty() == true) {
+            throw new IllegalArgumentException("해당 아이디로 상품을 찾을 수 없습니다.");
+        }
+
+    }
 }
