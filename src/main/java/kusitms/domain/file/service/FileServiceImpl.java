@@ -53,4 +53,6 @@ public class FileServiceImpl implements FileService {
     public void deleteAllByItemId(Long id) {
         fileRepository.deleteAllByItemId(id);
     }
+
+
 }

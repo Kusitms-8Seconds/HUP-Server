@@ -56,14 +56,14 @@ public class User extends BaseEntity{
     @OneToMany(mappedBy = "user")
     private List<PriceSuggestion> priceSuggestions = new ArrayList<>();
 
-    @Builder
-    public User(String email, String username, String password, String phoneNumber, String address) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-    }
+//    @Builder
+//    public User(String email, String username, String password, String phoneNumber, String address) {
+//        this.email = email;
+//        this.username = username;
+//        this.password = password;
+//        this.phoneNumber = phoneNumber;
+//        this.address = address;
+//    }
 
     // 연관관계 메서드
     public void addItem(Item item) {

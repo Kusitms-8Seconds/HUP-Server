@@ -3,10 +3,12 @@ package kusitms.domain.item.controller;
 import kusitms.domain.file.entity.MyFile;
 import kusitms.domain.file.service.FileService;
 import kusitms.domain.item.dto.DefaultResponse;
+import kusitms.domain.item.dto.ItemDetailsResponse;
 import kusitms.domain.item.dto.RegisterItemRequest;
 import kusitms.domain.item.dto.RegisterItemResponse;
 import kusitms.domain.item.entity.Item;
 import kusitms.domain.item.service.ItemService;
+import kusitms.domain.user.service.UserService;
 import kusitms.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ public class ItemApiController {
 
     private final ItemService itemService;
     private final FileService fileService;
+    private final UserService userService;
 
     @PostMapping
     public ResponseEntity<RegisterItemResponse> registerItem(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
@@ -43,6 +46,14 @@ public class ItemApiController {
         itemService.validationItemId(id);
         fileService.deleteAllByItemId(id);
         itemService.deleteByItemId(id);
-        return ResponseEntity.ok(DefaultResponse.from("삭제 완료"));
+        return ResponseEntity.ok(DefaultResponse.from("삭제를 완료했습니다."));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ItemDetailsResponse> getItem(@PathVariable Long id) { ;
+        itemService.validationItemId(id);
+        itemService.validationUserAndItem(userService.getUserWithAuthorities(SecurityUtil.getCurrentEmail().get()).get().getItems(), id);
+        Item item = itemService.getItem(id);
+        return ResponseEntity.ok(ItemDetailsResponse.from(item));
     }
 }
