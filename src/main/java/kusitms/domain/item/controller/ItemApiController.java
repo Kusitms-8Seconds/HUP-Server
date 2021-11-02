@@ -2,13 +2,13 @@ package kusitms.domain.item.controller;
 
 import kusitms.domain.file.entity.MyFile;
 import kusitms.domain.file.service.FileService;
-import kusitms.domain.item.dto.DefaultResponse;
 import kusitms.domain.item.dto.ItemDetailsResponse;
 import kusitms.domain.item.dto.RegisterItemRequest;
 import kusitms.domain.item.dto.RegisterItemResponse;
 import kusitms.domain.item.entity.Item;
 import kusitms.domain.item.service.ItemService;
 import kusitms.domain.user.service.UserService;
+import kusitms.global.dto.DefaultResponse;
 import kusitms.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

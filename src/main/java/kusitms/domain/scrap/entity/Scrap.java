@@ -3,15 +3,13 @@ package kusitms.domain.scrap.entity;
 import kusitms.domain.item.entity.Item;
 import kusitms.domain.user.entity.User;
 import kusitms.global.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
