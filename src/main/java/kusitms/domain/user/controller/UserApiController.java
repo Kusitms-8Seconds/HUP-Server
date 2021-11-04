@@ -9,17 +9,18 @@ import kusitms.domain.user.entity.User;
 import kusitms.domain.user.service.UserServiceImpl;
 import kusitms.global.jwt.JwtFilter;
 import kusitms.global.jwt.TokenProvider;
-import kusitms.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -34,7 +35,7 @@ public class UserApiController {
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
         User saved = userService.saveUser(signUpRequest);
-        return ResponseEntity.ok(SignUpResponse.of(saved.getLoginId(), UserConstants.SUCCESS_SIGN_UP.getMessage()));
+        return ResponseEntity.ok(SignUpResponse.from(saved.getLoginId(), UserConstants.SUCCESS_SIGN_UP.getMessage()));
     }
 
     @PostMapping("/login")

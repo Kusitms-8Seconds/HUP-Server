@@ -6,6 +6,8 @@ import kusitms.domain.scrap.entity.Scrap;
 import kusitms.domain.scrap.repository.ScrapRepository;
 import kusitms.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +42,13 @@ public class ScrapServiceImpl implements ScrapService{
         scrapRepository.deleteById(deleteScrapId);
     }
 
+    @Override
+    public Page<Scrap> getAllScrapsByUserId(Pageable pageable, Long userId) {
+        validationExistingScrapByUserId(pageable, userId);
+        Page<Scrap> scraps = scrapRepository.findAllByUserId(pageable, userId);
+        return scraps;
+    }
+
     /**
      * validation
      */
@@ -64,5 +73,11 @@ public class ScrapServiceImpl implements ScrapService{
             for (Scrap scrap : scraps) {
                 if(scrap.getItem().getId() == itemId){
                     throw new IllegalArgumentException("이미 스크랩한 상품입니다."); } } }
+    }
+
+    private void validationExistingScrapByUserId(Pageable pageable, Long userId) {
+        if (scrapRepository.findAllByUserId(pageable, userId).isEmpty() == true) {
+            throw new IllegalArgumentException("해당 유저의 스크랩 내역이 존재하지 않습니다.");
+        }
     }
 }
