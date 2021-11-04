@@ -20,13 +20,13 @@ public class FileApiController {
     private final FileService fileService;
 
     @PostMapping("file-save")
-    public ResponseEntity<?> fileSave(@RequestPart List<MultipartFile> files) throws Exception {
+    public ResponseEntity<?> save(@RequestPart List<MultipartFile> files) throws Exception {
         fileService.save(files);
         return ResponseEntity.ok(null);
     }
 
     @GetMapping(value = "image/{name}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<byte[]> getImage(@PathVariable String name){
+    public ResponseEntity<byte[]> find(@PathVariable String name){
         try (InputStream imageStream = new FileInputStream(System.getProperty("user.dir") + "/images/" + name)) {
             return ResponseEntity.ok(IOUtils.toByteArray(imageStream));
         } catch (IOException e) {

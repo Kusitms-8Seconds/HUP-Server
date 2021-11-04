@@ -14,7 +14,7 @@ public class SignUpResponse {
     private String loginId;
     private String message;
 
-    public static SignUpResponse of(String loginId, String message) {
+    public static SignUpResponse from(String loginId, String message) {
         return SignUpResponse.builder()
                 .loginId(loginId)
                 .message(message)

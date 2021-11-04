@@ -33,7 +33,7 @@ public class ItemApiController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<RegisterItemResponse> registerItem(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
+    public ResponseEntity<RegisterItemResponse> create(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
                                                        @Valid @RequestPart(value = "registerItemRequest")
                                                                RegisterItemRequest registerItemRequest) throws IOException {
         Item item = itemService.saveItem(SecurityUtil.getCurrentLoginId().get(), registerItemRequest);
@@ -45,7 +45,7 @@ public class ItemApiController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<DefaultResponse> deleteItem(@PathVariable Long id) {
+    public ResponseEntity<DefaultResponse> delete(@PathVariable Long id) {
         itemService.validationItemId(id);
         fileService.deleteAllByItemId(id);
         itemService.deleteByItemId(id);
@@ -53,7 +53,7 @@ public class ItemApiController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ItemDetailsResponse> getItem(@PathVariable Long id) { ;
+    public ResponseEntity<ItemDetailsResponse> find(@PathVariable Long id) { ;
         itemService.validationItemId(id);
         itemService.validationUserAndItem(userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get().getItems(), id);
         Item item = itemService.getItem(id);
@@ -61,7 +61,7 @@ public class ItemApiController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Page<ItemDetailsResponse>> getAllItems(@PageableDefault Pageable pageable) { ;
+    public ResponseEntity<Page<ItemDetailsResponse>> list(@PageableDefault Pageable pageable) { ;
         return ResponseEntity.ok(itemService
                 .getItemsByUserId(pageable, userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get().getId())
                 .map(ItemDetailsResponse::from));
