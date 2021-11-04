@@ -1,3 +1,3 @@
-# Auction-Server
+# HUP-Server
 
-경매시스템 서버
+HUP 서버
