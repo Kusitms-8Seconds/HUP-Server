@@ -2,6 +2,7 @@ package eightseconds.domain.file.entity;
 
 import eightseconds.domain.item.entity.Item;
 import eightseconds.global.entity.BaseEntity;
+import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter
 @Entity(name = "file")
-public class MyFile extends BaseEntity {
+public class MyFile extends BaseTimeEntity {
 
     @Getter(AccessLevel.NONE)
     @Id

@@ -1,23 +1,25 @@
 package eightseconds.domain.user.entity;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.global.entity.BaseEntity;
+import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class User extends BaseEntity{
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -31,13 +33,16 @@ public class User extends BaseEntity{
 
     private String username;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     private String phoneNumber;
 
     @Column(name = "activated")
     private boolean activated;
+
+    // oAuth2관련
+    private String picture;
 
     @ManyToMany
     @JoinTable(
@@ -55,19 +60,69 @@ public class User extends BaseEntity{
     @OneToMany(mappedBy = "user")
     private List<PriceSuggestion> priceSuggestions = new ArrayList<>();
 
-//    @Builder
-//    public User(String email, String username, String password, String phoneNumber, String address) {
-//        this.email = email;
-//        this.username = username;
-//        this.password = password;
-//        this.phoneNumber = phoneNumber;
-//        this.address = address;
-//    }
-
     // 연관관계 메서드
     public void addItem(Item item) {
         this.items.add(item);
         item.setUser(this);
+    }
+
+    public void getAuthority(Long id){
+        for (Iterator<Authority> itr = authorities.iterator(); itr.hasNext();) {
+            Authority authority = itr.next();
+            //if(id = authority.get)
+        }
+    }
+
+//    // 연관관계 메서드
+//    public void addAuthorities(){
+//        this.authorities
+//    }
+
+//    @Builder
+//    public User(String loginId, String email, String username,
+//                String password, String phoneNumber, Set<Authority> authorities) {
+//        this.loginId = loginId;
+//        this.email = email;
+//        this.username = username;
+//        this.password = password;
+//        this.phoneNumber = phoneNumber;
+//        this.description = description;
+//    }
+
+    // Google Builder
+
+    // Google Update Profile
+    public User update(String username, String picture) {
+        this.username = username;
+        this.picture = picture;
+        return this;
+    }
+
+    public static User toEntity(OAuth2User oAuth2User) {
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_USER")
+                .build();
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        return User.builder()
+                .email((String)attributes.get("email"))
+                .username((String)attributes.get("name"))
+                .picture((String)attributes.get("picture"))
+                .authorities(Collections.singleton(authority))
+                .activated(true)
+                .build();
+    }
+
+    public static User toEntity(Payload payload){
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_USER")
+                .build();
+        return User.builder()
+                .email(payload.getEmail())
+                .username((String)payload.get("name"))
+                .picture((String)payload.get("picture"))
+                .authorities(Collections.singleton(authority))
+                .activated(true)
+                .build();
     }
 
 }
