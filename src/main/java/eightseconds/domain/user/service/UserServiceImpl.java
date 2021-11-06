@@ -1,13 +1,19 @@
 package eightseconds.domain.user.service;
 
+import eightseconds.domain.user.dto.LoginRequest;
 import eightseconds.domain.user.dto.SignUpRequest;
 import eightseconds.domain.user.entity.Authority;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.repository.UserRepository;
+import eightseconds.global.jwt.TokenProvider;
 import eightseconds.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +32,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Override
     public User saveUser(SignUpRequest signUpRequest) {
@@ -35,7 +43,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Authority authority = Authority.builder()
                 .authorityName("ROLE_USER")
                 .build();
-
         User user = User.builder()
                 .loginId(signUpRequest.getLoginId())
                 .email(signUpRequest.getEmail())
@@ -45,7 +52,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();
-
         return this.userRepository.save(user);
     }
 
@@ -77,5 +83,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional()
     public Optional<User> getMyUserWithAuthorities() { // SecurityContext에 저장된 loginId의 정보만 가져온다.
         return SecurityUtil.getCurrentLoginId().flatMap(userRepository::findOneWithAuthoritiesByLoginId);
+    }
+
+    public String validationLogin(LoginRequest loginRequest) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginRequest.getLoginId(), loginRequest.getPassword());
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = tokenProvider.createToken(authentication);
+        return jwt;
     }
 }

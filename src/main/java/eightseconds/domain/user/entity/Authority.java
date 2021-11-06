@@ -1,5 +1,6 @@
 package eightseconds.domain.user.entity;
 
+import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -12,7 +13,7 @@ import javax.persistence.Id;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Authority {
+public class Authority extends BaseTimeEntity {
 
     @Id
     @Column(name = "authority_name", length = 50)

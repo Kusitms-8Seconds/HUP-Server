@@ -3,6 +3,7 @@ package eightseconds.domain.scrap.entity;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.user.entity.User;
 import eightseconds.global.entity.BaseEntity;
+import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Scrap extends BaseEntity {
+public class Scrap extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

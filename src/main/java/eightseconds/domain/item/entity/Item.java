@@ -6,6 +6,7 @@ import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.user.entity.User;
 import eightseconds.global.entity.BaseEntity;
+import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item extends BaseEntity {
+public class Item extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

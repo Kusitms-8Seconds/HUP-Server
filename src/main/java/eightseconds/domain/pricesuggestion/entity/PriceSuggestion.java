@@ -3,6 +3,7 @@ package eightseconds.domain.pricesuggestion.entity;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.user.entity.User;
 import eightseconds.global.entity.BaseEntity;
+import eightseconds.global.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PriceSuggestion extends BaseEntity {
+public class PriceSuggestion extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
