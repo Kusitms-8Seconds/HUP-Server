@@ -71,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/token/expired").permitAll()
                 .antMatchers("/googleOAuth/tokenVerify").permitAll()
                 .antMatchers("/oauth2/google/validation").permitAll()
+                .antMatchers("/oauth2/kakao/validation").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider))
