@@ -72,6 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/googleOAuth/tokenVerify").permitAll()
                 .antMatchers("/oauth2/google/validation").permitAll()
                 .antMatchers("/oauth2/kakao/validation").permitAll()
+                .antMatchers("/oauth2/naver/validation").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider))

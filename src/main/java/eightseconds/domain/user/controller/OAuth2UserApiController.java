@@ -5,6 +5,7 @@ import com.nimbusds.jose.shaded.json.parser.ParseException;
 import eightseconds.domain.user.dto.LoginResponse;
 import eightseconds.domain.user.dto.OAuth2GoogleLoginRequest;
 import eightseconds.domain.user.dto.OAuth2KakaoLoginRequest;
+import eightseconds.domain.user.dto.OAuth2NaverLoginRequest;
 import eightseconds.domain.user.service.OAuth2UserService;
 import eightseconds.global.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +35,18 @@ public class OAuth2UserApiController {
     }
 
     @GetMapping("oauth2/kakao/validation")
-    public ResponseEntity<LoginResponse> kakaoCodeValidation(@RequestBody OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) throws IOException, ParseException, org.json.simple.parser.ParseException {
+    public ResponseEntity<LoginResponse> kakaoAccessTokenValidation(@RequestBody OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) throws IOException, ParseException, org.json.simple.parser.ParseException {
 
-        String jwt = oAuth2UserService.validationKakaoCode(oAuth2KakaoLoginRequest);
+        String jwt = oAuth2UserService.validationKakaoAccessToken(oAuth2KakaoLoginRequest);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        return new ResponseEntity<>(new LoginResponse(jwt), httpHeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("oauth2/naver/validation")
+    public ResponseEntity<LoginResponse> naverAccessTokenValidation(@RequestBody OAuth2NaverLoginRequest oAuth2NaverLoginRequest) throws IOException, ParseException, org.json.simple.parser.ParseException {
+
+        String jwt = oAuth2UserService.validationNaverAccessToken(oAuth2NaverLoginRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new LoginResponse(jwt), httpHeaders, HttpStatus.OK);

@@ -59,13 +59,13 @@ public class OAuth2Attribute {
 
     private static OAuth2Attribute ofNaver(String attributeKey,
                                            Map<String, Object> attributes) {
-        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        //Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
         return OAuth2Attribute.builder()
-                .name((String) response.get("name"))
-                .email((String) response.get("email"))
-                .picture((String) response.get("profile_image"))
-                .attributes(response)
+                .name((String) attributes.get("name"))
+                .email((String) attributes.get("email"))
+                .picture((String) attributes.get("profile_image"))
+                .attributes(attributes)
                 .attributeKey(attributeKey)
                 .build();
     }

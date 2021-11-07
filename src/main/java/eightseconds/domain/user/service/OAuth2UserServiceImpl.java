@@ -10,21 +10,15 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.nimbusds.jose.shaded.json.parser.ParseException;
 import eightseconds.domain.user.dto.OAuth2GoogleLoginRequest;
 import eightseconds.domain.user.dto.OAuth2KakaoLoginRequest;
+import eightseconds.domain.user.dto.OAuth2NaverLoginRequest;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.exception.InvalidIdToken;
 import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.config.dto.OAuth2Attribute;
 import eightseconds.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.ResponseBody;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -102,7 +97,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     }
 
     @Override
-    public String validationKakaoCode(OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) {
+    public String validationKakaoAccessToken(OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
@@ -134,7 +129,6 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
-            //    요청에 필요한 Header에 포함될 내용
             conn.setRequestProperty("Authorization", "Bearer " + access_Token);
 
             int responseCode = conn.getResponseCode();
@@ -172,5 +166,102 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
             e.printStackTrace();
         }
         return userInfo;
+    }
+
+
+    public String validationNaverAccessToken(OAuth2NaverLoginRequest oAuth2NaverLoginRequest) {
+
+        String header = "Bearer " + oAuth2NaverLoginRequest.getAccessToken(); // Bearer 다음에 공백 추가
+        String apiURL = "https://openapi.naver.com/v1/nid/me";
+        Map<String, String> requestHeaders = new HashMap<>();
+        requestHeaders.put("Authorization", header);
+        String responseBody = get(apiURL,requestHeaders);
+        HashMap<String, Object> userInfo = getNaverUserInfo(responseBody);
+
+        saveOrUpdateNaver(userInfo);
+
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of("naver", "naver", userInfo);
+        var memberAttribute = oAuth2Attribute.convertToMap();
+        OAuth2User userDetails = new DefaultOAuth2User(authorities, memberAttribute, "key");
+        OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(userDetails, authorities, "key");
+        auth.setDetails(userDetails);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        String jwt = tokenProvider.createToken(auth);
+        return jwt;
+
+    }
+
+    private User saveOrUpdateNaver(HashMap<String, Object> userInfo) {
+        User user = userRepository.findByEmail(userInfo.get("email").toString())
+                .map(entity -> entity.update(userInfo.get("name").toString(), userInfo.get("profile_image").toString()))
+                .orElse(User.toEntityOfNaverUser(userInfo));
+        return userRepository.save(user);
+    }
+
+    private HashMap<String, Object> getNaverUserInfo(String responseBody) {
+        HashMap<String, Object> userInfo = new HashMap<>();
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(responseBody);
+
+        JsonObject jsonContent = element.getAsJsonObject().get("response").getAsJsonObject();
+        System.out.println("element" + element.toString());
+
+        String nickname = jsonContent.get("name").getAsString();
+        String profile_image = jsonContent.get("profile_image").getAsString();
+        String email = jsonContent.get("email").getAsString();
+
+        userInfo.put("name", nickname);
+        userInfo.put("email", email);
+        userInfo.put("profile_image", profile_image);
+        return userInfo;
+    }
+
+    private static String get(String apiUrl, Map<String, String> requestHeaders){
+        HttpURLConnection con = connect(apiUrl);
+        try {
+            con.setRequestMethod("GET");
+            for(Map.Entry<String, String> header :requestHeaders.entrySet()) {
+                con.setRequestProperty(header.getKey(), header.getValue());
+            }
+
+            int responseCode = con.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) { // 정상 호출
+                return readBody(con.getInputStream());
+            } else { // 에러 발생
+                return readBody(con.getErrorStream());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("API 요청과 응답 실패", e);
+        } finally {
+            con.disconnect();
+        }
+    }
+
+
+    private static HttpURLConnection connect(String apiUrl){
+        try {
+            URL url = new URL(apiUrl);
+            return (HttpURLConnection)url.openConnection();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("API URL이 잘못되었습니다. : " + apiUrl, e);
+        } catch (IOException e) {
+            throw new RuntimeException("연결이 실패했습니다. : " + apiUrl, e);
+        }
+    }
+
+    private static String readBody(InputStream body){
+        InputStreamReader streamReader = new InputStreamReader(body);
+        try (BufferedReader lineReader = new BufferedReader(streamReader)) {
+            StringBuilder responseBody = new StringBuilder();
+            String line;
+            while ((line = lineReader.readLine()) != null) {
+                responseBody.append(line);
+            }
+            return responseBody.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("API 응답을 읽는데 실패했습니다.", e);
+        }
     }
 }

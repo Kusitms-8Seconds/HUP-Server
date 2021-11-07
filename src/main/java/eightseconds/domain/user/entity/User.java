@@ -69,6 +69,7 @@ public class User extends BaseTimeEntity {
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
 
+
     // 연관관계 메서드
     public void addItem(Item item) {
         this.items.add(item);
@@ -141,6 +142,19 @@ public class User extends BaseTimeEntity {
         return User.builder()
                 .email(userInfo.get("email").toString())
                 .username(userInfo.get("nickname").toString())
+                .picture(userInfo.get("profile_image").toString())
+                .authorities(Collections.singleton(authority))
+                .activated(true)
+                .build();
+    }
+
+    public static User toEntityOfNaverUser(HashMap<String, Object> userInfo) {
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_USER")
+                .build();
+        return User.builder()
+                .email(userInfo.get("email").toString())
+                .username(userInfo.get("name").toString())
                 .picture(userInfo.get("profile_image").toString())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
