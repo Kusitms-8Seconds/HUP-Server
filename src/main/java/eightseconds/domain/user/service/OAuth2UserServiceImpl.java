@@ -10,6 +10,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import eightseconds.domain.user.dto.LoginResponse;
 import eightseconds.domain.user.dto.OAuth2GoogleLoginRequest;
 import eightseconds.domain.user.dto.OAuth2KakaoLoginRequest;
 import eightseconds.domain.user.dto.OAuth2NaverLoginRequest;
@@ -62,11 +63,11 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         else { throw new InvalidIdToken("Invalid ID token."); }
     }
 
-    public String saveUserOrUpdateByGoogleIdToken(GoogleIdToken idToken) {
+    public LoginResponse saveUserOrUpdateByGoogleIdToken(GoogleIdToken idToken) {
         Payload payload = idToken.getPayload();
-        saveOrUpdateGoogle(payload);
+        User user = saveOrUpdateGoogle(payload);
         String jwt = makeAppToken(payload);
-        return jwt;
+        return LoginResponse.from(jwt, user.getId());
     }
 
     private String makeAppToken(Payload payload) {
@@ -97,12 +98,12 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     }
 
     @Override
-    public String validationKakaoAccessToken(OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) {
+    public LoginResponse validationKakaoAccessToken(OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         HashMap<String, Object> userInfo = getUserInfo(oAuth2KakaoLoginRequest.getAccessToken());
-        saveOrUpdateKakao(userInfo);
+        User user = saveOrUpdateKakao(userInfo);
         OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of("kakao", "kakao", userInfo);
         var memberAttribute = oAuth2Attribute.convertToMap();
         OAuth2User userDetails = new DefaultOAuth2User(authorities, memberAttribute, "key");
@@ -110,7 +111,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         auth.setDetails(userDetails);
         SecurityContextHolder.getContext().setAuthentication(auth);
         String jwt = tokenProvider.createToken(auth);
-        return jwt;
+        return LoginResponse.from(jwt, user.getId());
     }
 
     private User saveOrUpdateKakao(HashMap<String, Object> userInfo) {
@@ -169,7 +170,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     }
 
 
-    public String validationNaverAccessToken(OAuth2NaverLoginRequest oAuth2NaverLoginRequest) {
+    public LoginResponse validationNaverAccessToken(OAuth2NaverLoginRequest oAuth2NaverLoginRequest) {
 
         String header = "Bearer " + oAuth2NaverLoginRequest.getAccessToken(); // Bearer 다음에 공백 추가
         String apiURL = "https://openapi.naver.com/v1/nid/me";
@@ -178,7 +179,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         String responseBody = get(apiURL,requestHeaders);
         HashMap<String, Object> userInfo = getNaverUserInfo(responseBody);
 
-        saveOrUpdateNaver(userInfo);
+        User user = saveOrUpdateNaver(userInfo);
 
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
@@ -189,7 +190,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         auth.setDetails(userDetails);
         SecurityContextHolder.getContext().setAuthentication(auth);
         String jwt = tokenProvider.createToken(auth);
-        return jwt;
+        return LoginResponse.from(jwt, user.getId());
 
     }
 

@@ -12,4 +12,6 @@ public interface UserService {
     Optional<User> getUserWithAuthorities(String loginId);
     Optional<User> getMyUserWithAuthorities();
     String validationLogin(LoginRequest loginRequest);
+    User getUserByLoginId(String loginId);
+    User getUserByUserId(Long userId);
 }

@@ -1,10 +1,7 @@
 package eightseconds.domain.user.controller;
 
 import eightseconds.domain.user.constant.UserConstants;
-import eightseconds.domain.user.dto.LoginRequest;
-import eightseconds.domain.user.dto.LoginResponse;
-import eightseconds.domain.user.dto.SignUpRequest;
-import eightseconds.domain.user.dto.SignUpResponse;
+import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserServiceImpl;
 import eightseconds.global.jwt.JwtFilter;
@@ -34,9 +31,10 @@ public class UserApiController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         String jwt = userService.validationLogin(loginRequest);
+        User user = userService.getUserByLoginId(loginRequest.getLoginId());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-        return new ResponseEntity<>(new LoginResponse(jwt), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new LoginResponse(jwt, user.getId()), httpHeaders, HttpStatus.OK);
     }
 
 //    @GetMapping("/user")
@@ -54,6 +52,12 @@ public class UserApiController {
     @GetMapping("/api/tokenTest")
     public String test() {
         return "Complete Token Test!!";
+    }
+
+    @GetMapping("/api/user/details")
+    public ResponseEntity<UserDetailsInfoResponse> getUserDetails(@Valid @RequestBody UserDetailsInfoRequest userDetailsInfoRequest) {
+        User user = userService.getUserByUserId(userDetailsInfoRequest.getUserId());
+        return ResponseEntity.ok(UserDetailsInfoResponse.from(user));
     }
 
 }
