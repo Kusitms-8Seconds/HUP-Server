@@ -93,4 +93,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         String jwt = tokenProvider.createToken(authentication);
         return jwt;
     }
+
+    public User getUserByLoginId(String loginId) {
+        Optional<User> user = userRepository.findUserByLoginId(loginId);
+        return user.get();
+    }
+
+    public User getUserByUserId(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        return user.get();
+    }
 }
