@@ -1,8 +1,10 @@
 package eightseconds.domain.user.controller;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.nimbusds.jose.shaded.json.parser.ParseException;
 import eightseconds.domain.user.dto.LoginResponse;
-import eightseconds.domain.user.dto.OAuth2LoginRequest;
+import eightseconds.domain.user.dto.OAuth2GoogleLoginRequest;
+import eightseconds.domain.user.dto.OAuth2KakaoLoginRequest;
 import eightseconds.domain.user.service.OAuth2UserService;
 import eightseconds.global.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +25,18 @@ public class OAuth2UserApiController {
     private final OAuth2UserService oAuth2UserService;
 
     @GetMapping("oauth2/google/validation")
-    public ResponseEntity<LoginResponse> googleIdTokenValidation(@RequestBody OAuth2LoginRequest oAuth2LoginRequest) throws GeneralSecurityException, IOException {
-        GoogleIdToken idToken = oAuth2UserService.validationGoogleIdToken(oAuth2LoginRequest);
+    public ResponseEntity<LoginResponse> googleIdTokenValidation(@RequestBody OAuth2GoogleLoginRequest oAuth2GoogleLoginRequest) throws GeneralSecurityException, IOException {
+        GoogleIdToken idToken = oAuth2UserService.validationGoogleIdToken(oAuth2GoogleLoginRequest);
         String jwt = oAuth2UserService.saveUserOrUpdateByGoogleIdToken(idToken);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        return new ResponseEntity<>(new LoginResponse(jwt), httpHeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("oauth2/kakao/validation")
+    public ResponseEntity<LoginResponse> kakaoCodeValidation(@RequestBody OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) throws IOException, ParseException, org.json.simple.parser.ParseException {
+
+        String jwt = oAuth2UserService.validationKakaoCode(oAuth2KakaoLoginRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new LoginResponse(jwt), httpHeaders, HttpStatus.OK);

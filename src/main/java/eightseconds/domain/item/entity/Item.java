@@ -1,5 +1,6 @@
 package eightseconds.domain.item.entity;
 
+import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
@@ -48,6 +49,9 @@ public class Item extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "item")
     private List<MyFile> myFiles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "item")
+    private List<ChatRoom> chatRooms = new ArrayList<>();
 
 //    @Builder
 //    public Item(String itemName, Enum category, int initPrice, int soldPrice,

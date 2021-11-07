@@ -45,14 +45,14 @@ public class OAuth2Attribute {
 
     private static OAuth2Attribute ofKakao(String attributeKey,
                                            Map<String, Object> attributes) {
-        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
+//        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+//        Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
 
         return OAuth2Attribute.builder()
-                .name((String) kakaoProfile.get("nickname"))
-                .email((String) kakaoAccount.get("email"))
-                .picture((String)kakaoProfile.get("profile_image_url"))
-                .attributes(kakaoAccount)
+                .name((String) attributes.get("nickname"))
+                .email((String) attributes.get("email"))
+                .picture((String)attributes.get("profile_image_url"))
+                .attributes(attributes)
                 .attributeKey(attributeKey)
                 .build();
     }
