@@ -10,4 +10,6 @@ public interface ScrapService {
     Scrap saveScrap(User user, Item item);
     void deleteScrap(User user, Item item, Long deleteScrapId);
     Page<Scrap> getAllScrapsByUserId(Pageable pageable, Long userId);
+    Long getAllScrapsByItemIdQuantity(Long id);
+
 }

@@ -3,6 +3,7 @@ package eightseconds.domain.scrap.controller;
 
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.service.ItemService;
+import eightseconds.domain.scrap.dto.ScrapCountResponse;
 import eightseconds.domain.scrap.dto.ScrapDetailsResponse;
 import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.scrap.service.ScrapService;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/scrap")
+@RequestMapping("api/v1/scrap")
 public class ScrapApiController {
 
     private final ScrapService scrapService;
@@ -30,6 +31,7 @@ public class ScrapApiController {
     public ResponseEntity<?> create(@PathVariable Long id) throws Exception {
 
         User user = userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get();
+        System.out.println("로그인아이디찍기"+user.getLoginId());
         Item item = itemService.getItem(id);
         scrapService.saveScrap(user, item);
         return ResponseEntity.ok(DefaultResponse.from("스크랩을 완료했습니다."));
@@ -50,6 +52,12 @@ public class ScrapApiController {
         User user = userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get();
         Page<Scrap> allScraps = scrapService.getAllScrapsByUserId(pageable, user.getId());
         return ResponseEntity.ok(allScraps.map(ScrapDetailsResponse::from));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> getHeart(@PathVariable Long id) throws Exception {
+        Long heart = scrapService.getAllScrapsByItemIdQuantity(id);
+        return ResponseEntity.ok(ScrapCountResponse.from(heart));
     }
 
 }
