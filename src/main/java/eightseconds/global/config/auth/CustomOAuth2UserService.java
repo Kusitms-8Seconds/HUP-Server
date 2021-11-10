@@ -1,6 +1,6 @@
 package eightseconds.global.config.auth;
 
-import eightseconds.global.config.dto.OAuth2Attribute;
+import eightseconds.global.dto.OAuth2Attribute;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,7 +27,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
-        System.out.println("test중이다22");
         OAuth2Attribute oAuth2Attribute =
                 OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
