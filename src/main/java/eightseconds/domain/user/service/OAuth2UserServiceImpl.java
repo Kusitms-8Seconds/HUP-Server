@@ -42,13 +42,13 @@ import java.util.*;
 @Service
 public class OAuth2UserServiceImpl implements OAuth2UserService{
 
-    private String Client_ID = "940555005991-aptm7147s5n4ef0og6dj366ll2vffjaq.apps.googleusercontent.com";
+    private String Client_ID = "221537301769-e1qd8130nulhheiqo68nv8upistikcp4.apps.googleusercontent.com";
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
 
     private static String KAKAO_AUTH_BASE_URL = "https://kauth.kakao.com";
     private static String KAKAO_API_BASE_URL = "https://kapi.kakao.com";
-    private static String APP_KEY = "e4b092a0692591def92fb184787c6d56";
+    private static String APP_KEY = "6605274d9a8165288410480f4bd1fa9b";
     private static String REDIRECT_URL = "https://localhost:8080/oauth";
 
     public GoogleIdToken validationGoogleIdToken(OAuth2GoogleLoginRequest oAuth2LoginRequest) throws GeneralSecurityException, IOException {
