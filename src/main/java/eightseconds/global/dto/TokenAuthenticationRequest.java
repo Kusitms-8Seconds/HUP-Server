@@ -1,4 +1,4 @@
-package eightseconds.global.config.dto;
+package eightseconds.global.dto;
 
 import lombok.Getter;
 

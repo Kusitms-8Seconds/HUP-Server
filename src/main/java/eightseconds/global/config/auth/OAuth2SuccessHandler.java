@@ -1,7 +1,6 @@
 package eightseconds.global.config.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eightseconds.domain.user.entity.Authority;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.jwt.TokenProvider;
@@ -40,7 +39,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         saveOrUpdate(oAuth2User);
-        System.out.println("test중이다");
 
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));

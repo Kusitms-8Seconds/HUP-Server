@@ -17,7 +17,7 @@ import eightseconds.domain.user.dto.OAuth2NaverLoginRequest;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.exception.InvalidIdToken;
 import eightseconds.domain.user.repository.UserRepository;
-import eightseconds.global.config.dto.OAuth2Attribute;
+import eightseconds.global.dto.OAuth2Attribute;
 import eightseconds.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
