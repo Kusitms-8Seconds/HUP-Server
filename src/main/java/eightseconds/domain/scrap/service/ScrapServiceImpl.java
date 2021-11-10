@@ -23,7 +23,7 @@ public class ScrapServiceImpl implements ScrapService{
     @Override
     public Scrap saveScrap(User user, Item item) {
 
-        validationExistingScrap(item.getId());
+        validationExistingScrap(user, item.getId());
         validationIsExistingItem(item.getId());
         Scrap scrap = Scrap.builder()
                 .user(user)
@@ -49,6 +49,12 @@ public class ScrapServiceImpl implements ScrapService{
         return scraps;
     }
 
+    @Override
+    public Long getAllScrapsByItemIdQuantity(Long id) {
+        Long itemCountByItemId = scrapRepository.findItemCountByItemId(id);
+        return itemCountByItemId;
+    }
+
     /**
      * validation
      */
@@ -67,9 +73,9 @@ public class ScrapServiceImpl implements ScrapService{
         }
     }
 
-    private void validationExistingScrap(Long itemId) {
+    private void validationExistingScrap(User user, Long itemId) {
         if (scrapRepository.findAll().isEmpty() != true) {
-            List<Scrap> scraps = scrapRepository.findAll();
+            List<Scrap> scraps = scrapRepository.findAllByUserId(user.getId());
             for (Scrap scrap : scraps) {
                 if(scrap.getItem().getId() == itemId){
                     throw new IllegalArgumentException("이미 스크랩한 상품입니다."); } } }

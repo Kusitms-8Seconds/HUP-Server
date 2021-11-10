@@ -26,7 +26,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/items")
+@RequestMapping("api/v1/items")
 public class ItemApiController {
 
     private final ItemService itemService;
@@ -74,4 +74,5 @@ public class ItemApiController {
                 .getItemsByCategory(pageable, category)
                 .map(ItemDetailsResponse::from));
     }
+
 }
