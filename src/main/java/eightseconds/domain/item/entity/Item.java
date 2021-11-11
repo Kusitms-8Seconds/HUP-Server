@@ -3,6 +3,7 @@ package eightseconds.domain.item.entity;
 import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
+import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.user.entity.User;
@@ -36,6 +37,8 @@ public class Item extends BaseTimeEntity {
     private LocalDateTime buyDate;
     private int itemStatePoint;
     private String description;
+    @Enumerated(EnumType.STRING)
+    private EItemSoldStatus soldStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -78,6 +81,7 @@ public class Item extends BaseTimeEntity {
         this.buyDate = buyDate;
         this.itemStatePoint = itemStatePoint;
         this.description = description;
+        this.soldStatus = EItemSoldStatus.eNew;
     }
 
     // 연관관계 메서드

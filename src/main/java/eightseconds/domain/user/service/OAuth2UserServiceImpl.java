@@ -153,14 +153,16 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
 
             String nickname = properties.getAsJsonObject().get("nickname").getAsString();
             String profile_image = properties.getAsJsonObject().get("profile_image").getAsString();
-            String email = kakao_account.getAsJsonObject().get("email").getAsString();
+            if(kakao_account!= null){
+                String email = kakao_account.getAsJsonObject().get("email").getAsString();
+                userInfo.put("email", email);
+                System.out.println("email" + email);
+            }
 
             userInfo.put("nickname", nickname);
-            userInfo.put("email", email);
             userInfo.put("profile_image", profile_image);
 
             System.out.println("nickname" + nickname);
-            System.out.println("email" + email);
             System.out.println("profile_image" + profile_image);
         } catch (IOException e) {
             // TODO Auto-generated catch block

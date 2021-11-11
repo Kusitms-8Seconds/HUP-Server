@@ -32,6 +32,6 @@ public class PriceSuggestion extends BaseTimeEntity {
     private Item item;
 
     private int suggestionPrice;
-    private boolean soldState;
+    private boolean acceptState;
 
 }

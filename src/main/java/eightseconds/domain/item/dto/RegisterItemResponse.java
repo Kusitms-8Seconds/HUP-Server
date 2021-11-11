@@ -20,6 +20,7 @@ public class RegisterItemResponse {
     private LocalDateTime buyDate;
     private int itemStatePoint;
     private String description;
+    private Enum soldStatus;
 
     public static RegisterItemResponse from(Item item) {
         return RegisterItemResponse.builder()
@@ -30,6 +31,7 @@ public class RegisterItemResponse {
                 .buyDate(item.getBuyDate())
                 .itemStatePoint(item.getItemStatePoint())
                 .description(item.getDescription())
+                .soldStatus(item.getSoldStatus())
                 .build();
     }
 }
