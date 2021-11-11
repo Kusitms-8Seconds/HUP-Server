@@ -43,4 +43,19 @@ public class ItemConstants {
             return EItemCategory.valueOf(s);
         }
     }
+
+    @Getter
+    @AllArgsConstructor
+    public enum EItemSoldStatus{
+        eNew("새로운 상품"),
+        eOnGoing("경매중인 상품"),
+        eSoldOut("판매 완료");
+
+        private final String name;
+
+        @JsonCreator
+        public static EItemSoldStatus from(String s) {
+            return EItemSoldStatus.valueOf(s);
+        }
+    }
 }

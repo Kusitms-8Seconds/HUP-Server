@@ -2,6 +2,7 @@ package eightseconds.domain.item.dto;
 
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
+import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.entity.Item;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,7 @@ public class ItemDetailsResponse {
     @NotNull private LocalDateTime buyDate;
     @NotNull private int itemStatePoint;
     private String description;
+    @NotNull @Enumerated(EnumType.STRING) private EItemSoldStatus soldStatus;
     private List<String> fileNames;
 
     public static ItemDetailsResponse from(Item item) {
@@ -47,6 +49,7 @@ public class ItemDetailsResponse {
                 .buyDate(item.getBuyDate())
                 .itemStatePoint(item.getItemStatePoint())
                 .description(item.getDescription())
+                .soldStatus(item.getSoldStatus())
                 .fileNames(fileNames)
                 .build();
     }
