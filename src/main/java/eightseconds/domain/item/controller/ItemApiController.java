@@ -75,4 +75,12 @@ public class ItemApiController {
                 .map(ItemDetailsResponse::from));
     }
 
+    @GetMapping("/status/{id}")
+    public ResponseEntity<?> findSoldStatus(@PathVariable Long id) {
+        itemService.validationItemId(id);
+        itemService.validationSoldStatusByItemId(id);
+        Item item = itemService.getItem(id);
+        return ResponseEntity.ok(item.getSoldStatus());
+    }
+
 }

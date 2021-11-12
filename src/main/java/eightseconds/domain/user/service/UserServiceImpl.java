@@ -103,4 +103,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Optional<User> user = userRepository.findById(userId);
         return user.get();
     }
+
+    /**
+     * validation
+     */
+
+    public boolean validationUserId(Long userId){
+        Optional<User> user = userRepository.findUserById(userId);
+        if(!user.isEmpty()){
+            return true;
+        } else throw new IllegalArgumentException("해당 유저아이디로 유저를 찾을 수 없습니다.");
+    }
 }

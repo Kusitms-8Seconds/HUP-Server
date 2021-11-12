@@ -14,4 +14,5 @@ public interface UserService {
     String validationLogin(LoginRequest loginRequest);
     User getUserByLoginId(String loginId);
     User getUserByUserId(Long userId);
+    boolean validationUserId(Long userId);
 }
