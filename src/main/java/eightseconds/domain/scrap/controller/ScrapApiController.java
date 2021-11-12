@@ -31,7 +31,6 @@ public class ScrapApiController {
     public ResponseEntity<?> create(@PathVariable Long id) throws Exception {
 
         User user = userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get();
-        System.out.println("로그인아이디찍기"+user.getLoginId());
         Item item = itemService.getItem(id);
         scrapService.saveScrap(user, item);
         return ResponseEntity.ok(DefaultResponse.from("스크랩을 완료했습니다."));

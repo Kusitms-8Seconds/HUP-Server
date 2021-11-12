@@ -1,9 +1,11 @@
 package eightseconds.domain.item.service;
 
 import eightseconds.domain.file.entity.MyFile;
+import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.dto.RegisterItemRequest;
 import eightseconds.domain.item.entity.Item;
+import eightseconds.domain.item.exception.NotOnGoingException;
 import eightseconds.domain.item.repository.ItemRepository;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.repository.UserRepository;
@@ -61,6 +63,14 @@ public class ItemServiceImpl implements ItemService{
     public Page<Item> getItemsByCategory(Pageable pageable, EItemCategory category) {
         validationExistingItemsByCategory(pageable, category);
         return itemRepository.findAllByCategory(pageable, category);
+    }
+
+    @Override
+    public void validationSoldStatusByItemId(Long itemId) {
+        Optional<Item> item = itemRepository.findById(itemId);
+        if(!item.get().getSoldStatus().equals(ItemConstants.EItemSoldStatus.eOnGoing)){
+            throw new NotOnGoingException("경매중인 상품이 아닙니다.");
+        }
     }
 
     /**

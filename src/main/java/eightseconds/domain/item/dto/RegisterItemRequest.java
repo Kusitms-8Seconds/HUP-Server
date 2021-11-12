@@ -1,5 +1,6 @@
 package eightseconds.domain.item.dto;
 
+import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.entity.Item;
 import lombok.AllArgsConstructor;

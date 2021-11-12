@@ -21,4 +21,5 @@ public interface ItemService{
     void validationUserAndItem(List<Item> items, Long id);
     Page<Item> getItemsByUserId(Pageable pageable, Long userId);
     Page<Item> getItemsByCategory(Pageable pageable, EItemCategory category);
+    void validationSoldStatusByItemId(Long itemId);
 }
