@@ -6,10 +6,10 @@ import org.springframework.data.domain.Pageable;
 
 public interface PriceSuggestionService {
 
-    Page<PriceSuggestion> getAllPriceSuggestionsItemId(Pageable pageable, Long itemId);
+    Page<PriceSuggestion> getAllPriceSuggestionsByItemId(Pageable pageable, Long itemId);
     int getMaximumPrice(Long itemId);
     void validationPriceSuggestionsItemId(Long itemId);
     PriceSuggestion priceSuggestionItem(Long userId, Long itemId, int suggestionPrice);
     int getParticipants(Long itemId);
-
+    Page<PriceSuggestion> getAllPriceSuggestionsByUserId(Pageable pageable, Long userId);
 }
