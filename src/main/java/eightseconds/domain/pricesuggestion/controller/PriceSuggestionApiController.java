@@ -26,11 +26,11 @@ public class PriceSuggestionApiController {
     private final PriceSuggestionService priceSuggestionService;
     private final UserService userService;
 
-    @GetMapping("/list/{itemId}")
-    public ResponseEntity<?> findAll(@PageableDefault Pageable pageable, @PathVariable Long itemId) {
+    @GetMapping("/list/item/{itemId}")
+    public ResponseEntity<?> findAllByItemId(@PageableDefault Pageable pageable, @PathVariable Long itemId) {
         itemService.validationItemId(itemId);
         itemService.validationSoldStatusByItemId(itemId);
-        Page<PriceSuggestion> allPriceSuggestions = priceSuggestionService.getAllPriceSuggestionsItemId(pageable, itemId);
+        Page<PriceSuggestion> allPriceSuggestions = priceSuggestionService.getAllPriceSuggestionsByItemId(pageable, itemId);
         return ResponseEntity.ok(allPriceSuggestions.map(PriceSuggestionListResponse::from));
     }
 
@@ -48,6 +48,12 @@ public class PriceSuggestionApiController {
         itemService.validationSoldStatusByItemId(itemId);
         int participants = priceSuggestionService.getParticipants(itemId);
         return ResponseEntity.ok(participants);
+    }
+
+    @GetMapping("/list/user/{userId}")
+    public ResponseEntity<?> findAllByUserId(@PageableDefault Pageable pageable, @PathVariable Long userId) {
+        userService.validationUserId(userId);
+        return ResponseEntity.ok(priceSuggestionService.getAllPriceSuggestionsByUserId(pageable, userId).map(PriceSuggestionListResponse::from));
     }
 
 

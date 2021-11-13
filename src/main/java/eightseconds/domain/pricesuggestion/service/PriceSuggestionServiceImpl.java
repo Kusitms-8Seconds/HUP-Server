@@ -3,7 +3,6 @@ package eightseconds.domain.pricesuggestion.service;
 import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.NotOnGoingException;
-import eightseconds.domain.item.repository.ItemRepository;
 import eightseconds.domain.item.service.ItemService;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.exception.AlreadySoldOutException;
@@ -29,7 +28,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     private final ItemService itemService;
 
     @Override
-    public Page<PriceSuggestion> getAllPriceSuggestionsItemId(Pageable pageable, Long itemId) {
+    public Page<PriceSuggestion> getAllPriceSuggestionsByItemId(Pageable pageable, Long itemId) {
         Page<PriceSuggestion> priceSuggestions = priceSuggestionRepository.findAllByItemId(pageable, itemId);
         return priceSuggestions;
     }
@@ -59,7 +58,6 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
             priceSuggestion.get().setSuggestionPrice(suggestionPrice);
             return priceSuggestion.get(); }
         else{
-            validationPrice(getMaximumPrice(itemId), suggestionPrice);
             PriceSuggestion entity = PriceSuggestion.toEntity(user, item, suggestionPrice);
             priceSuggestionRepository.save(entity);
             return entity; }
@@ -79,6 +77,11 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     public int getParticipants(Long itemId) {
         int count = priceSuggestionRepository.findPriceSuggestionCountByItemId(itemId);
         return count;
+    }
+
+    @Override
+    public Page<PriceSuggestion> getAllPriceSuggestionsByUserId(Pageable pageable, Long userId) {
+        return priceSuggestionRepository.findAllByUserId(pageable, userId);
     }
 
 

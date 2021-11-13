@@ -15,12 +15,13 @@ public interface PriceSuggestionRepository extends JpaRepository<PriceSuggestion
     List<PriceSuggestion> findAllByItemId(Long itemId);
     Optional<PriceSuggestion> getByUserIdAndItemId(Long userId, Long itemId);
 
-    @Query("SELECT p FROM PriceSuggestion p WHERE p.suggestionPrice = (SELECT max(subP.suggestionPrice) FROM PriceSuggestion subP)")
-    Optional<PriceSuggestion> getMaximumPriceByItemId(Long itemId);
+    @Query("SELECT p FROM PriceSuggestion p WHERE p.item.id = :itemId and p.suggestionPrice = (SELECT max(subP.suggestionPrice) FROM PriceSuggestion subP)")
+    Optional<PriceSuggestion> getMaximumPriceByItemId(@Param("itemId") Long itemId);
 
     Optional<PriceSuggestion> getByItemId(Long itemId);
 
     @Query("select count(p) from PriceSuggestion p where p.item.id = :itemId")
     int findPriceSuggestionCountByItemId(@Param("itemId") Long itemId);
 
+    Page<PriceSuggestion> findAllByUserId(Pageable pageable, Long userId);
 }
