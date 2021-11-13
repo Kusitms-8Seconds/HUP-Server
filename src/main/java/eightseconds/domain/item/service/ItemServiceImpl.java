@@ -66,11 +66,8 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
-    public void validationSoldStatusByItemId(Long itemId) {
-        Optional<Item> item = itemRepository.findById(itemId);
-        if(!item.get().getSoldStatus().equals(ItemConstants.EItemSoldStatus.eOnGoing)){
-            throw new NotOnGoingException("경매중인 상품이 아닙니다.");
-        }
+    public Page<Item> getItemsByStatusAndUserId(Pageable pageable, ItemConstants.EItemSoldStatus soldStatus, Long userId) {
+        return itemRepository.findAllByStatusAndUserId(pageable, soldStatus, userId);
     }
 
     /**
@@ -96,5 +93,13 @@ public class ItemServiceImpl implements ItemService{
     private void validationExistingItemsByCategory(Pageable pageable, EItemCategory category) {
        if(itemRepository.findAllByCategory(pageable, category).isEmpty()){
            throw new IllegalArgumentException("해당 카테고리에 해당하는 상품이 없습니다."); }
+    }
+
+    @Override
+    public void validationSoldStatusByItemId(Long itemId) {
+        Optional<Item> item = itemRepository.findById(itemId);
+        if(!item.get().getSoldStatus().equals(ItemConstants.EItemSoldStatus.eOnGoing)){
+            throw new NotOnGoingException("경매중인 상품이 아닙니다.");
+        }
     }
 }

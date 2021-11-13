@@ -3,6 +3,8 @@ package eightseconds.domain.item.controller;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.file.service.FileService;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
+import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
+import eightseconds.domain.item.dto.GetAllItemsByStatusRequest;
 import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.dto.RegisterItemRequest;
 import eightseconds.domain.item.dto.RegisterItemResponse;
@@ -81,6 +83,15 @@ public class ItemApiController {
         itemService.validationSoldStatusByItemId(id);
         Item item = itemService.getItem(id);
         return ResponseEntity.ok(item.getSoldStatus());
+    }
+
+    @GetMapping("/list/status")
+    public ResponseEntity<?> findListByStatus(@PageableDefault Pageable pageable,
+                                              @Valid @RequestBody GetAllItemsByStatusRequest getAllItemsByStatusRequest) {
+        Long userId = getAllItemsByStatusRequest.getUserId();
+        EItemSoldStatus soldStatus = getAllItemsByStatusRequest.getSoldStatus();
+        userService.validationUserId(userId);
+        return ResponseEntity.ok(itemService.getItemsByStatusAndUserId(pageable, soldStatus, userId).map(ItemDetailsResponse::from));
     }
 
 }
