@@ -1,4 +1,4 @@
-package eightseconds.global.webSocket;
+package eightseconds.global.config.websocket;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
