@@ -1,4 +1,4 @@
-package eightseconds.global.webSocket;
+package eightseconds.global.config.websocket;
 
 import eightseconds.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
