@@ -54,7 +54,7 @@ public class UserApiController {
         return "Complete Token Test!!";
     }
 
-    @GetMapping("/api/user/details")
+    @PostMapping("/api/user/details")
     public ResponseEntity<UserDetailsInfoResponse> getUserDetails(@Valid @RequestBody UserDetailsInfoRequest userDetailsInfoRequest) {
         User user = userService.getUserByUserId(userDetailsInfoRequest.getUserId());
         return ResponseEntity.ok(UserDetailsInfoResponse.from(user));

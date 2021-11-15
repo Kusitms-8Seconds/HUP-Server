@@ -85,7 +85,7 @@ public class ItemApiController {
         return ResponseEntity.ok(item.getSoldStatus());
     }
 
-    @GetMapping("/list/status")
+    @PostMapping("/list/status")
     public ResponseEntity<?> findListByStatus(@PageableDefault Pageable pageable,
                                               @Valid @RequestBody GetAllItemsByStatusRequest getAllItemsByStatusRequest) {
         Long userId = getAllItemsByStatusRequest.getUserId();
