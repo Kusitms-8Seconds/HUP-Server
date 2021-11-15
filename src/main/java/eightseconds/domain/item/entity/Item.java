@@ -7,7 +7,6 @@ import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.user.entity.User;
-import eightseconds.global.entity.BaseEntity;
 import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;
 
@@ -39,6 +38,7 @@ public class Item extends BaseTimeEntity {
     private String description;
     @Enumerated(EnumType.STRING)
     private EItemSoldStatus soldStatus;
+    private LocalDateTime auctionClosingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -74,7 +74,7 @@ public class Item extends BaseTimeEntity {
 
     @Builder
     public Item(String itemName, EItemCategory category, int initPrice,
-                LocalDateTime buyDate, int itemStatePoint, String description) {
+                LocalDateTime buyDate, int itemStatePoint, String description, LocalDateTime auctionClosingDate) {
         this.itemName = itemName;
         this.category = category;
         this.initPrice = initPrice;
@@ -82,6 +82,7 @@ public class Item extends BaseTimeEntity {
         this.itemStatePoint = itemStatePoint;
         this.description = description;
         this.soldStatus = EItemSoldStatus.eNew;
+        this.auctionClosingDate = auctionClosingDate;
     }
 
     // 연관관계 메서드

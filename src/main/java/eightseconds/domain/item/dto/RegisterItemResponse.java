@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
@@ -21,6 +22,7 @@ public class RegisterItemResponse {
     private int itemStatePoint;
     private String description;
     private Enum soldStatus;
+    private LocalDateTime auctionClosingDate;
 
     public static RegisterItemResponse from(Item item) {
         return RegisterItemResponse.builder()
@@ -32,6 +34,7 @@ public class RegisterItemResponse {
                 .itemStatePoint(item.getItemStatePoint())
                 .description(item.getDescription())
                 .soldStatus(item.getSoldStatus())
+                .auctionClosingDate(item.getAuctionClosingDate())
                 .build();
     }
 }
