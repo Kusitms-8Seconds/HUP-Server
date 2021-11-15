@@ -1,5 +1,6 @@
 package eightseconds.domain.user.service;
 
+import eightseconds.domain.user.constant.UserConstants;
 import eightseconds.domain.user.dto.LoginRequest;
 import eightseconds.domain.user.dto.SignUpRequest;
 import eightseconds.domain.user.entity.Authority;
@@ -51,6 +52,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .phoneNumber(signUpRequest.getPhoneNumber())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
+                .loginType(UserConstants.ELoginType.eApp)
                 .build();
         return this.userRepository.save(user);
     }
