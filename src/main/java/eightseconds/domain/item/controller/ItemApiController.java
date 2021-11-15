@@ -10,6 +10,7 @@ import eightseconds.domain.item.dto.RegisterItemRequest;
 import eightseconds.domain.item.dto.RegisterItemResponse;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.service.ItemService;
+import eightseconds.domain.pricesuggestion.dto.SoldOutRequest;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.util.SecurityUtil;
@@ -42,8 +43,7 @@ public class ItemApiController {
         Item item = itemService.saveItem(SecurityUtil.getCurrentLoginId().get(), registerItemRequest);
         if(files != null ){
             List<MyFile> saveFiles = fileService.save(files);
-            itemService.addFiles(item, saveFiles);
-        }
+            itemService.addFiles(item, saveFiles); }
         return ResponseEntity.ok(RegisterItemResponse.from(item));
     }
 
@@ -94,4 +94,10 @@ public class ItemApiController {
         return ResponseEntity.ok(itemService.getItemsByStatusAndUserId(pageable, soldStatus, userId).map(ItemDetailsResponse::from));
     }
 
+    // 낙찰 Test용도임 이걸로쓰면 안됨!
+    @PostMapping("/soldOutTest")
+    public ResponseEntity<ItemDetailsResponse> soldOut(@RequestBody SoldOutRequest soldOutRequest) throws Exception {
+        Item item = itemService.soldOutItem(soldOutRequest.getItemId());
+        return ResponseEntity.ok(ItemDetailsResponse.from(item));
+    }
 }

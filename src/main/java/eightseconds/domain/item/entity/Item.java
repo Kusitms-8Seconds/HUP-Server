@@ -81,7 +81,7 @@ public class Item extends BaseTimeEntity {
         this.buyDate = buyDate;
         this.itemStatePoint = itemStatePoint;
         this.description = description;
-        this.soldStatus = EItemSoldStatus.eNew;
+        this.soldStatus = EItemSoldStatus.eOnGoing;
         this.auctionClosingDate = auctionClosingDate;
     }
 

@@ -1,11 +1,10 @@
 package eightseconds.domain.pricesuggestion.controller;
 
 import eightseconds.domain.item.constant.ItemConstants;
+import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.service.ItemService;
-import eightseconds.domain.pricesuggestion.dto.PriceSuggestionListResponse;
-import eightseconds.domain.pricesuggestion.dto.PriceSuggestionRequest;
-import eightseconds.domain.pricesuggestion.dto.PriceSuggestionResponse;
+import eightseconds.domain.pricesuggestion.dto.*;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.service.PriceSuggestionService;
 import eightseconds.domain.user.entity.User;
@@ -57,7 +56,7 @@ public class PriceSuggestionApiController {
     }
 
 
-    // Test용도임 이걸로쓰면 안됨!
+    // 입찰 Test용도임 이걸로쓰면 안됨!
     @PostMapping("/priceSuggestionTest")
     public ResponseEntity<PriceSuggestionResponse> priceSuggestion(@RequestBody PriceSuggestionRequest priceSuggestionRequest) throws Exception {
         Long itemId = priceSuggestionRequest.getItemId();
@@ -72,4 +71,5 @@ public class PriceSuggestionApiController {
         ItemConstants.EItemSoldStatus soldStatus = itemService.getItem(itemId).getSoldStatus();
         return ResponseEntity.ok(PriceSuggestionResponse.from(item, user, priceSuggestion, maximumPrice, participants, soldStatus));
     }
+
 }
