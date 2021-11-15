@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,4 +25,7 @@ public interface ItemService{
     Page<Item> getItemsByCategory(Pageable pageable, EItemCategory category);
     void validationSoldStatusByItemId(Long itemId);
     Page<Item> getItemsByStatusAndUserId(Pageable pageable, ItemConstants.EItemSoldStatus soldStatus, Long userId);
+    void validationSoldOutTime(LocalDateTime auctionClosingDate);
+    Item soldOutItem(Long itemId);
+
 }

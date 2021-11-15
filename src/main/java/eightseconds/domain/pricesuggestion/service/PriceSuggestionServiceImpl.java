@@ -34,20 +34,6 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     }
 
     @Override
-    public void validationPriceSuggestionsItemId(Long itemId) {
-        List<PriceSuggestion> priceSuggestions= priceSuggestionRepository.findAllByItemId(itemId);
-        Item item = itemService.getItem(itemId);
-        validationOnGoingItem(item);
-        validationAcceptStatusPriceSuggestion(priceSuggestions);
-    }
-
-    private void validationOnGoingItem(Item item) {
-        if(!item.getSoldStatus().equals(ItemConstants.EItemSoldStatus.eOnGoing)){
-            throw new NotOnGoingException("경매 진행중인 상품이 아닙니다.");
-        }
-    }
-
-    @Override
     @Transactional
     public PriceSuggestion priceSuggestionItem(Long userId, Long itemId, int suggestionPrice) {
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getByUserIdAndItemId(userId, itemId);
@@ -89,6 +75,12 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
      * validation
      */
 
+    private void validationOnGoingItem(Item item) {
+        if(!item.getSoldStatus().equals(ItemConstants.EItemSoldStatus.eOnGoing)){
+            throw new NotOnGoingException("경매 진행중인 상품이 아닙니다.");
+        }
+    }
+
     private void validationAcceptStatusPriceSuggestion(List<PriceSuggestion> priceSuggestions) {
         if (priceSuggestions.size() != 0) {
             for (PriceSuggestion priceSuggestion : priceSuggestions) {
@@ -99,6 +91,14 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     private void validationPrice(int priorSuggestionPrice, int suggestionPrice) {
         if(priorSuggestionPrice >= suggestionPrice){
             throw new PriorPriceSuggestionException("이전의 입찰가격이 지금의 입찰보다 높거나 같습니다."); }
+    }
+
+    @Override
+    public void validationPriceSuggestionsItemId(Long itemId) {
+        List<PriceSuggestion> priceSuggestions= priceSuggestionRepository.findAllByItemId(itemId);
+        Item item = itemService.getItem(itemId);
+        validationOnGoingItem(item);
+        validationAcceptStatusPriceSuggestion(priceSuggestions);
     }
 
 }
