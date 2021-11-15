@@ -10,6 +10,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import eightseconds.domain.user.constant.UserConstants;
 import eightseconds.domain.user.dto.LoginResponse;
 import eightseconds.domain.user.dto.OAuth2GoogleLoginRequest;
 import eightseconds.domain.user.dto.OAuth2KakaoLoginRequest;
@@ -91,7 +92,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     }
 
     private User saveOrUpdateGoogle(Payload payload) {
-        User user = userRepository.findByEmail(payload.getEmail())
+        User user = userRepository.findByEmailAndLoginType(payload.getEmail(), UserConstants.ELoginType.eGoogle)
                 .map(entity -> entity.update((String) payload.get("name"), (String) payload.get("picture")))
                 .orElse(User.toEntityOfGoogleUser(payload));
         return userRepository.save(user);
@@ -101,7 +102,6 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     public LoginResponse validationKakaoAccessToken(OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
         HashMap<String, Object> userInfo = getUserInfo(oAuth2KakaoLoginRequest.getAccessToken());
         User user = saveOrUpdateKakao(userInfo);
         OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of("kakao", "kakao", userInfo);
@@ -115,7 +115,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     }
 
     private User saveOrUpdateKakao(HashMap<String, Object> userInfo) {
-        User user = userRepository.findByEmail(userInfo.get("email").toString())
+        User user = userRepository.findByEmailAndLoginType(userInfo.get("email").toString(), UserConstants.ELoginType.eKakao)
                 .map(entity -> entity.update(userInfo.get("nickname").toString(), userInfo.get("profile_image").toString()))
                 .orElse(User.toEntityOfKakaoUser(userInfo));
         return userRepository.save(user);
@@ -197,7 +197,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     }
 
     private User saveOrUpdateNaver(HashMap<String, Object> userInfo) {
-        User user = userRepository.findByEmail(userInfo.get("email").toString())
+        User user = userRepository.findByEmailAndLoginType(userInfo.get("email").toString(), UserConstants.ELoginType.eNaver)
                 .map(entity -> entity.update(userInfo.get("name").toString(), userInfo.get("profile_image").toString()))
                 .orElse(User.toEntityOfNaverUser(userInfo));
         return userRepository.save(user);
