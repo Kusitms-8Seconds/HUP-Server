@@ -30,6 +30,7 @@ public class ItemDetailsResponse {
     private String description;
     @NotNull @Enumerated(EnumType.STRING) private EItemSoldStatus soldStatus;
     private List<String> fileNames;
+    private LocalDateTime auctionClosingDate;
 
     public static ItemDetailsResponse from(Item item) {
         List<String> fileNames = new ArrayList<>();
@@ -51,6 +52,7 @@ public class ItemDetailsResponse {
                 .description(item.getDescription())
                 .soldStatus(item.getSoldStatus())
                 .fileNames(fileNames)
+                .auctionClosingDate(item.getAuctionClosingDate())
                 .build();
     }
 }

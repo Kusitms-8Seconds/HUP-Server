@@ -21,6 +21,7 @@ public class RegisterItemRequest {
     @NotNull private LocalDateTime buyDate;
     @NotNull private int itemStatePoint;
     private String description;
+    @NotNull private LocalDateTime auctionClosingDate;
 
     public Item toEntity(){
         return Item.builder()
@@ -30,6 +31,7 @@ public class RegisterItemRequest {
                 .buyDate(buyDate)
                 .itemStatePoint(itemStatePoint)
                 .description(description)
+                .auctionClosingDate(auctionClosingDate)
                 .build();
     }
 }
