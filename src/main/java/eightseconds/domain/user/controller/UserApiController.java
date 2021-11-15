@@ -25,7 +25,7 @@ public class UserApiController {
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
         User saved = userService.saveUser(signUpRequest);
-        return ResponseEntity.ok(SignUpResponse.from(saved.getLoginId(), UserConstants.SUCCESS_SIGN_UP.getMessage()));
+        return ResponseEntity.ok(SignUpResponse.from(saved.getId(), saved.getLoginId(), UserConstants.SUCCESS_SIGN_UP.getMessage()));
     }
 
     @PostMapping("/login")
