@@ -27,7 +27,7 @@ public class ScrapApiController {
     private final ItemService itemService;
     private final UserService userService;
 
-    @PostMapping("{id}")
+    @GetMapping("{id}")
     public ResponseEntity<?> create(@PathVariable Long id) throws Exception {
 
         User user = userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get();
@@ -53,7 +53,7 @@ public class ScrapApiController {
         return ResponseEntity.ok(allScraps.map(ScrapDetailsResponse::from));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/heart/{id}")
     public ResponseEntity<?> getHeart(@PathVariable Long id) throws Exception {
         Long heart = scrapService.getAllScrapsByItemIdQuantity(id);
         return ResponseEntity.ok(ScrapCountResponse.from(heart));

@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +28,7 @@ public class OAuth2UserApiController {
     private final OAuth2UserService oAuth2UserService;
     private final UserService userService;
 
-    @GetMapping("oauth2/google/validation")
+    @PostMapping("oauth2/google/validation")
     public ResponseEntity<LoginResponse> googleIdTokenValidation(@RequestBody OAuth2GoogleLoginRequest oAuth2GoogleLoginRequest) throws GeneralSecurityException, IOException {
         GoogleIdToken idToken = oAuth2UserService.validationGoogleIdToken(oAuth2GoogleLoginRequest);
         LoginResponse loginResponse = oAuth2UserService.saveUserOrUpdateByGoogleIdToken(idToken);
@@ -37,7 +38,7 @@ public class OAuth2UserApiController {
         return new ResponseEntity<>(loginResponse, httpHeaders, HttpStatus.OK);
     }
 
-    @GetMapping("oauth2/kakao/validation")
+    @PostMapping("oauth2/kakao/validation")
     public ResponseEntity<LoginResponse> kakaoAccessTokenValidation(@RequestBody OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) throws IOException, ParseException, org.json.simple.parser.ParseException {
 
         LoginResponse loginResponse = oAuth2UserService.validationKakaoAccessToken(oAuth2KakaoLoginRequest);
@@ -46,7 +47,7 @@ public class OAuth2UserApiController {
         return new ResponseEntity<>(loginResponse, httpHeaders, HttpStatus.OK);
     }
 
-    @GetMapping("oauth2/naver/validation")
+    @PostMapping("oauth2/naver/validation")
     public ResponseEntity<LoginResponse> naverAccessTokenValidation(@RequestBody OAuth2NaverLoginRequest oAuth2NaverLoginRequest) throws IOException, ParseException, org.json.simple.parser.ParseException {
 
         LoginResponse loginResponse = oAuth2UserService.validationNaverAccessToken(oAuth2NaverLoginRequest);
