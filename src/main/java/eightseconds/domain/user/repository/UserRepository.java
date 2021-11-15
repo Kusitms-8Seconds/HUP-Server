@@ -1,5 +1,6 @@
 package eightseconds.domain.user.repository;
 
+import eightseconds.domain.user.constant.UserConstants;
 import eightseconds.domain.user.entity.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByLoginId(String loginId);
     Optional<User> findByEmail(String email);
     Optional<User> findUserById(Long userId);
+
+    Optional<User> findByEmailAndLoginType(String email, UserConstants.ELoginType loginType);
 
 }

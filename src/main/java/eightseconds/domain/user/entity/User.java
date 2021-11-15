@@ -7,6 +7,7 @@ import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.scrap.entity.Scrap;
+import eightseconds.domain.user.constant.UserConstants.ELoginType;
 import eightseconds.global.entity.BaseEntity;
 import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;
@@ -30,7 +31,7 @@ public class User extends BaseTimeEntity {
 
     private String loginId;
 
-    @Column(unique = true, nullable = false)
+    @Column
     private String email;
 
     private String username;
@@ -45,6 +46,8 @@ public class User extends BaseTimeEntity {
 
     // oAuth2관련
     private String picture;
+    @Enumerated(EnumType.STRING)
+    private ELoginType loginType;
 
     @ManyToMany
     @JoinTable(
@@ -119,6 +122,7 @@ public class User extends BaseTimeEntity {
                 .picture((String)attributes.get("picture"))
                 .authorities(Collections.singleton(authority))
                 .activated(true)
+                .loginType(ELoginType.eApp)
                 .build();
     }
 
@@ -132,6 +136,7 @@ public class User extends BaseTimeEntity {
                 .picture((String)payload.get("picture"))
                 .authorities(Collections.singleton(authority))
                 .activated(true)
+                .loginType(ELoginType.eGoogle)
                 .build();
     }
 
@@ -145,6 +150,7 @@ public class User extends BaseTimeEntity {
                 .picture(userInfo.get("profile_image").toString())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
+                .loginType(ELoginType.eKakao)
                 .build();
     }
 
@@ -158,6 +164,7 @@ public class User extends BaseTimeEntity {
                 .picture(userInfo.get("profile_image").toString())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
+                .loginType(ELoginType.eNaver)
                 .build();
     }
 
