@@ -3,6 +3,7 @@ package eightseconds.domain.item.service;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
+import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.dto.RegisterItemRequest;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.NotOnGoingException;
@@ -13,6 +14,7 @@ import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.repository.PriceSuggestionRepository;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.repository.UserRepository;
+import eightseconds.global.dto.PaginationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -62,19 +65,25 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Page<Item> getAllItems(Pageable pageable, EItemSoldStatus itemSoldStatus) {
-        return itemRepository.findAllByStatus(pageable, itemSoldStatus);
+    public PaginationDto<List<ItemDetailsResponse>> getAllItems(Pageable pageable, EItemSoldStatus itemSoldStatus) {
+        Page<Item> page = itemRepository.findAllByStatus(pageable, itemSoldStatus);
+        List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
+        return PaginationDto.of(page, data);
     }
 
     @Override
-    public Page<Item> getItemsByCategory(Pageable pageable, EItemCategory category) {
+    public PaginationDto<List<ItemDetailsResponse>> getItemsByCategory(Pageable pageable, EItemCategory category) {
         validationExistingItemsByCategory(pageable, category);
-        return itemRepository.findAllByCategory(pageable, category);
+        Page<Item> page = itemRepository.findAllByCategory(pageable, category);
+        List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
+        return PaginationDto.of(page, data);
     }
 
     @Override
-    public Page<Item> getItemsByStatusAndUserId(Pageable pageable, EItemSoldStatus soldStatus, Long userId) {
-        return itemRepository.findAllByStatusAndUserId(pageable, soldStatus, userId);
+    public PaginationDto<List<ItemDetailsResponse>> getItemsByStatusAndUserId(Pageable pageable, EItemSoldStatus soldStatus, Long userId) {
+        Page<Item> page = itemRepository.findAllByStatusAndUserId(pageable, soldStatus, userId);
+        List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
+        return PaginationDto.of(page, data);
     }
 
     @Override

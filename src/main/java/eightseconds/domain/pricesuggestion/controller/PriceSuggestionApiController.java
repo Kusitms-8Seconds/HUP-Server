@@ -1,20 +1,23 @@
 package eightseconds.domain.pricesuggestion.controller;
 
 import eightseconds.domain.item.constant.ItemConstants;
-import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.service.ItemService;
-import eightseconds.domain.pricesuggestion.dto.*;
+import eightseconds.domain.pricesuggestion.dto.PriceSuggestionListResponse;
+import eightseconds.domain.pricesuggestion.dto.PriceSuggestionRequest;
+import eightseconds.domain.pricesuggestion.dto.PriceSuggestionResponse;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.service.PriceSuggestionService;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
+import eightseconds.global.dto.PaginationDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,11 +29,10 @@ public class PriceSuggestionApiController {
     private final UserService userService;
 
     @GetMapping("/list/item/{itemId}")
-    public ResponseEntity<?> findAllByItemId(@PageableDefault Pageable pageable, @PathVariable Long itemId) {
+    public ResponseEntity<PaginationDto<List<PriceSuggestionListResponse>>> findAllByItemId(@PageableDefault Pageable pageable, @PathVariable Long itemId) {
         itemService.validationItemId(itemId);
         itemService.validationSoldStatusByItemId(itemId);
-        Page<PriceSuggestion> allPriceSuggestions = priceSuggestionService.getAllPriceSuggestionsByItemId(pageable, itemId);
-        return ResponseEntity.ok(allPriceSuggestions.map(PriceSuggestionListResponse::from));
+        return ResponseEntity.ok(priceSuggestionService.getAllPriceSuggestionsByItemId(pageable, itemId));
     }
 
     @GetMapping("/maximumPrice/{itemId}")
@@ -50,9 +52,9 @@ public class PriceSuggestionApiController {
     }
 
     @GetMapping("/list/user/{userId}")
-    public ResponseEntity<?> findAllByUserId(@PageableDefault Pageable pageable, @PathVariable Long userId) {
+    public ResponseEntity<PaginationDto<List<PriceSuggestionListResponse>>> findAllByUserId(@PageableDefault Pageable pageable, @PathVariable Long userId) {
         userService.validationUserId(userId);
-        return ResponseEntity.ok(priceSuggestionService.getAllPriceSuggestionsByUserId(pageable, userId).map(PriceSuggestionListResponse::from));
+        return ResponseEntity.ok(priceSuggestionService.getAllPriceSuggestionsByUserId(pageable, userId));
     }
 
 

@@ -13,9 +13,9 @@ import eightseconds.domain.item.service.ItemService;
 import eightseconds.domain.pricesuggestion.dto.SoldOutRequest;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.DefaultResponse;
+import eightseconds.global.dto.PaginationDto;
 import eightseconds.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -64,16 +64,13 @@ public class ItemApiController {
     }
 
     @GetMapping("/list/status/{itemSoldStatus}")
-    public ResponseEntity<Page<ItemDetailsResponse>> list(@PageableDefault Pageable pageable, @PathVariable EItemSoldStatus itemSoldStatus) {
-        return ResponseEntity.ok(itemService.getAllItems(pageable, itemSoldStatus)
-                .map(ItemDetailsResponse::from));
+    public ResponseEntity<PaginationDto<List<ItemDetailsResponse>>> list(@PageableDefault Pageable pageable, @PathVariable EItemSoldStatus itemSoldStatus) {
+        return ResponseEntity.ok(itemService.getAllItems(pageable, itemSoldStatus));
     }
 
     @GetMapping("/list/category/{category}")
-    public ResponseEntity<Page<ItemDetailsResponse>> listByCategory(@PageableDefault Pageable pageable, @PathVariable EItemCategory category) { ;
-        return ResponseEntity.ok(itemService
-                .getItemsByCategory(pageable, category)
-                .map(ItemDetailsResponse::from));
+    public ResponseEntity<PaginationDto<List<ItemDetailsResponse>>> listByCategory(@PageableDefault Pageable pageable, @PathVariable EItemCategory category) { ;
+        return ResponseEntity.ok(itemService.getItemsByCategory(pageable, category));
     }
 
     @GetMapping("/status/{id}")
@@ -85,12 +82,12 @@ public class ItemApiController {
     }
 
     @PostMapping("/list/status")
-    public ResponseEntity<?> findListByStatus(@PageableDefault Pageable pageable,
+    public ResponseEntity<PaginationDto<List<ItemDetailsResponse>>> findListByStatus(@PageableDefault Pageable pageable,
                                               @Valid @RequestBody GetAllItemsByStatusRequest getAllItemsByStatusRequest) {
         Long userId = getAllItemsByStatusRequest.getUserId();
         EItemSoldStatus soldStatus = getAllItemsByStatusRequest.getSoldStatus();
         userService.validationUserId(userId);
-        return ResponseEntity.ok(itemService.getItemsByStatusAndUserId(pageable, soldStatus, userId).map(ItemDetailsResponse::from));
+        return ResponseEntity.ok(itemService.getItemsByStatusAndUserId(pageable, soldStatus, userId));
     }
 
     // 낙찰 Test용도임 이걸로쓰면 안됨!

@@ -1,15 +1,18 @@
 package eightseconds.domain.pricesuggestion.service;
 
 import eightseconds.domain.item.constant.ItemConstants;
+import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.NotOnGoingException;
 import eightseconds.domain.item.service.ItemService;
+import eightseconds.domain.pricesuggestion.dto.PriceSuggestionListResponse;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.exception.AlreadySoldOutException;
 import eightseconds.domain.pricesuggestion.exception.PriorPriceSuggestionException;
 import eightseconds.domain.pricesuggestion.repository.PriceSuggestionRepository;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
+import eightseconds.global.dto.PaginationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -28,9 +32,10 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     private final ItemService itemService;
 
     @Override
-    public Page<PriceSuggestion> getAllPriceSuggestionsByItemId(Pageable pageable, Long itemId) {
-        Page<PriceSuggestion> priceSuggestions = priceSuggestionRepository.findAllByItemId(pageable, itemId);
-        return priceSuggestions;
+    public PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByItemId(Pageable pageable, Long itemId) {
+        Page<PriceSuggestion> page = priceSuggestionRepository.findAllByItemId(pageable, itemId);
+        List<PriceSuggestionListResponse> data = page.get().map(PriceSuggestionListResponse::from).collect(Collectors.toList());
+        return PaginationDto.of(page, data);
     }
 
     @Override
@@ -66,8 +71,10 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     }
 
     @Override
-    public Page<PriceSuggestion> getAllPriceSuggestionsByUserId(Pageable pageable, Long userId) {
-        return priceSuggestionRepository.findAllByUserId(pageable, userId);
+    public PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByUserId(Pageable pageable, Long userId) {
+        Page<PriceSuggestion> page = priceSuggestionRepository.findAllByUserId(pageable, userId);
+        List<PriceSuggestionListResponse> data = page.get().map(PriceSuggestionListResponse::from).collect(Collectors.toList());
+        return PaginationDto.of(page, data);
     }
 
 
