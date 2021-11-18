@@ -1,7 +1,7 @@
 package eightseconds.domain.item.service;
 
 import eightseconds.domain.file.entity.MyFile;
-import eightseconds.domain.item.constant.ItemConstants;
+import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.dto.RegisterItemRequest;
 import eightseconds.domain.item.entity.Item;
@@ -21,10 +21,10 @@ public interface ItemService{
     void validationItemId(Long id);
     Item getItem(Long id);
     void validationUserAndItem(List<Item> items, Long id);
-    Page<Item> getItemsByUserId(Pageable pageable, Long userId);
+    Page<Item> getAllItems(Pageable pageable, EItemSoldStatus itemSoldStatus);
     Page<Item> getItemsByCategory(Pageable pageable, EItemCategory category);
     void validationSoldStatusByItemId(Long itemId);
-    Page<Item> getItemsByStatusAndUserId(Pageable pageable, ItemConstants.EItemSoldStatus soldStatus, Long userId);
+    Page<Item> getItemsByStatusAndUserId(Pageable pageable, EItemSoldStatus soldStatus, Long userId);
     void validationSoldOutTime(LocalDateTime auctionClosingDate);
     Item soldOutItem(Long itemId);
 

@@ -62,8 +62,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Page<Item> getItemsByUserId(Pageable pageable, Long userId) {
-        return itemRepository.findAllByUserId(pageable, userId);
+    public Page<Item> getAllItems(Pageable pageable, EItemSoldStatus itemSoldStatus) {
+        return itemRepository.findAllByStatus(pageable, itemSoldStatus);
     }
 
     @Override
