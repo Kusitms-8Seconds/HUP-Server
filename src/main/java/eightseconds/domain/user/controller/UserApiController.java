@@ -49,12 +49,12 @@ public class UserApiController {
 //        return ResponseEntity.ok(userService.getUserWithAuthorities(username).get());
 //    }
 
-    @GetMapping("/api/tokenTest")
+    @GetMapping("/api/v1/tokenTest")
     public String test() {
         return "Complete Token Test!!";
     }
 
-    @PostMapping("/api/user/details")
+    @PostMapping("/api/v1/user/details")
     public ResponseEntity<UserDetailsInfoResponse> getUserDetails(@Valid @RequestBody UserDetailsInfoRequest userDetailsInfoRequest) {
         User user = userService.getUserByUserId(userDetailsInfoRequest.getUserId());
         return ResponseEntity.ok(UserDetailsInfoResponse.from(user));
