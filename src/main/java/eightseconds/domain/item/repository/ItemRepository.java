@@ -12,7 +12,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    Page<Item> findAllByUserId(Pageable pageable, Long userId);
+    @Query("select i from Item i where i.soldStatus = :soldStatus")
+    Page<Item> findAllByStatus(Pageable pageable, @Param("soldStatus") EItemSoldStatus soldStatus);
     Page<Item> findAllByCategory(Pageable pageable, EItemCategory category);
     Optional<Item> findById(Long itemId);
     @Query("select i from Item i where i.user.id = :userId and i.soldStatus = :soldStatus")

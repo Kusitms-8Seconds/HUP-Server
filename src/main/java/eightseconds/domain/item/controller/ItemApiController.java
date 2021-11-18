@@ -63,14 +63,13 @@ public class ItemApiController {
         return ResponseEntity.ok(ItemDetailsResponse.from(item));
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<Page<ItemDetailsResponse>> list(@PageableDefault Pageable pageable) { ;
-        return ResponseEntity.ok(itemService
-                .getItemsByUserId(pageable, userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get().getId())
+    @GetMapping("/list/status/{itemSoldStatus}")
+    public ResponseEntity<Page<ItemDetailsResponse>> list(@PageableDefault Pageable pageable, @PathVariable EItemSoldStatus itemSoldStatus) {
+        return ResponseEntity.ok(itemService.getAllItems(pageable, itemSoldStatus)
                 .map(ItemDetailsResponse::from));
     }
 
-    @GetMapping("/list/{category}")
+    @GetMapping("/list/category/{category}")
     public ResponseEntity<Page<ItemDetailsResponse>> listByCategory(@PageableDefault Pageable pageable, @PathVariable EItemCategory category) { ;
         return ResponseEntity.ok(itemService
                 .getItemsByCategory(pageable, category)
