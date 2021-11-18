@@ -1,10 +1,13 @@
 package eightseconds.domain.scrap.service;
 
+import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.repository.ItemRepository;
+import eightseconds.domain.scrap.dto.ScrapDetailsResponse;
 import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.scrap.repository.ScrapRepository;
 import eightseconds.domain.user.entity.User;
+import eightseconds.global.dto.PaginationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -43,10 +47,11 @@ public class ScrapServiceImpl implements ScrapService{
     }
 
     @Override
-    public Page<Scrap> getAllScrapsByUserId(Pageable pageable, Long userId) {
+    public PaginationDto<List<ScrapDetailsResponse>> getAllScrapsByUserId(Pageable pageable, Long userId) {
         validationExistingScrapByUserId(pageable, userId);
-        Page<Scrap> scraps = scrapRepository.findAllByUserId(pageable, userId);
-        return scraps;
+        Page<Scrap> page = scrapRepository.findAllByUserId(pageable, userId);
+        List<ScrapDetailsResponse> data = page.get().map(ScrapDetailsResponse::from).collect(Collectors.toList());
+        return PaginationDto.of(page, data);
     }
 
     @Override

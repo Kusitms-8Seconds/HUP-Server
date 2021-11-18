@@ -10,6 +10,7 @@ import eightseconds.domain.scrap.service.ScrapService;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.DefaultResponse;
+import eightseconds.global.dto.PaginationDto;
 import eightseconds.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,8 +31,7 @@ public class ScrapApiController {
     private final UserService userService;
 
     @GetMapping("{id}")
-    public ResponseEntity<?> create(@PathVariable Long id) throws Exception {
-
+    public ResponseEntity<DefaultResponse> create(@PathVariable Long id) throws Exception {
         User user = userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get();
         Item item = itemService.getItem(id);
         scrapService.saveScrap(user, item);
@@ -37,8 +39,7 @@ public class ScrapApiController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) throws Exception {
-
+    public ResponseEntity<DefaultResponse> delete(@PathVariable Long id) throws Exception {
         User user = userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get();
         Item item = itemService.getItem(id);
         scrapService.deleteScrap(user, item, id);
@@ -46,15 +47,13 @@ public class ScrapApiController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> list(@PageableDefault Pageable pageable) throws Exception {
-
+    public ResponseEntity<PaginationDto<List<ScrapDetailsResponse>>> list(@PageableDefault Pageable pageable) throws Exception {
         User user = userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get();
-        Page<Scrap> allScraps = scrapService.getAllScrapsByUserId(pageable, user.getId());
-        return ResponseEntity.ok(allScraps.map(ScrapDetailsResponse::from));
+        return ResponseEntity.ok(scrapService.getAllScrapsByUserId(pageable, user.getId()));
     }
 
     @GetMapping("/heart/{id}")
-    public ResponseEntity<?> getHeart(@PathVariable Long id) throws Exception {
+    public ResponseEntity<ScrapCountResponse> getHeart(@PathVariable Long id) throws Exception {
         Long heart = scrapService.getAllScrapsByItemIdQuantity(id);
         return ResponseEntity.ok(ScrapCountResponse.from(heart));
     }
