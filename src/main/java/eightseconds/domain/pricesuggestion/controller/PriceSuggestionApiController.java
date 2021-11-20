@@ -3,9 +3,7 @@ package eightseconds.domain.pricesuggestion.controller;
 import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.service.ItemService;
-import eightseconds.domain.pricesuggestion.dto.PriceSuggestionListResponse;
-import eightseconds.domain.pricesuggestion.dto.PriceSuggestionRequest;
-import eightseconds.domain.pricesuggestion.dto.PriceSuggestionResponse;
+import eightseconds.domain.pricesuggestion.dto.*;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.service.PriceSuggestionService;
 import eightseconds.domain.user.entity.User;
@@ -36,19 +34,19 @@ public class PriceSuggestionApiController {
     }
 
     @GetMapping("/maximumPrice/{itemId}")
-    public ResponseEntity<?> findMaximumPrice(@PathVariable Long itemId) {
+    public ResponseEntity<MaximumPriceResponse> findMaximumPrice(@PathVariable Long itemId) {
         itemService.validationItemId(itemId);
         itemService.validationSoldStatusByItemId(itemId);
         int maximumPrice = priceSuggestionService.getMaximumPrice(itemId);
-        return ResponseEntity.ok(maximumPrice);
+        return ResponseEntity.ok(MaximumPriceResponse.from(maximumPrice));
     }
 
     @GetMapping("/participant/{itemId}")
-    public ResponseEntity<?> findParticipants(@PathVariable Long itemId) {
+    public ResponseEntity<ParticipantsResponse> findParticipants(@PathVariable Long itemId) {
         itemService.validationItemId(itemId);
         itemService.validationSoldStatusByItemId(itemId);
         int participants = priceSuggestionService.getParticipants(itemId);
-        return ResponseEntity.ok(participants);
+        return ResponseEntity.ok(ParticipantsResponse.from(participants));
     }
 
     @GetMapping("/list/user/{userId}")
