@@ -16,5 +16,4 @@ public interface ScrapService {
     void deleteScrap(User user, Item item, Long deleteScrapId);
     PaginationDto<List<ScrapDetailsResponse>> getAllScrapsByUserId(Pageable pageable, Long userId);
     Long getAllScrapsByItemIdQuantity(Long id);
-
 }
