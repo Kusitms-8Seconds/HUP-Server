@@ -46,10 +46,10 @@ public class ScrapApiController {
         return ResponseEntity.ok(DefaultResponse.from("스크랩 삭제를 완료했습니다."));
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<PaginationDto<List<ScrapDetailsResponse>>> list(@PageableDefault Pageable pageable) throws Exception {
-        User user = userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get();
-        return ResponseEntity.ok(scrapService.getAllScrapsByUserId(pageable, user.getId()));
+    @GetMapping("/list/{id}")
+    public ResponseEntity<PaginationDto<List<ScrapDetailsResponse>>> list(@PageableDefault Pageable pageable, @PathVariable Long id) throws Exception {
+        userService.validationUserId(id);
+        return ResponseEntity.ok(scrapService.getAllScrapsByUserId(pageable, id));
     }
 
     @GetMapping("/heart/{id}")
