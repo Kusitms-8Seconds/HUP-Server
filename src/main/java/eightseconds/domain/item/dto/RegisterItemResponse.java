@@ -1,6 +1,8 @@
 package eightseconds.domain.item.dto;
 
 import eightseconds.domain.file.entity.MyFile;
+import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
+import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.entity.Item;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,12 +21,12 @@ public class RegisterItemResponse {
     private Long id;
 
     private final String itemName;
-    private Enum category;
+    private EItemCategory category;
     private int initPrice;
     private LocalDateTime buyDate;
     private int itemStatePoint;
     private String description;
-    private Enum soldStatus;
+    private EItemSoldStatus soldStatus;
     private List<String> fileNames;
     private LocalDateTime auctionClosingDate;
 
