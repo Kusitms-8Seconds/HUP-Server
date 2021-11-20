@@ -42,8 +42,6 @@ public class ItemServiceImpl implements ItemService {
         Item item = registerItemRequest.toEntity();
         Optional<User> user = userRepository.findUserById(userId);
 
-
-
         Item savedItem = itemRepository.save(item);
         savedItem.setUser(user.get());
         return savedItem;
