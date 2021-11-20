@@ -37,10 +37,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public Item saveItem(String loginId, @Valid RegisterItemRequest registerItemRequest) {
+    public Item saveItem(Long userId, @Valid RegisterItemRequest registerItemRequest) {
         validationCreateSoldOutTime(registerItemRequest.getAuctionClosingDate());
         Item item = registerItemRequest.toEntity();
-        Optional<User> user = userRepository.findUserByLoginId(loginId);
+        Optional<User> user = userRepository.findUserById(userId);
+
+
+
         Item savedItem = itemRepository.save(item);
         savedItem.setUser(user.get());
         return savedItem;

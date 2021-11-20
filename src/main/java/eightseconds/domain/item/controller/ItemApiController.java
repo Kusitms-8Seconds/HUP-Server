@@ -39,19 +39,22 @@ public class ItemApiController {
 
     @PostMapping
     public ResponseEntity<RegisterItemResponse> create(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
-                                                       @Valid @RequestPart(value = "registerItemRequest")
-                                                               RegisterItemRequest registerItemRequest) throws IOException {
+                                                       @RequestPart(value = "userId", required = true) String userId,
+                                                       @RequestPart(value = "itemName", required = false) String itemName,
+                                                       @RequestPart(value = "category", required = false) String category,
+                                                       @RequestPart(value = "initPrice", required = false) String initPrice,
+                                                       @RequestPart(value = "buyDate", required = false) String buyDate,
+                                                       @RequestPart(value = "itemStatePoint", required = false) String itemStatePoint,
+                                                       @RequestPart(value = "description", required = false) String description,
+                                                       @RequestPart(value = "auctionClosingDate", required = false) String auctionClosingDate) throws IOException {
 
-//        RequestBody itemName = responseBodyHashMap.get("itemName");
-//        System.out.println("itemName"+itemName);
-
-        Item item = itemService.saveItem(SecurityUtil.getCurrentLoginId().get(), registerItemRequest);
+        Item item = itemService.saveItem(Long.valueOf(userId), RegisterItemRequest.of(itemName, category, initPrice
+                , buyDate, itemStatePoint, description, auctionClosingDate));
         if(files != null ){
             List<MyFile> saveFiles = fileService.save(files);
             itemService.addFiles(item, saveFiles); }
         return ResponseEntity.ok(RegisterItemResponse.from(item));
 
-        //return null;
     }
 
     @DeleteMapping("{id}")
