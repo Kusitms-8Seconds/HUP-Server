@@ -39,20 +39,19 @@ public class ItemApiController {
 
     @PostMapping
     public ResponseEntity<RegisterItemResponse> create(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
-                                                       @Valid @RequestPart //(value = "registerItemRequest")
-                                                               HashMap<String, RequestBody> responseBodyHashMap) throws IOException {
+                                                       @Valid @RequestPart(value = "registerItemRequest")
+                                                               RegisterItemRequest registerItemRequest) throws IOException {
 
-        RequestBody itemName = responseBodyHashMap.get("itemName");
-        System.out.println("itemName"+itemName);
+//        RequestBody itemName = responseBodyHashMap.get("itemName");
+//        System.out.println("itemName"+itemName);
 
+        Item item = itemService.saveItem(SecurityUtil.getCurrentLoginId().get(), registerItemRequest);
+        if(files != null ){
+            List<MyFile> saveFiles = fileService.save(files);
+            itemService.addFiles(item, saveFiles); }
+        return ResponseEntity.ok(RegisterItemResponse.from(item));
 
-//        Item item = itemService.saveItem(SecurityUtil.getCurrentLoginId().get(), registerItemRequest);
-//        if(files != null ){
-//            List<MyFile> saveFiles = fileService.save(files);
-//            itemService.addFiles(item, saveFiles); }
-//        return ResponseEntity.ok(RegisterItemResponse.from(item));
-
-        return null;
+        //return null;
     }
 
     @DeleteMapping("{id}")
