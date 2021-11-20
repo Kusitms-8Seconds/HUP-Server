@@ -30,7 +30,7 @@ public class ScrapApiController {
     private final ItemService itemService;
     private final UserService userService;
 
-    @GetMapping("{id}")
+    @PostMapping("{id}")
     public ResponseEntity<DefaultResponse> create(@PathVariable Long id) throws Exception {
         User user = userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get();
         Item item = itemService.getItem(id);
