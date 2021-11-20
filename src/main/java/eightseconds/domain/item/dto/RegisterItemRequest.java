@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 public class RegisterItemRequest {
 
     @NotNull private String itemName;
-    @NotNull private String category;
+    @NotNull private EItemCategory category;
     @NotNull private int initPrice;
     @NotNull private LocalDateTime buyDate;
     @NotNull private int itemStatePoint;
@@ -32,11 +32,11 @@ public class RegisterItemRequest {
         LocalDateTime buyDateFormatted = LocalDateTime.parse(buyDate, formatter);
         LocalDateTime auctionClosingDateFormatted = LocalDateTime.parse(auctionClosingDate, formatter);
 
-        System.out.println("buyDateFormatted"+buyDateFormatted.toString());
+        System.out.println("밸류오브카테고리"+EItemCategory.valueOf(category));
 
         return RegisterItemRequest.builder()
                 .itemName(itemName)
-                .category(category)
+                .category(EItemCategory.valueOf(category))
                 .initPrice(Integer.valueOf(initPrice))
                 .buyDate(buyDateFormatted)
                 .itemStatePoint(Integer.valueOf(itemStatePoint))
@@ -48,7 +48,7 @@ public class RegisterItemRequest {
     public Item toEntity(){
         return Item.builder()
                 .itemName(itemName)
-                .category(EItemCategory.from(category))
+                .category(EItemCategory.from(category.toString()))
                 .initPrice(initPrice)
                 .buyDate(buyDate)
                 .itemStatePoint(itemStatePoint)

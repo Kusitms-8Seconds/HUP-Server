@@ -50,7 +50,9 @@ public class ItemApiController {
 
         Item item = itemService.saveItem(Long.valueOf(userId), RegisterItemRequest.of(itemName, category, initPrice
                 , buyDate, itemStatePoint, description, auctionClosingDate));
+        System.out.println("files널이아닌지?"+files);
         if(files != null ){
+            System.out.println("files널이아닌지22?"+files);
             List<MyFile> saveFiles = fileService.save(files);
             itemService.addFiles(item, saveFiles); }
         return ResponseEntity.ok(RegisterItemResponse.from(item));
