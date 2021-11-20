@@ -36,7 +36,7 @@ public class FileApiController {
         try (InputStream imageStream = new FileInputStream(System.getProperty("user.dir") + "/images/" + name)) {
             return new ResponseEntity<byte[]>(IOUtils.toByteArray(imageStream), HttpStatus.OK);
         } catch (IOException e) {
-            throw new IllegalArgumentException("해당 파일을 찾을 수 업습니다.");
+            throw new IllegalArgumentException("해당 파일을 찾을 수 없습니다.");
         }
     }
 }
