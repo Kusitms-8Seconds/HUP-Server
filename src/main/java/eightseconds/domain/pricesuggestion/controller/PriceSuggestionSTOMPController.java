@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class PriceSuggestionSTOMPController {
 
     @MessageMapping("/priceSuggestion")
     @SendTo("/topic/priceSuggestion")
+    @Transactional
     public PriceSuggestionResponse priceSuggestion(PriceSuggestionRequest priceSuggestionRequest) throws Exception {
         Thread.sleep(100); // delay
         Long itemId = priceSuggestionRequest.getItemId();
