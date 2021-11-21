@@ -4,10 +4,7 @@ import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.file.service.FileService;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
-import eightseconds.domain.item.dto.GetAllItemsByStatusRequest;
-import eightseconds.domain.item.dto.ItemDetailsResponse;
-import eightseconds.domain.item.dto.RegisterItemRequest;
-import eightseconds.domain.item.dto.RegisterItemResponse;
+import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.service.ItemService;
 import eightseconds.domain.pricesuggestion.dto.SoldOutRequest;
@@ -78,6 +75,11 @@ public class ItemApiController {
     @GetMapping("/list/status/{itemSoldStatus}")
     public ResponseEntity<PaginationDto<List<ItemDetailsResponse>>> list(@PageableDefault Pageable pageable, @PathVariable EItemSoldStatus itemSoldStatus) {
         return ResponseEntity.ok(itemService.getAllItems(pageable, itemSoldStatus));
+    }
+
+    @GetMapping("/list/status/heart/{itemSoldStatus}")
+    public ResponseEntity<List<BestItemResponse>> listBestItems(@PathVariable EItemSoldStatus itemSoldStatus) {
+        return ResponseEntity.ok(itemService.getAllBestItems(itemSoldStatus));
     }
 
     @GetMapping("/list/category/{category}")

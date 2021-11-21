@@ -3,6 +3,7 @@ package eightseconds.domain.item.service;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
+import eightseconds.domain.item.dto.BestItemResponse;
 import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.dto.RegisterItemRequest;
 import eightseconds.domain.item.entity.Item;
@@ -23,8 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -101,10 +101,46 @@ public class ItemServiceImpl implements ItemService {
         return item;
     }
 
-    private void validationPriceSuggestion(Optional<PriceSuggestion> priceSuggestion) {
-        if(priceSuggestion.isEmpty())
-            throw new NotPriceSuggestionContentException("경매입찰내역이 없습니다.");
+    @Override
+    public List<BestItemResponse> getAllBestItems(EItemSoldStatus itemSoldStatus) {
+        List<Item> items = itemRepository.findAllItemsByStatus(itemSoldStatus);
+        List<BestItemResponse> bestItems = new ArrayList<>();
+        for (Item item : items) {
+            bestItems.add(BestItemResponse.from(item, item.getScraps().size())); }
+        Collections.sort(bestItems, new ItemComparator());
+
+        for (BestItemResponse bestItem : bestItems) {
+            System.out.println("bestItem정렬"+bestItem.getHeart());
+        };
+        return bestItems;
     }
+    class ItemComparator implements Comparator<BestItemResponse> {
+        @Override
+        public int compare(BestItemResponse a,BestItemResponse b){
+            if(a.getHeart()<b.getHeart()) return 1;
+            if(a.getHeart()>b.getHeart()) return -1;
+            return 0;
+        }
+    }
+
+//    public void selectionSort(List<Item> items){
+//          for(int i=0; i<items.size()-1; i++){
+//              int temp = i;
+//              for(int j=1+1; j<items.size(); j++){
+//                  if(items.get(temp).getScraps().size()>=items.get(j).getScraps().size()) temp = j;
+//              }
+//              items.get(i), items.get(temp);
+//          }
+//    }
+//
+//    static void swap(Item item1, Item item2)
+//    {
+//        Item item1 = null;
+//        num1 = num2;
+//        num2 = num_swap;
+//    }
+
+
 
     /**
      * validation
@@ -156,5 +192,10 @@ public class ItemServiceImpl implements ItemService {
         if (!currentDateTime.isBefore(auctionClosingDate)) {
             throw new NotSoldOutTimeException("경매종료일자가 현재시각보다 빠릅니다.");
         }
+    }
+
+    private void validationPriceSuggestion(Optional<PriceSuggestion> priceSuggestion) {
+        if(priceSuggestion.isEmpty())
+            throw new NotPriceSuggestionContentException("경매입찰내역이 없습니다.");
     }
 }

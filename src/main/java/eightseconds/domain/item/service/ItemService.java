@@ -3,6 +3,7 @@ package eightseconds.domain.item.service;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
+import eightseconds.domain.item.dto.BestItemResponse;
 import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.dto.RegisterItemRequest;
 import eightseconds.domain.item.entity.Item;
@@ -27,5 +28,7 @@ public interface ItemService{
     PaginationDto<List<ItemDetailsResponse>> getItemsByStatusAndUserId(Pageable pageable, EItemSoldStatus soldStatus, Long userId);
     void validationSoldOutTime(LocalDateTime auctionClosingDate);
     Item soldOutItem(Long itemId);
+
+    List<BestItemResponse> getAllBestItems(EItemSoldStatus itemSoldStatus);
 
 }
