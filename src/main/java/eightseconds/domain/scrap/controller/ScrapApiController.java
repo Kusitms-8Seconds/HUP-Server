@@ -3,10 +3,8 @@ package eightseconds.domain.scrap.controller;
 
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.service.ItemService;
-import eightseconds.domain.scrap.dto.ScrapCountResponse;
-import eightseconds.domain.scrap.dto.ScrapDeleteRequest;
-import eightseconds.domain.scrap.dto.ScrapDetailsResponse;
-import eightseconds.domain.scrap.dto.ScrapRegisterRequest;
+import eightseconds.domain.scrap.dto.*;
+import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.scrap.service.ScrapService;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
@@ -31,19 +29,17 @@ public class ScrapApiController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<DefaultResponse> create(@Valid @RequestBody ScrapRegisterRequest scrapRegisterRequest) throws Exception {
+    public ResponseEntity<ScrapRegisterResponse> create(@Valid @RequestBody ScrapRegisterRequest scrapRegisterRequest) throws Exception {
 
         User user = userService.getUserByUserId(scrapRegisterRequest.getUserId());
         Item item = itemService.getItem(scrapRegisterRequest.getItemId());
-        scrapService.saveScrap(user, item);
-        return ResponseEntity.ok(DefaultResponse.from("스크랩을 완료했습니다."));
+        Scrap scrap = scrapService.saveScrap(user, item);
+        return ResponseEntity.ok(ScrapRegisterResponse.from("스크랩을 완료했습니다.", scrap.getId()));
     }
 
-    @DeleteMapping
-    public ResponseEntity<DefaultResponse> delete(@Valid @RequestBody ScrapDeleteRequest scrapDeleteRequest) throws Exception {
-        User user = userService.getUserByUserId(scrapDeleteRequest.getUserId());
-        Item item = itemService.getItem(scrapDeleteRequest.getItemId());
-        scrapService.deleteScrap(user, item, scrapDeleteRequest.getScrapId());
+    @DeleteMapping("/{scrapId}")
+    public ResponseEntity<DefaultResponse> delete(@PathVariable Long scrapId) throws Exception {
+        scrapService.deleteScrap(scrapId);
         return ResponseEntity.ok(DefaultResponse.from("스크랩 삭제를 완료했습니다."));
     }
 
@@ -57,5 +53,11 @@ public class ScrapApiController {
     public ResponseEntity<ScrapCountResponse> getHeart(@PathVariable Long itemId) throws Exception {
         Long heart = scrapService.getAllScrapsByItemIdQuantity(itemId);
         return ResponseEntity.ok(ScrapCountResponse.from(heart));
+    }
+
+    @PostMapping("/heart/check")
+    public ResponseEntity<ScrapCheckedResponse> checkScrap(@Valid @RequestBody ScrapCheckedRequest scrapCheckedRequest) throws Exception {
+        ScrapCheckedResponse checkedScrap = scrapService.isCheckedScrap(scrapCheckedRequest);
+        return ResponseEntity.ok(checkedScrap);
     }
 }

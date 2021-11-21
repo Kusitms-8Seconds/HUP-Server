@@ -10,11 +10,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DefaultResponse {
 
-    private LocalDateTime responseTime;
     private String message;
 
     private DefaultResponse(String message) {
-        this.responseTime = LocalDateTime.now();
         this.message = message;
     }
 
