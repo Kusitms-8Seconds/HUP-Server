@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ScrapRepository extends JpaRepository<Scrap, Long> {
 
@@ -15,5 +16,6 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     List<Scrap> findAllByUserId(Long userId);
     @Query("select count(s) from Scrap s where s.item.id = :itemId")
     Long findItemCountByItemId(@Param("itemId") Long itemId);
+    Optional<Scrap> findByUserIdAndItemId(Long userId, Long itemId);
 
 }

@@ -3,6 +3,8 @@ package eightseconds.domain.scrap.service;
 import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.repository.ItemRepository;
+import eightseconds.domain.scrap.dto.ScrapCheckedRequest;
+import eightseconds.domain.scrap.dto.ScrapCheckedResponse;
 import eightseconds.domain.scrap.dto.ScrapDetailsResponse;
 import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.scrap.repository.ScrapRepository;
@@ -33,18 +35,27 @@ public class ScrapServiceImpl implements ScrapService{
                 .user(user)
                 .item(item)
                 .build();
-        scrapRepository.save(scrap);
-        return null;
+        Scrap save = scrapRepository.save(scrap);
+        return save;
     }
 
     @Override
-    public void deleteScrap(User user, Item item, Long deleteScrapId) {
-        validationIsExistingScrap(deleteScrapId);
-        Scrap scrap = scrapRepository.findById(deleteScrapId).get();
+    public void deleteScrap(Long scrapId) {
+        validationIsExistingScrap(scrapId);
+        Scrap scrap = scrapRepository.findById(scrapId).get();
         scrap.setUser(null);
         scrap.setItem(null);
-        scrapRepository.deleteById(deleteScrapId);
+        scrapRepository.deleteById(scrapId);
     }
+
+//    @Override
+//    public void deleteScrap(User user, Item item, Long deleteScrapId) {
+//        validationIsExistingScrap(deleteScrapId);
+//        Scrap scrap = scrapRepository.findById(deleteScrapId).get();
+//        scrap.setUser(null);
+//        scrap.setItem(null);
+//        scrapRepository.deleteById(deleteScrapId);
+//    }
 
     @Override
     public PaginationDto<List<ScrapDetailsResponse>> getAllScrapsByUserId(Pageable pageable, Long userId) {
@@ -59,6 +70,18 @@ public class ScrapServiceImpl implements ScrapService{
         Long itemCountByItemId = scrapRepository.findItemCountByItemId(id);
         return itemCountByItemId;
     }
+
+    @Override
+    public ScrapCheckedResponse isCheckedScrap(ScrapCheckedRequest scrapCheckedRequest) {
+        Optional<Scrap> scrap = scrapRepository.findByUserIdAndItemId(scrapCheckedRequest.getUserId(), scrapCheckedRequest.getItemId());
+        if(scrap.isEmpty()){
+            System.out.println("비었는지");
+            return ScrapCheckedResponse.from(false, null); }
+        else
+            System.out.println("안비었는지");
+            return ScrapCheckedResponse.from(true, scrap.get().getId());
+    }
+
 
     /**
      * validation
