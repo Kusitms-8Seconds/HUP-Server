@@ -67,7 +67,6 @@ public class ItemApiController {
     @GetMapping("{id}")
     public ResponseEntity<ItemDetailsResponse> find(@PathVariable Long id) { ;
         itemService.validationItemId(id);
-        itemService.validationUserAndItem(userService.getUserWithAuthorities(SecurityUtil.getCurrentLoginId().get()).get().getItems(), id);
         Item item = itemService.getItem(id);
         return ResponseEntity.ok(ItemDetailsResponse.from(item));
     }
