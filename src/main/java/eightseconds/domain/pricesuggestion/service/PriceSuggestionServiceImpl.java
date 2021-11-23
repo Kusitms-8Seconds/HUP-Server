@@ -5,6 +5,7 @@ import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.NotOnGoingException;
 import eightseconds.domain.item.service.ItemService;
+import eightseconds.domain.pricesuggestion.dto.BidderResponse;
 import eightseconds.domain.pricesuggestion.dto.PriceSuggestionListResponse;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.exception.AlreadySoldOutException;
@@ -75,6 +76,12 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         Page<PriceSuggestion> page = priceSuggestionRepository.findAllByUserId(pageable, userId);
         List<PriceSuggestionListResponse> data = page.get().map(PriceSuggestionListResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
+    }
+
+    @Override
+    public BidderResponse getBidder(Long itemId) {
+        Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getMaximumPriceByItemId(itemId);
+        return BidderResponse.from(priceSuggestion.get().getUser().getUsername());
     }
 
 

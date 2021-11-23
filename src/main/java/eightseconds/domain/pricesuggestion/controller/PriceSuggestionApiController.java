@@ -55,6 +55,11 @@ public class PriceSuggestionApiController {
         return ResponseEntity.ok(priceSuggestionService.getAllPriceSuggestionsByUserId(pageable, userId));
     }
 
+    @GetMapping("/bidder/{itemId}")
+    public ResponseEntity<BidderResponse> getBidder(@PathVariable Long itemId) {
+        BidderResponse bidder = priceSuggestionService.getBidder(itemId);
+        return ResponseEntity.ok(bidder);
+    }
 
     // 입찰 Test용도임 이걸로쓰면 안됨!
     @PostMapping("/priceSuggestionTest")
