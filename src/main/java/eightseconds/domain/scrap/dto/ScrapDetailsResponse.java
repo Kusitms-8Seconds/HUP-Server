@@ -20,8 +20,8 @@ import java.util.List;
 public class ScrapDetailsResponse {
 
     @NotNull private Long id;
-    @NotNull private Long UserId;
-    @NotNull private Long ItemId;
+    @NotNull private Long userId;
+    @NotNull private Long itemId;
     @NotNull private String itemName;
     @NotNull @Enumerated(EnumType.STRING) private ItemConstants.EItemCategory category;
     @NotNull private int initPrice;
@@ -30,6 +30,7 @@ public class ScrapDetailsResponse {
     @NotNull private int itemStatePoint;
     private String description;
     private List<String> fileNames;
+    private LocalDateTime auctionClosingDate;
 
     public static ScrapDetailsResponse from(Scrap scrap) {
         List<String> fileNames = new ArrayList<>();
@@ -42,8 +43,8 @@ public class ScrapDetailsResponse {
         }
         return ScrapDetailsResponse.builder()
                 .id(scrap.getId())
-                .UserId(scrap.getUser().getId())
-                .ItemId(scrap.getItem().getId())
+                .userId(scrap.getUser().getId())
+                .itemId(scrap.getItem().getId())
                 .itemName(scrap.getItem().getItemName())
                 .category(scrap.getItem().getCategory())
                 .initPrice(scrap.getItem().getInitPrice())
@@ -52,6 +53,7 @@ public class ScrapDetailsResponse {
                 .itemStatePoint(scrap.getItem().getItemStatePoint())
                 .description(scrap.getItem().getDescription())
                 .fileNames(fileNames)
+                .auctionClosingDate(scrap.getItem().getAuctionClosingDate())
                 .build();
     }
 }

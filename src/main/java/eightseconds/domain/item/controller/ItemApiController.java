@@ -11,7 +11,6 @@ import eightseconds.domain.pricesuggestion.dto.SoldOutRequest;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.dto.PaginationDto;
-import eightseconds.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -22,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
