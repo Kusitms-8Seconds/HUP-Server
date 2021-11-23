@@ -1,5 +1,6 @@
 package eightseconds.domain.pricesuggestion.service;
 
+import eightseconds.domain.pricesuggestion.dto.BidderResponse;
 import eightseconds.domain.pricesuggestion.dto.PriceSuggestionListResponse;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.global.dto.PaginationDto;
@@ -16,4 +17,5 @@ public interface PriceSuggestionService {
     PriceSuggestion priceSuggestionItem(Long userId, Long itemId, int suggestionPrice);
     int getParticipants(Long itemId);
     PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByUserId(Pageable pageable, Long userId);
+    BidderResponse getBidder(Long itemId);
 }
