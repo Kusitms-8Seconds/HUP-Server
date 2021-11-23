@@ -75,10 +75,8 @@ public class ScrapServiceImpl implements ScrapService{
     public ScrapCheckedResponse isCheckedScrap(ScrapCheckedRequest scrapCheckedRequest) {
         Optional<Scrap> scrap = scrapRepository.findByUserIdAndItemId(scrapCheckedRequest.getUserId(), scrapCheckedRequest.getItemId());
         if(scrap.isEmpty()){
-            System.out.println("비었는지");
             return ScrapCheckedResponse.from(false, null); }
         else
-            System.out.println("안비었는지");
             return ScrapCheckedResponse.from(true, scrap.get().getId());
     }
 
