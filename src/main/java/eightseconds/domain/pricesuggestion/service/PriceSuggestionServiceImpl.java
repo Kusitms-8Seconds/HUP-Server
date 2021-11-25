@@ -34,7 +34,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
 
     @Override
     public PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByItemId(Pageable pageable, Long itemId) {
-        Page<PriceSuggestion> page = priceSuggestionRepository.findAllByItemId(pageable, itemId);
+        Page<PriceSuggestion> page = priceSuggestionRepository.findAllByItemId(Pageable.ofSize(30), itemId);
         List<PriceSuggestionListResponse> data = page.get().map(PriceSuggestionListResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -73,7 +73,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
 
     @Override
     public PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByUserId(Pageable pageable, Long userId) {
-        Page<PriceSuggestion> page = priceSuggestionRepository.findAllByUserId(pageable, userId);
+        Page<PriceSuggestion> page = priceSuggestionRepository.findAllByUserId(Pageable.ofSize(30), userId);
         List<PriceSuggestionListResponse> data = page.get().map(PriceSuggestionListResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }

@@ -60,7 +60,7 @@ public class ScrapServiceImpl implements ScrapService{
     @Override
     public PaginationDto<List<ScrapDetailsResponse>> getAllScrapsByUserId(Pageable pageable, Long userId) {
         validationExistingScrapByUserId(pageable, userId);
-        Page<Scrap> page = scrapRepository.findAllByUserId(pageable, userId);
+        Page<Scrap> page = scrapRepository.findAllByUserId(Pageable.ofSize(30), userId);
         List<ScrapDetailsResponse> data = page.get().map(ScrapDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
