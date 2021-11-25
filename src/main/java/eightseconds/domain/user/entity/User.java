@@ -1,14 +1,10 @@
 package eightseconds.domain.user.entity;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import eightseconds.domain.chatmessage.entity.ChatMessage;
-import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.user.constant.UserConstants.ELoginType;
-import eightseconds.global.entity.BaseEntity;
 import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -65,11 +61,11 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user")
     private List<PriceSuggestion> priceSuggestions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<ChatRoom> chatRooms = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<ChatMessage> chatMessages = new ArrayList<>();
+//    @OneToMany(mappedBy = "user")
+//    private List<ChatRoom> chatRooms = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<ChatMessage> chatMessages = new ArrayList<>();
 
 
 
