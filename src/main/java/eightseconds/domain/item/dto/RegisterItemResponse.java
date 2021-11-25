@@ -19,7 +19,7 @@ import java.util.List;
 public class RegisterItemResponse {
 
     private Long id;
-
+    private Long userId;
     private final String itemName;
     private EItemCategory category;
     private int initPrice;
@@ -41,6 +41,7 @@ public class RegisterItemResponse {
         }
         return RegisterItemResponse.builder()
                 .id(item.getId())
+                .userId(item.getUser().getId())
                 .itemName(item.getItemName())
                 .category(item.getCategory())
                 .initPrice(item.getInitPrice())
