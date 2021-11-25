@@ -21,6 +21,7 @@ import java.util.List;
 public class ItemDetailsResponse {
 
     @NotNull private Long id;
+    @NotNull private Long userId;
     @NotNull private String itemName;
     @NotNull @Enumerated(EnumType.STRING) private EItemCategory category;
     @NotNull private int initPrice;
@@ -43,6 +44,7 @@ public class ItemDetailsResponse {
         }
         return ItemDetailsResponse.builder()
                 .id(item.getId())
+                .userId(item.getUser().getId())
                 .itemName(item.getItemName())
                 .category(item.getCategory())
                 .initPrice(item.getInitPrice())

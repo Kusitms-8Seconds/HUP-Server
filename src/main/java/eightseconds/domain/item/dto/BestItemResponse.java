@@ -17,6 +17,7 @@ import java.util.List;
 public class BestItemResponse {
 
     private Long id;
+    private Long userId;
     private String itemName;
     private ItemConstants.EItemCategory category;
     private int initPrice;
@@ -39,6 +40,7 @@ public class BestItemResponse {
         }
         return BestItemResponse.builder()
                 .id(item.getId())
+                .userId(item.getUser().getId())
                 .itemName(item.getItemName())
                 .category(item.getCategory())
                 .initPrice(item.getInitPrice())
