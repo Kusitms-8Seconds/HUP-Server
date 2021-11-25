@@ -66,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public PaginationDto<List<ItemDetailsResponse>> getAllItems(Pageable pageable, EItemSoldStatus itemSoldStatus) {
-        Page<Item> page = itemRepository.findAllByStatus(pageable, itemSoldStatus);
+        Page<Item> page = itemRepository.findAllByStatus(Pageable.ofSize(30), itemSoldStatus);
         List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -74,14 +74,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public PaginationDto<List<ItemDetailsResponse>> getItemsByCategory(Pageable pageable, EItemCategory category) {
         validationExistingItemsByCategory(pageable, category);
-        Page<Item> page = itemRepository.findAllByCategory(pageable, category);
+        Page<Item> page = itemRepository.findAllByCategory(Pageable.ofSize(30), category);
         List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
 
     @Override
     public PaginationDto<List<ItemDetailsResponse>> getItemsByStatusAndUserId(Pageable pageable, EItemSoldStatus soldStatus, Long userId) {
-        Page<Item> page = itemRepository.findAllByStatusAndUserId(pageable, soldStatus, userId);
+        Page<Item> page = itemRepository.findAllByStatusAndUserId(Pageable.ofSize(30), soldStatus, userId);
         List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
