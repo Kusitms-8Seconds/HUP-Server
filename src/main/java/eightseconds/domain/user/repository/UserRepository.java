@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findOneWithAuthoritiesByLoginId(String loginId);
     Optional<User> findUserByLoginId(String loginId);
     Optional<User> findByEmail(String email);
-    Optional<User> findUserById(Long userId);
+    Optional<User> findUserById(Long id);
 
     Optional<User> findByEmailAndLoginType(String email, UserConstants.ELoginType loginType);
 
