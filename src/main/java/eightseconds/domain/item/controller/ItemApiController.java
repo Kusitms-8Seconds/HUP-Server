@@ -97,7 +97,7 @@ public class ItemApiController {
                                               @Valid @RequestBody GetAllItemsByStatusRequest getAllItemsByStatusRequest) {
         Long userId = getAllItemsByStatusRequest.getUserId();
         EItemSoldStatus soldStatus = getAllItemsByStatusRequest.getSoldStatus();
-        userService.validationUserId(userId);
+        userService.validateUserId(userId);
         return ResponseEntity.ok(itemService.getItemsByStatusAndUserId(pageable, soldStatus, userId));
     }
 

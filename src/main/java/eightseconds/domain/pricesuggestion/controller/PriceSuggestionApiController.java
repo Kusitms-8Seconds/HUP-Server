@@ -51,7 +51,7 @@ public class PriceSuggestionApiController {
 
     @GetMapping("/list/user/{userId}")
     public ResponseEntity<PaginationDto<List<PriceSuggestionListResponse>>> findAllByUserId(@PageableDefault Pageable pageable, @PathVariable Long userId) {
-        userService.validationUserId(userId);
+        userService.validateUserId(userId);
         return ResponseEntity.ok(priceSuggestionService.getAllPriceSuggestionsByUserId(pageable, userId));
     }
 

@@ -1,6 +1,5 @@
 package eightseconds.domain.user.controller;
 
-import eightseconds.domain.user.constant.UserConstants;
 import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserServiceImpl;
@@ -11,45 +10,48 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/users")
 public class UserApiController {
 
     private final UserServiceImpl userService;
 
     @ApiOperation(value = "사용자 생성", notes = "회원가입을 합니다.")
-    @PostMapping("/signup")
-    public ResponseEntity<SignUpResponse> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
+    @PostMapping
+    public ResponseEntity<SignUpResponse> createUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         SignUpResponse signUpResponse = userService.saveUser(signUpRequest);
-        URI createdUri = linkTo(UserApiController.class).slash(signUpResponse).toUri();
-        return ResponseEntity.created(createdUri).body(signUpResponse);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(signUpResponse.getUserId())
+                .toUri();
+        return ResponseEntity.created(location).body(signUpResponse);
     }
 
+    @ApiOperation(value = "사용자 로그인", notes = "로그인을 합니다.")
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        String jwt = userService.validationLogin(loginRequest);
-        User user = userService.getUserByLoginId(loginRequest.getLoginId());
+    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse = userService.loginUser(loginRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-        return new ResponseEntity<>(new LoginResponse(jwt, user.getId()), httpHeaders, HttpStatus.OK);
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + loginResponse.getToken());
+        return new ResponseEntity<>(loginResponse, httpHeaders, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "사용자 정보 조회", notes = "사용자의 정보를 조회합니다.")
+    @PostMapping("/{id}")
+    public ResponseEntity<UserDetailsInfoResponse> getUser(@PathVariable Long id) {
+        User user = userService.getUserByUserId(id);
+        return ResponseEntity.ok(UserDetailsInfoResponse.from(user));
     }
 
     @GetMapping("/tokenTest")
     public String test() {
         return "Complete Token Test!!";
-    }
-
-    @PostMapping("/user/details")
-    public ResponseEntity<UserDetailsInfoResponse> getUserDetails(@Valid @RequestBody UserDetailsInfoRequest userDetailsInfoRequest) {
-        User user = userService.getUserByUserId(userDetailsInfoRequest.getUserId());
-        return ResponseEntity.ok(UserDetailsInfoResponse.from(user));
     }
 
 }

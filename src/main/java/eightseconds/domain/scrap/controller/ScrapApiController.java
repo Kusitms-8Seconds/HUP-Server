@@ -45,7 +45,7 @@ public class ScrapApiController {
 
     @GetMapping("/list/{userId}")
     public ResponseEntity<PaginationDto<List<ScrapDetailsResponse>>> list(@PageableDefault Pageable pageable, @PathVariable Long userId) throws Exception {
-        userService.validationUserId(userId);
+        userService.validateUserId(userId);
         return ResponseEntity.ok(scrapService.getAllScrapsByUserId(pageable, userId));
     }
 
