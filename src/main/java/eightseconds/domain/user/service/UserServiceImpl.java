@@ -3,6 +3,7 @@ package eightseconds.domain.user.service;
 import eightseconds.domain.user.constant.UserConstants;
 import eightseconds.domain.user.dto.LoginRequest;
 import eightseconds.domain.user.dto.SignUpRequest;
+import eightseconds.domain.user.dto.SignUpResponse;
 import eightseconds.domain.user.entity.Authority;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.repository.UserRepository;
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Override
-    public User saveUser(SignUpRequest signUpRequest) {
+    public SignUpResponse saveUser(SignUpRequest signUpRequest) {
         if (userRepository.findOneWithAuthoritiesByLoginId(signUpRequest.getLoginId()).orElse(null) != null) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
@@ -54,7 +55,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .activated(true)
                 .loginType(UserConstants.ELoginType.eApp)
                 .build();
-        return this.userRepository.save(user);
+
+        User savedUser = this.userRepository.save(user);
+
+        return SignUpResponse.from(savedUser.getId(), savedUser.getLoginId(), UserConstants.SUCCESS_SIGN_UP.getMessage());
     }
 
     @Override

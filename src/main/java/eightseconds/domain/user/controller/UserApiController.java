@@ -5,27 +5,31 @@ import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserServiceImpl;
 import eightseconds.global.jwt.JwtFilter;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("api/v1")
 public class UserApiController {
 
     private final UserServiceImpl userService;
 
+    @ApiOperation(value = "사용자 생성", notes = "회원가입을 합니다.")
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
-        User saved = userService.saveUser(signUpRequest);
-        return ResponseEntity.ok(SignUpResponse.from(saved.getId(), saved.getLoginId(), UserConstants.SUCCESS_SIGN_UP.getMessage()));
+        SignUpResponse signUpResponse = userService.saveUser(signUpRequest);
+        URI createdUri = linkTo(UserApiController.class).slash(signUpResponse).toUri();
+        return ResponseEntity.created(createdUri).body(signUpResponse);
     }
 
     @PostMapping("/login")
@@ -37,24 +41,12 @@ public class UserApiController {
         return new ResponseEntity<>(new LoginResponse(jwt, user.getId()), httpHeaders, HttpStatus.OK);
     }
 
-//    @GetMapping("/user")
-//    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-//    public ResponseEntity<User> getMyUserInfo() {
-//        return ResponseEntity.ok(userService.getMyUserWithAuthorities().get());
-//    }
-//
-//    @GetMapping("/user/{username}")
-//    @PreAuthorize("hasAnyRole('ADMIN')")
-//    public ResponseEntity<User> getUserInfo(@PathVariable String username) {
-//        return ResponseEntity.ok(userService.getUserWithAuthorities(username).get());
-//    }
-
-    @GetMapping("/api/v1/tokenTest")
+    @GetMapping("/tokenTest")
     public String test() {
         return "Complete Token Test!!";
     }
 
-    @PostMapping("/api/v1/user/details")
+    @PostMapping("/user/details")
     public ResponseEntity<UserDetailsInfoResponse> getUserDetails(@Valid @RequestBody UserDetailsInfoRequest userDetailsInfoRequest) {
         User user = userService.getUserByUserId(userDetailsInfoRequest.getUserId());
         return ResponseEntity.ok(UserDetailsInfoResponse.from(user));
