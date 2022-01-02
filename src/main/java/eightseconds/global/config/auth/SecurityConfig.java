@@ -6,6 +6,7 @@ import eightseconds.global.jwt.JwtSecurityConfig;
 import eightseconds.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -69,8 +70,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/websocket").permitAll()
                 .antMatchers("/websocket/websocket").permitAll()
                 .antMatchers("/hup/**").permitAll()
-                .antMatchers("/api/v1/login").permitAll()
-                .antMatchers("/api/v1/signup").permitAll()
                 .antMatchers("/oauth2/authorization/google").permitAll()
                 .antMatchers("/token/expired").permitAll()
                 .antMatchers("/googleOAuth/tokenVerify").permitAll()
@@ -82,6 +81,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/v3/api-docs").permitAll()
                 .antMatchers("/image/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
+                .antMatchers("/api/v1/users/login").permitAll()
                 .antMatchers("/api/v1/priceSuggestion/maximumPrice/**").permitAll()
                 .antMatchers("/api/v1/priceSuggestion/participant/**").permitAll()
                 .antMatchers("/api/v1/scrap/heart/**").permitAll()

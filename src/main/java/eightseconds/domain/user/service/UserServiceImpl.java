@@ -2,10 +2,12 @@ package eightseconds.domain.user.service;
 
 import eightseconds.domain.user.constant.UserConstants;
 import eightseconds.domain.user.dto.LoginRequest;
+import eightseconds.domain.user.dto.LoginResponse;
 import eightseconds.domain.user.dto.SignUpRequest;
 import eightseconds.domain.user.dto.SignUpResponse;
 import eightseconds.domain.user.entity.Authority;
 import eightseconds.domain.user.entity.User;
+import eightseconds.domain.user.exception.AlreadyRegisteredUserException;
 import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.jwt.TokenProvider;
 import eightseconds.global.util.SecurityUtil;
@@ -40,8 +42,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public SignUpResponse saveUser(SignUpRequest signUpRequest) {
         if (userRepository.findOneWithAuthoritiesByLoginId(signUpRequest.getLoginId()).orElse(null) != null) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
-        }
+                throw new AlreadyRegisteredUserException("이미 가입되어 있는 유저입니다."); }
+
         Authority authority = Authority.builder()
                 .authorityName("ROLE_USER")
                 .build();
@@ -91,6 +93,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return SecurityUtil.getCurrentLoginId().flatMap(userRepository::findOneWithAuthoritiesByLoginId);
     }
 
+    public LoginResponse loginUser(LoginRequest loginRequest) {
+        String token = validationLogin(loginRequest);
+        User user = getUserByLoginId(loginRequest.getLoginId());
+        return LoginResponse.from(token, user.getId());
+    }
+
     public String validationLogin(LoginRequest loginRequest) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequest.getLoginId(), loginRequest.getPassword());
@@ -111,13 +119,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     /**
-     * validation
+     * validate
      */
 
-    public boolean validationUserId(Long userId){
+    public boolean validateUserId(Long userId){
         Optional<User> user = userRepository.findUserById(userId);
         if(!user.isEmpty()){
             return true;
         } else throw new IllegalArgumentException("해당 유저아이디로 유저를 찾을 수 없습니다.");
     }
+
 }
