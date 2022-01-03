@@ -56,7 +56,12 @@ public class UserApiController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @ApiOperation(value = "사용자 정보 수정", notes = "사용자의 정보를 수정합니다.")
+    @PutMapping
+    public ResponseEntity<UpdateUserResponse> updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest) {
+        UpdateUserResponse updateUserResponse = userService.updateUser(updateUserRequest);
+        return ResponseEntity.ok(updateUserResponse);
+    }
 
     @GetMapping("/tokenTest")
     public String test() {

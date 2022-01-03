@@ -5,6 +5,7 @@ import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.user.constant.UserConstants.ELoginType;
+import eightseconds.domain.user.dto.UpdateUserRequest;
 import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -98,6 +99,8 @@ public class User extends BaseTimeEntity {
 //        this.description = description;
 //    }
 
+
+
     // Google Builder
 
     // Google Update Profile
@@ -162,6 +165,14 @@ public class User extends BaseTimeEntity {
                 .activated(true)
                 .loginType(ELoginType.eNaver)
                 .build();
+    }
+
+    public User updateUserByUpdateUserRequest(UpdateUserRequest userRequest) {
+        setLoginId(userRequest.getLoginId());
+        setUsername(userRequest.getUsername());
+        setPassword(userRequest.getPassword());
+        setPhoneNumber(userRequest.getPhoneNumber());
+        return this;
     }
 
 }
