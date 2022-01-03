@@ -117,6 +117,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return UserInfoResponse.from(user);
     }
 
+    @Override
+    public void deleteUserByUserId(Long userId) {
+        validateUserId(userId);
+        userRepository.deleteById(userId);
+    }
+
     public User getUserByUserId(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         return user.get();

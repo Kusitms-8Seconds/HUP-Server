@@ -6,6 +6,7 @@ import eightseconds.domain.user.service.UserServiceImpl;
 import eightseconds.global.jwt.JwtFilter;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,15 @@ public class UserApiController {
     public ResponseEntity<UserInfoResponse> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserInfoByUserId(id));
     }
+
+    @ApiOperation(value = "사용자 정보 삭제", notes = "사용자의 정보를 삭제합니다.")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<EntityModel<?>> deleteUser(@PathVariable Long id) {
+        userService.deleteUserByUserId(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
     @GetMapping("/tokenTest")
     public String test() {
