@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest) {
         User user = validateUserId(updateUserRequest.getUserId());
         User updatedUser = userRepository.save(user.updateUserByUpdateUserRequest(updateUserRequest));
-        return  UpdateUserResponse.from(updatedUser);
+        return UpdateUserResponse.from(updatedUser);
     }
 
     public User getUserByUserId(Long userId) {
