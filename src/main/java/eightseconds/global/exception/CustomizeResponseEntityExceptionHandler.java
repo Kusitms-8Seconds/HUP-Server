@@ -1,6 +1,7 @@
 package eightseconds.global.exception;
 
 import eightseconds.domain.user.exception.AlreadyRegisteredUserException;
+import eightseconds.domain.user.exception.NotFoundUserException;
 import eightseconds.global.dto.ErrorResultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +34,12 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<Object> handleAlreadyRegisteredUserException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NotFoundUserException.class)
+    public final ResponseEntity<Object> handleNotFoundUserException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
     @Override

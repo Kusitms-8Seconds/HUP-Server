@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDetailsInfoRequest {
+public class UserInfoRequest {
 
     private Long userId;
 }

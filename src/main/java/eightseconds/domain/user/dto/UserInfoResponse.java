@@ -1,5 +1,6 @@
 package eightseconds.domain.user.dto;
 
+import eightseconds.domain.user.constant.UserConstants.*;
 import eightseconds.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDetailsInfoResponse {
+public class UserInfoResponse {
 
     private Long userId;
     private String loginId;
@@ -19,9 +20,10 @@ public class UserDetailsInfoResponse {
     private String phoneNumber;
     private String picture;
     private boolean activated;
+    private ELoginType loginType;
 
-    public static UserDetailsInfoResponse from(User user) {
-        return UserDetailsInfoResponse.builder()
+    public static UserInfoResponse from(User user) {
+        return UserInfoResponse.builder()
                 .userId(user.getId())
                 .loginId(user.getLoginId())
                 .email(user.getEmail())
@@ -29,6 +31,7 @@ public class UserDetailsInfoResponse {
                 .phoneNumber(user.getPhoneNumber())
                 .picture(user.getPicture())
                 .activated(user.isActivated())
+                .loginType(user.getLoginType())
                 .build();
     }
 }
