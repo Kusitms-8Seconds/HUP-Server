@@ -43,10 +43,9 @@ public class UserApiController {
     }
 
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자의 정보를 조회합니다.")
-    @PostMapping("/{id}")
-    public ResponseEntity<UserDetailsInfoResponse> getUser(@PathVariable Long id) {
-        User user = userService.getUserByUserId(id);
-        return ResponseEntity.ok(UserDetailsInfoResponse.from(user));
+    @GetMapping("/{id}")
+    public ResponseEntity<UserInfoResponse> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserInfoByUserId(id));
     }
 
     @GetMapping("/tokenTest")

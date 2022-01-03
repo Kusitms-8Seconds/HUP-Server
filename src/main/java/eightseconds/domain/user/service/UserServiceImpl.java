@@ -1,13 +1,11 @@
 package eightseconds.domain.user.service;
 
 import eightseconds.domain.user.constant.UserConstants;
-import eightseconds.domain.user.dto.LoginRequest;
-import eightseconds.domain.user.dto.LoginResponse;
-import eightseconds.domain.user.dto.SignUpRequest;
-import eightseconds.domain.user.dto.SignUpResponse;
+import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.Authority;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.exception.AlreadyRegisteredUserException;
+import eightseconds.domain.user.exception.NotFoundUserException;
 import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.jwt.TokenProvider;
 import eightseconds.global.util.SecurityUtil;
@@ -113,6 +111,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return user.get();
     }
 
+    public UserInfoResponse getUserInfoByUserId(Long userId) {
+        validateUserId(userId);
+        User user = getUserByUserId(userId);
+        return UserInfoResponse.from(user);
+    }
+
     public User getUserByUserId(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         return user.get();
@@ -122,11 +126,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      * validate
      */
 
-    public boolean validateUserId(Long userId){
-        Optional<User> user = userRepository.findUserById(userId);
-        if(!user.isEmpty()){
-            return true;
-        } else throw new IllegalArgumentException("해당 유저아이디로 유저를 찾을 수 없습니다.");
+    public User validateUserId(Long userId){
+        Optional<User> user = userRepository.findById(userId);
+        if(!user.isEmpty()){ return user.get(); }
+        else throw new NotFoundUserException("해당 유저아이디로 유저를 찾을 수 없습니다.");
     }
+
 
 }
