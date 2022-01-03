@@ -92,18 +92,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     public LoginResponse loginUser(LoginRequest loginRequest) {
-        String token = validationLogin(loginRequest);
+        String token = validateLogin(loginRequest);
         User user = getUserByLoginId(loginRequest.getLoginId());
         return LoginResponse.from(token, user.getId());
-    }
-
-    public String validationLogin(LoginRequest loginRequest) {
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginRequest.getLoginId(), loginRequest.getPassword());
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.createToken(authentication);
-        return jwt;
     }
 
     public User getUserByLoginId(String loginId) {
@@ -112,8 +103,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     public UserInfoResponse getUserInfoByUserId(Long userId) {
-        validateUserId(userId);
-        User user = getUserByUserId(userId);
+        User user = validateUserId(userId);
         return UserInfoResponse.from(user);
     }
 
@@ -121,6 +111,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void deleteUserByUserId(Long userId) {
         validateUserId(userId);
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest) {
+        User user = validateUserId(updateUserRequest.getUserId());
+        User updatedUser = userRepository.save(user.updateUserByUpdateUserRequest(updateUserRequest));
+        return  UpdateUserResponse.from(updatedUser);
     }
 
     public User getUserByUserId(Long userId) {
@@ -138,5 +135,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         else throw new NotFoundUserException("해당 유저아이디로 유저를 찾을 수 없습니다.");
     }
 
+    public String validateLogin(LoginRequest loginRequest) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginRequest.getLoginId(), loginRequest.getPassword());
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = tokenProvider.createToken(authentication);
+        return jwt;
+    }
 
 }
