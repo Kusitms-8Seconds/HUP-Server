@@ -12,7 +12,7 @@ import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
 
 public interface OAuth2UserService {
-    GoogleIdToken validationGoogleIdToken(OAuth2GoogleLoginRequest oAuth2LoginRequest) throws GeneralSecurityException, IOException;
+    LoginResponse validationGoogleIdToken(OAuth2GoogleLoginRequest oAuth2LoginRequest) throws GeneralSecurityException, IOException;
     LoginResponse saveUserOrUpdateByGoogleIdToken(GoogleIdToken idToken);
     LoginResponse validationKakaoAccessToken(OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) throws IOException, ParseException, org.json.simple.parser.ParseException;
     LoginResponse validationNaverAccessToken(OAuth2NaverLoginRequest oAuth2NaverLoginRequest);
