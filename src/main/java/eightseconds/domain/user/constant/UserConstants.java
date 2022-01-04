@@ -42,7 +42,6 @@ public enum UserConstants {
         eGoogleSub("sub"),
         eGoogle("google"),
         eGoogleInvalidIdTokenMessage("ID token이 유효하지 않습니다."),
-
         eKakaoKeyAttribute("key"),
         eKakaoNickNameAttribute("nickname"),
         eKakaoEmailAttribute("email"),
@@ -54,7 +53,22 @@ public enum UserConstants {
         eKakaoEmpty(""),
         eKakaoPropertiesAttribute("properties"),
         eKakaoAccountAttribute("kakao_account"),
-        eKakao("kakao");
+        eKakao("kakao"),
+        eNaverNameAttribute("name"),
+        eNaverEmailAttribute("email"),
+        eNaverProfileImageAttribute("profile_image"),
+        eNaverKeyAttribute("key"),
+        eNaverGetMethod("GET"),
+        eNaverResponse("response"),
+        eNaverElement("element"),
+        eNaverAuthorization("Authorization"),
+        eNaverBearer("Bearer "),
+        eNaverApiUrlException("API URL이 잘못되었습니다. : "),
+        eNaverConnectionException("연결이 실패했습니다. : "),
+        eNaverApiResponseException("API 응답을 읽는데 실패했습니다."),
+        eNaverNull(null),
+        eNaver("naver");
+
 
         private final String value;
 
