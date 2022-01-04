@@ -10,7 +10,8 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import eightseconds.domain.user.constant.UserConstants;
+import eightseconds.domain.user.constant.UserConstants.EOAuth2UserServiceImpl;
+import eightseconds.domain.user.constant.UserConstants.ELoginType;
 import eightseconds.domain.user.dto.LoginResponse;
 import eightseconds.domain.user.dto.OAuth2GoogleLoginRequest;
 import eightseconds.domain.user.dto.OAuth2KakaoLoginRequest;
@@ -21,6 +22,8 @@ import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.dto.OAuth2Attribute;
 import eightseconds.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,129 +44,123 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
+@PropertySource("classpath:application-oauth.properties")
 public class OAuth2UserServiceImpl implements OAuth2UserService{
 
-    private String Client_ID = "221537301769-e1qd8130nulhheiqo68nv8upistikcp4.apps.googleusercontent.com";
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
+
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    private String googleClientId;
+    @Value("${spring.security.oauth2.client.provider.google.issuer-uri}")
+    private String googleIssuer;
+
+    @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
+    private String kakaoUserInfoUrl;
 
     private static String KAKAO_AUTH_BASE_URL = "https://kauth.kakao.com";
     private static String KAKAO_API_BASE_URL = "https://kapi.kakao.com";
     private static String APP_KEY = "6605274d9a8165288410480f4bd1fa9b";
     private static String REDIRECT_URL = "https://localhost:8080/oauth";
 
-    public GoogleIdToken validationGoogleIdToken(OAuth2GoogleLoginRequest oAuth2LoginRequest) throws GeneralSecurityException, IOException {
+    public LoginResponse validationGoogleIdToken(OAuth2GoogleLoginRequest oAuth2LoginRequest) throws GeneralSecurityException, IOException {
         HttpTransport transport = new NetHttpTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-                .setAudience(Collections.singletonList(Client_ID))
-                .setIssuer("https://accounts.google.com")
+                .setAudience(Collections.singletonList(googleClientId))
+                .setIssuer(googleIssuer)
                 .build();
         GoogleIdToken idToken = verifier.verify(oAuth2LoginRequest.getIdToken());
-        if(idToken != null){ return idToken; }
-        else { throw new InvalidIdToken("Invalid ID token."); }
+        if(idToken != null) return saveUserOrUpdateByGoogleIdToken(idToken);
+        else throw new InvalidIdToken(EOAuth2UserServiceImpl.eGoogleInvalidIdTokenMessage.getValue());
     }
 
     public LoginResponse saveUserOrUpdateByGoogleIdToken(GoogleIdToken idToken) {
         Payload payload = idToken.getPayload();
-        User user = saveOrUpdateGoogle(payload);
+        User user = saveOrUpdateGoogleUser(payload);
         String jwt = makeAppToken(payload);
         return LoginResponse.from(jwt, user.getId());
     }
 
+    private User saveOrUpdateGoogleUser(Payload payload) {
+        User user = userRepository.findByEmailAndLoginType(payload.getEmail(), ELoginType.eGoogle)
+                .map(entity -> entity.update((String) payload.get(EOAuth2UserServiceImpl.eGoogleNameAttribute.getValue()),
+                        (String) payload.get(EOAuth2UserServiceImpl.eGooglePictureAttribute.getValue())))
+                .orElse(User.toEntityOfGoogleUser(payload));
+        return userRepository.save(user);
+    }
+
     private String makeAppToken(Payload payload) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        authorities.add(new SimpleGrantedAuthority(EOAuth2UserServiceImpl.eRoleUser.getValue()));
         Map<String, Object> map = new HashMap<>();
-        map.put("id", "sub");
-        map.put("key", "sub");
-        map.put("name", (String) payload.get("name"));
-        map.put("email", (String) payload.getEmail());
-        map.put("picture", (String) payload.get("picture"));
+        map.put(EOAuth2UserServiceImpl.eGoogleIdAttribute.getValue(), EOAuth2UserServiceImpl.eGoogleSub.getValue());
+        map.put(EOAuth2UserServiceImpl.eGoogleKeyAttribute.getValue(), EOAuth2UserServiceImpl.eGoogleSub.getValue());
+        map.put(EOAuth2UserServiceImpl.eGoogleNameAttribute.getValue(), payload.get(EOAuth2UserServiceImpl.eGoogleNameAttribute.getValue()));
+        map.put(EOAuth2UserServiceImpl.eGoogleEmailAttribute.getValue(), payload.getEmail());
+        map.put(EOAuth2UserServiceImpl.eGooglePictureAttribute.getValue(), payload.get(EOAuth2UserServiceImpl.eGooglePictureAttribute.getValue()));
 
-        OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of("google", "sub", map);
+        OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(EOAuth2UserServiceImpl.eGoogle.getValue(), EOAuth2UserServiceImpl.eGoogleSub.getValue(), map);
         var memberAttribute = oAuth2Attribute.convertToMap();
-        OAuth2User userDetails = new DefaultOAuth2User(authorities, memberAttribute, "key");
-        OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(userDetails, authorities, "key");
+        OAuth2User userDetails = new DefaultOAuth2User(authorities, memberAttribute, EOAuth2UserServiceImpl.eGoogleKeyAttribute.getValue());
+        OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(userDetails, authorities, EOAuth2UserServiceImpl.eGoogleKeyAttribute.getValue());
         auth.setDetails(userDetails);
         SecurityContextHolder.getContext().setAuthentication(auth);
         String jwt = tokenProvider.createToken(auth);
         return jwt;
     }
 
-    private User saveOrUpdateGoogle(Payload payload) {
-        User user = userRepository.findByEmailAndLoginType(payload.getEmail(), UserConstants.ELoginType.eGoogle)
-                .map(entity -> entity.update((String) payload.get("name"), (String) payload.get("picture")))
-                .orElse(User.toEntityOfGoogleUser(payload));
-        return userRepository.save(user);
-    }
-
     @Override
     public LoginResponse validationKakaoAccessToken(OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        authorities.add(new SimpleGrantedAuthority(EOAuth2UserServiceImpl.eRoleUser.getValue()));
         HashMap<String, Object> userInfo = getUserInfo(oAuth2KakaoLoginRequest.getAccessToken());
         User user = saveOrUpdateKakao(userInfo);
-        OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of("kakao", "kakao", userInfo);
+        OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(EOAuth2UserServiceImpl.eKakao.getValue(), EOAuth2UserServiceImpl.eKakao.getValue(), userInfo);
         var memberAttribute = oAuth2Attribute.convertToMap();
-        OAuth2User userDetails = new DefaultOAuth2User(authorities, memberAttribute, "key");
-        OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(userDetails, authorities, "key");
+        OAuth2User userDetails = new DefaultOAuth2User(authorities, memberAttribute, EOAuth2UserServiceImpl.eKakaoKeyAttribute.getValue());
+        OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(userDetails, authorities, EOAuth2UserServiceImpl.eKakaoKeyAttribute.getValue());
         auth.setDetails(userDetails);
         SecurityContextHolder.getContext().setAuthentication(auth);
         String jwt = tokenProvider.createToken(auth);
         return LoginResponse.from(jwt, user.getId());
     }
 
-    private User saveOrUpdateKakao(HashMap<String, Object> userInfo) {
-        User user = userRepository.findByEmailAndLoginType(userInfo.get("email").toString(), UserConstants.ELoginType.eKakao)
-                .map(entity -> entity.update(userInfo.get("nickname").toString(), userInfo.get("profile_image").toString()))
-                .orElse(User.toEntityOfKakaoUser(userInfo));
-        return userRepository.save(user);
-    }
-
-    public HashMap<String, Object> getUserInfo (String access_Token) {
+    public HashMap<String, Object> getUserInfo(String access_Token) {
 
         HashMap<String, Object> userInfo = new HashMap<>();
-        String reqURL = "https://kapi.kakao.com/v2/user/me";
         try {
-            URL url = new URL(reqURL);
+            URL url = new URL(kakaoUserInfoUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-
-            conn.setRequestProperty("Authorization", "Bearer " + access_Token);
+            conn.setRequestMethod(EOAuth2UserServiceImpl.eKakaoGetMethod.getValue());
+            conn.setRequestProperty(EOAuth2UserServiceImpl.eKakaoAuthorization.getValue(), EOAuth2UserServiceImpl.eKakaoBearer.getValue() + access_Token);
 
             int responseCode = conn.getResponseCode();
-            System.out.println("responseCode : " + responseCode);
+            System.out.println(EOAuth2UserServiceImpl.eKakaoResponseCode.getValue() + responseCode);
 
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-            String line = "";
-            String result = "";
+            String line;
+            String result = EOAuth2UserServiceImpl.eKakaoEmpty.getValue();
 
             while ((line = br.readLine()) != null) {
-                result += line;
-            }
-            System.out.println("response body : " + result);
+                result += line;}
 
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
-            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
+            JsonObject properties = element.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoPropertiesAttribute.getValue()).getAsJsonObject();
+            JsonObject kakao_account = element.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoAccountAttribute.getValue()).getAsJsonObject();
 
-            String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-            String profile_image = properties.getAsJsonObject().get("profile_image").getAsString();
+            String nickname = properties.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoNickNameAttribute.getValue()).getAsString();
+            String profile_image = properties.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoProfileImageAttribute.getValue()).getAsString();
             if(kakao_account!= null){
-                String email = kakao_account.getAsJsonObject().get("email").getAsString();
-                userInfo.put("email", email);
-                System.out.println("email" + email);
-            }
+                String email = kakao_account.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoEmailAttribute.getValue()).getAsString();
+                userInfo.put(EOAuth2UserServiceImpl.eKakaoEmailAttribute.getValue(), email);}
 
-            userInfo.put("nickname", nickname);
-            userInfo.put("profile_image", profile_image);
+            userInfo.put(EOAuth2UserServiceImpl.eKakaoNickNameAttribute.getValue(), nickname);
+            userInfo.put(EOAuth2UserServiceImpl.eKakaoProfileImageAttribute.getValue(), profile_image);
 
-            System.out.println("nickname" + nickname);
-            System.out.println("profile_image" + profile_image);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -171,6 +168,13 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         return userInfo;
     }
 
+    private User saveOrUpdateKakao(HashMap<String, Object> userInfo) {
+        User user = userRepository.findByEmailAndLoginType(userInfo.get(EOAuth2UserServiceImpl.eKakaoEmailAttribute.getValue()).toString(), ELoginType.eKakao)
+                .map(entity -> entity.update(userInfo.get(EOAuth2UserServiceImpl.eKakaoNickNameAttribute.getValue()).toString()
+                        , userInfo.get(EOAuth2UserServiceImpl.eKakaoProfileImageAttribute.getValue()).toString()))
+                .orElse(User.toEntityOfKakaoUser(userInfo));
+        return userRepository.save(user);
+    }
 
     public LoginResponse validationNaverAccessToken(OAuth2NaverLoginRequest oAuth2NaverLoginRequest) {
 
@@ -197,7 +201,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     }
 
     private User saveOrUpdateNaver(HashMap<String, Object> userInfo) {
-        User user = userRepository.findByEmailAndLoginType(userInfo.get("email").toString(), UserConstants.ELoginType.eNaver)
+        User user = userRepository.findByEmailAndLoginType(userInfo.get("email").toString(), ELoginType.eNaver)
                 .map(entity -> entity.update(userInfo.get("name").toString(), userInfo.get("profile_image").toString()))
                 .orElse(User.toEntityOfNaverUser(userInfo));
         return userRepository.save(user);
