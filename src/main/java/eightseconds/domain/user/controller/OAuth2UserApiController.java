@@ -33,7 +33,7 @@ public class OAuth2UserApiController {
 
     @PostMapping("/google-login")
     public ResponseEntity<EntityModel<LoginResponse>> googleLogin(@RequestBody OAuth2GoogleLoginRequest oAuth2GoogleLoginRequest) throws GeneralSecurityException, IOException {
-        LoginResponse loginResponse = oAuth2UserService.validationGoogleIdToken(oAuth2GoogleLoginRequest);
+        LoginResponse loginResponse = oAuth2UserService.validateGoogleIdToken(oAuth2GoogleLoginRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, EOAuth2UserApiController.eBearerHeaderValue.getValue() + loginResponse.getToken());
         return new ResponseEntity<>(EntityModel.of(loginResponse)
@@ -47,7 +47,7 @@ public class OAuth2UserApiController {
     @PostMapping("/kakao-login")
     public ResponseEntity<EntityModel<LoginResponse>> kakaoLogin(@RequestBody OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) throws IOException, ParseException, org.json.simple.parser.ParseException {
 
-        LoginResponse loginResponse = oAuth2UserService.validationKakaoAccessToken(oAuth2KakaoLoginRequest);
+        LoginResponse loginResponse = oAuth2UserService.validateKakaoAccessToken(oAuth2KakaoLoginRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, EOAuth2UserApiController.eBearerHeaderValue.getValue() + loginResponse.getToken());
         return new ResponseEntity<>(EntityModel.of(loginResponse)
@@ -61,7 +61,7 @@ public class OAuth2UserApiController {
     @PostMapping("/naver-login")
     public ResponseEntity<EntityModel<LoginResponse>> naverLogin(@RequestBody OAuth2NaverLoginRequest oAuth2NaverLoginRequest){
 
-        LoginResponse loginResponse = oAuth2UserService.validationNaverAccessToken(oAuth2NaverLoginRequest);
+        LoginResponse loginResponse = oAuth2UserService.validateNaverAccessToken(oAuth2NaverLoginRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, EOAuth2UserApiController.eBearerHeaderValue.getValue() + loginResponse.getToken());
         return new ResponseEntity<>(EntityModel.of(loginResponse)
