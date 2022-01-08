@@ -16,6 +16,16 @@ public enum UserConstants {
 
     @Getter
     @AllArgsConstructor
+    public enum EOAuth2UserApiController{
+        eBearerHeaderValue("Bearer "),
+        eGetMethod("get"),
+        eDeleteMethod("delete"),
+        eUpdateMethod("update");
+        private final String value;
+    }
+
+    @Getter
+    @AllArgsConstructor
     public enum ELoginType{
         eGoogle("구글"),
         eNaver("네이버"),
@@ -68,7 +78,6 @@ public enum UserConstants {
         eNaverApiResponseException("API 응답을 읽는데 실패했습니다."),
         eNaverNull(null),
         eNaver("naver");
-
 
         private final String value;
 

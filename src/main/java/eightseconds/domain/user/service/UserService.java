@@ -8,8 +8,6 @@ import java.util.Optional;
 public interface UserService {
 
     SignUpResponse saveUser(SignUpRequest signUpRequest);
-    Optional<User> getUserWithAuthorities(String loginId);
-    Optional<User> getMyUserWithAuthorities();
     String validateLogin(LoginRequest loginRequest);
     User getUserByLoginId(String loginId);
     UserInfoResponse getUserInfoByUserId(Long userId);
