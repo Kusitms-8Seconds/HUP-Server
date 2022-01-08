@@ -1,7 +1,7 @@
 package eightseconds.domain.user.controller;
 
+import eightseconds.domain.user.constant.UserConstants.EUserApiController;
 import eightseconds.domain.user.dto.*;
-import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserServiceImpl;
 import eightseconds.global.jwt.JwtFilter;
 import io.swagger.annotations.ApiOperation;
@@ -31,15 +31,15 @@ public class UserApiController {
     public ResponseEntity<EntityModel<SignUpResponse>> createUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         SignUpResponse signUpResponse = userService.saveUser(signUpRequest);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path(EUserApiController.eLocationIdPath.getValue())
                 .buildAndExpand(signUpResponse.getUserId())
                 .toUri();
 
         return ResponseEntity.created(location).body(EntityModel.of(signUpResponse)
                 .add(linkTo(methodOn(this.getClass()).createUser(signUpRequest)).withSelfRel())
-                .add(linkTo(methodOn(this.getClass()).getUser(signUpResponse.getUserId())).withRel("get"))
-                .add(linkTo(methodOn(this.getClass()).deleteUser(signUpResponse.getUserId())).withRel("delete"))
-                .add(linkTo(methodOn(this.getClass()).updateUser(null)).withRel("update")));
+                .add(linkTo(methodOn(this.getClass()).getUser(signUpResponse.getUserId())).withRel(EUserApiController.eGetMethod.getValue()))
+                .add(linkTo(methodOn(this.getClass()).deleteUser(signUpResponse.getUserId())).withRel(EUserApiController.eDeleteMethod.getValue()))
+                .add(linkTo(methodOn(this.getClass()).updateUser(null)).withRel(EUserApiController.eUpdateMethod.getValue())));
     }
 
     @ApiOperation(value = "사용자 로그인", notes = "로그인을 합니다.")
@@ -51,9 +51,9 @@ public class UserApiController {
 
         return new ResponseEntity<>(EntityModel.of(loginResponse)
                 .add(linkTo(methodOn(this.getClass()).loginUser(loginRequest)).withSelfRel())
-                .add(linkTo(methodOn(this.getClass()).getUser(loginResponse.getUserId())).withRel("get"))
-                .add(linkTo(methodOn(this.getClass()).deleteUser(loginResponse.getUserId())).withRel("delete"))
-                .add(linkTo(methodOn(this.getClass()).updateUser(null)).withRel("update")), httpHeaders, HttpStatus.OK);
+                .add(linkTo(methodOn(this.getClass()).getUser(loginResponse.getUserId())).withRel(EUserApiController.eGetMethod.getValue()))
+                .add(linkTo(methodOn(this.getClass()).deleteUser(loginResponse.getUserId())).withRel(EUserApiController.eDeleteMethod.getValue()))
+                .add(linkTo(methodOn(this.getClass()).updateUser(null)).withRel(EUserApiController.eUpdateMethod.getValue())), httpHeaders, HttpStatus.OK);
     }
 
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자의 정보를 조회합니다.")
@@ -62,8 +62,8 @@ public class UserApiController {
 
         return ResponseEntity.ok((EntityModel.of(userService.getUserInfoByUserId(id))
                 .add(linkTo(methodOn(this.getClass()).getUser(id)).withSelfRel())
-                .add(linkTo(methodOn(this.getClass()).deleteUser(id)).withRel("delete"))
-                .add(linkTo(methodOn(this.getClass()).updateUser(null)).withRel("update"))));
+                .add(linkTo(methodOn(this.getClass()).deleteUser(id)).withRel(EUserApiController.eDeleteMethod.getValue()))
+                .add(linkTo(methodOn(this.getClass()).updateUser(null)).withRel(EUserApiController.eUpdateMethod.getValue()))));
     }
 
     @ApiOperation(value = "사용자 정보 삭제", notes = "사용자의 정보를 삭제합니다.")
@@ -80,13 +80,8 @@ public class UserApiController {
 
         return ResponseEntity.ok((EntityModel.of(updateUserResponse)
                 .add(linkTo(methodOn(this.getClass()).updateUser(updateUserRequest)).withSelfRel())
-                .add(linkTo(methodOn(this.getClass()).getUser(updateUserResponse.getUserId())).withRel("get"))
-                .add(linkTo(methodOn(this.getClass()).deleteUser(updateUserResponse.getUserId())).withRel("delete"))));
-    }
-
-    @GetMapping("/tokenTest")
-    public String test() {
-        return "Complete Token Test!!";
+                .add(linkTo(methodOn(this.getClass()).getUser(updateUserResponse.getUserId())).withRel(EUserApiController.eGetMethod.getValue()))
+                .add(linkTo(methodOn(this.getClass()).deleteUser(updateUserResponse.getUserId())).withRel(EUserApiController.eDeleteMethod.getValue()))));
     }
 
 }

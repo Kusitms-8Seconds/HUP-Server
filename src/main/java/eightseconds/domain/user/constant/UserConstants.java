@@ -26,6 +26,18 @@ public enum UserConstants {
 
     @Getter
     @AllArgsConstructor
+    public enum EUserApiController{
+        eLocationIdPath("/{id}"),
+        eGetMethod("get"),
+        eDeleteMethod("delete"),
+        eUpdateMethod("update");
+        private final String value;
+    }
+
+
+
+    @Getter
+    @AllArgsConstructor
     public enum ELoginType{
         eGoogle("구글"),
         eNaver("네이버"),
