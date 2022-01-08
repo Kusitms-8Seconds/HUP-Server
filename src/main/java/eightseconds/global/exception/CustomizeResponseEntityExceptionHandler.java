@@ -1,6 +1,7 @@
 package eightseconds.global.exception;
 
 import eightseconds.domain.user.exception.AlreadyRegisteredUserException;
+import eightseconds.domain.user.exception.InvalidIdToken;
 import eightseconds.domain.user.exception.NotFoundUserException;
 import eightseconds.global.dto.ErrorResultResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,10 @@ import java.util.stream.Collectors;
 @RestControllerAdvice(annotations = RestController.class)
 public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
+    /**
+     * Global Domain Exception
+     */
+
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.INTERNAL_SERVER_ERROR.toString(), Arrays.asList(ex.getMessage()));
@@ -34,18 +39,6 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<Object> handleRunTimeExceptions(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.INTERNAL_SERVER_ERROR.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(AlreadyRegisteredUserException.class)
-    public final ResponseEntity<Object> handleAlreadyRegisteredUserException(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
-        return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(NotFoundUserException.class)
-    public final ResponseEntity<Object> handleNotFoundUserException(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
-        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
     @Override
@@ -62,4 +55,33 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
 
         return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * User Domain Exception
+     */
+
+    @ExceptionHandler(AlreadyRegisteredUserException.class)
+    public final ResponseEntity<Object> handleAlreadyRegisteredUserException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NotFoundUserException.class)
+    public final ResponseEntity<Object> handleNotFoundUserException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NotFoundUserException.class)
+    public final ResponseEntity<Object> handleUserNotActivatedException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.FORBIDDEN.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(InvalidIdToken.class)
+    public final ResponseEntity<Object> handleInvalidIdToken(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+
 }

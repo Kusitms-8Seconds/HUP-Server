@@ -2,8 +2,10 @@ package eightseconds.domain.user.constant;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import eightseconds.domain.item.constant.ItemConstants;
+import eightseconds.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Getter
@@ -33,8 +35,6 @@ public enum UserConstants {
         eUpdateMethod("update");
         private final String value;
     }
-
-
 
     @Getter
     @AllArgsConstructor
@@ -98,5 +98,25 @@ public enum UserConstants {
             return EOAuth2UserServiceImpl.valueOf(s);
         }
     }
+
+    @Getter
+    public enum EUserServiceImpl{
+        eAlreadyRegisteredUserExceptionMessage("이미 가입되어 있는 유저입니다."),
+        eSuccessSignUpMessage("회원가입을 완료했습니다."),
+        eUsernameNotFoundException(" -> 유저 이름을 데이터베이스에서 찾을 수 없습니다."),
+        eUserNotActivatedException(" -> 유저가 활성화되어 있지 않습니다."),
+        eNotFoundUserException("해당 유저아이디로 유저를 찾을 수 없습니다."),
+        eTrue(true),
+        eAuthorityRoleUser("ROLE_USER");
+
+
+        private boolean check;
+        private String value;
+
+        EUserServiceImpl(boolean check) { this.check = check;}
+        EUserServiceImpl(String value) {this.value = value;}
+
+    }
+
 
 }

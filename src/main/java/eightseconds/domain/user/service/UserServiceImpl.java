@@ -1,11 +1,13 @@
 package eightseconds.domain.user.service;
 
-import eightseconds.domain.user.constant.UserConstants;
+import eightseconds.domain.user.constant.UserConstants.ELoginType;
+import eightseconds.domain.user.constant.UserConstants.EUserServiceImpl;
 import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.Authority;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.exception.AlreadyRegisteredUserException;
 import eightseconds.domain.user.exception.NotFoundUserException;
+import eightseconds.domain.user.exception.UserNotActivatedException;
 import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.jwt.TokenProvider;
 import eightseconds.global.util.SecurityUtil;
@@ -40,10 +42,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public SignUpResponse saveUser(SignUpRequest signUpRequest) {
         if (userRepository.findOneWithAuthoritiesByLoginId(signUpRequest.getLoginId()).orElse(null) != null) {
-                throw new AlreadyRegisteredUserException("이미 가입되어 있는 유저입니다."); }
+                throw new AlreadyRegisteredUserException(EUserServiceImpl.eAlreadyRegisteredUserExceptionMessage.getValue()); }
 
         Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
+                .authorityName(EUserServiceImpl.eAuthorityRoleUser.getValue())
                 .build();
         User user = User.builder()
                 .loginId(signUpRequest.getLoginId())
@@ -53,12 +55,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .phoneNumber(signUpRequest.getPhoneNumber())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
-                .loginType(UserConstants.ELoginType.eApp)
+                .loginType(ELoginType.eApp)
                 .build();
 
         User savedUser = this.userRepository.save(user);
 
-        return SignUpResponse.from(savedUser.getId(), savedUser.getLoginId(), UserConstants.SUCCESS_SIGN_UP.getMessage());
+        return SignUpResponse.from(savedUser.getId(), savedUser.getLoginId(), EUserServiceImpl.eSuccessSignUpMessage.getValue());
     }
 
     @Override
@@ -66,13 +68,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(final String loginId) {
         return userRepository.findOneWithAuthoritiesByLoginId(loginId)
                 .map(user -> createUser(loginId, user))
-                .orElseThrow(() -> new UsernameNotFoundException(loginId + " -> 데이터베이스에서 찾을 수 없습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException(loginId + EUserServiceImpl.eUsernameNotFoundException.getValue()));
     }
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
-        if (!user.isActivated()) {
-            throw new RuntimeException(username + " -> 활성화되어 있지 않습니다.");
-        }
+        if (!user.isActivated()) throw new UserNotActivatedException(username + EUserServiceImpl.eUserNotActivatedException.getValue());
+
         List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
                 .collect(Collectors.toList());
@@ -132,7 +133,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User validateUserId(Long userId){
         Optional<User> user = userRepository.findById(userId);
         if(!user.isEmpty()){ return user.get(); }
-        else throw new NotFoundUserException("해당 유저아이디로 유저를 찾을 수 없습니다.");
+        else throw new NotFoundUserException(EUserServiceImpl.eNotFoundUserException.getValue());
     }
 
     public String validateLogin(LoginRequest loginRequest) {
