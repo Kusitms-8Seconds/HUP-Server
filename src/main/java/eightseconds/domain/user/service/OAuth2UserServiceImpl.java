@@ -61,7 +61,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     @Value("${spring.security.oauth2.client.provider.naver.user-info-uri}")
     private String naverUserInfoUrl;
 
-    public LoginResponse validationGoogleIdToken(OAuth2GoogleLoginRequest oAuth2LoginRequest) throws GeneralSecurityException, IOException {
+    public LoginResponse validateGoogleIdToken(OAuth2GoogleLoginRequest oAuth2LoginRequest) throws GeneralSecurityException, IOException {
         HttpTransport transport = new NetHttpTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
@@ -109,7 +109,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     }
 
     @Override
-    public LoginResponse validationKakaoAccessToken(OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) {
+    public LoginResponse validateKakaoAccessToken(OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority(EOAuth2UserServiceImpl.eRoleUser.getValue()));
         HashMap<String, Object> userInfo = getUserInfo(oAuth2KakaoLoginRequest.getAccessToken());
@@ -173,7 +173,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         return userRepository.save(user);
     }
 
-    public LoginResponse validationNaverAccessToken(OAuth2NaverLoginRequest oAuth2NaverLoginRequest) {
+    public LoginResponse validateNaverAccessToken(OAuth2NaverLoginRequest oAuth2NaverLoginRequest) {
 
         String header = EOAuth2UserServiceImpl.eNaverBearer.getValue() + oAuth2NaverLoginRequest.getAccessToken();
         Map<String, String> requestHeaders = new HashMap<>();
