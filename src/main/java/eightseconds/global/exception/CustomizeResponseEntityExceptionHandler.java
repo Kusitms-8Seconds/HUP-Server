@@ -3,6 +3,7 @@ package eightseconds.global.exception;
 import eightseconds.domain.user.exception.AlreadyRegisteredUserException;
 import eightseconds.domain.user.exception.InvalidIdToken;
 import eightseconds.domain.user.exception.NotFoundUserException;
+import eightseconds.domain.user.exception.UserNotActivatedException;
 import eightseconds.global.dto.ErrorResultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -72,7 +73,7 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(NotFoundUserException.class)
+    @ExceptionHandler(UserNotActivatedException.class)
     public final ResponseEntity<Object> handleUserNotActivatedException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.FORBIDDEN.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.FORBIDDEN);
