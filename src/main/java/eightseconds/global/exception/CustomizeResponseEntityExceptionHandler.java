@@ -1,10 +1,9 @@
 package eightseconds.global.exception;
 
-import eightseconds.domain.user.exception.AlreadyRegisteredUserException;
-import eightseconds.domain.user.exception.InvalidIdToken;
-import eightseconds.domain.user.exception.NotFoundUserException;
-import eightseconds.domain.user.exception.UserNotActivatedException;
+import eightseconds.domain.user.exception.*;
 import eightseconds.global.dto.ErrorResultResponse;
+import eightseconds.infra.email.exception.ExpiredAuthCodeTimeException;
+import eightseconds.infra.email.exception.InvalidAuthCodeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -80,9 +79,31 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
     }
 
     @ExceptionHandler(InvalidIdToken.class)
-    public final ResponseEntity<Object> handleInvalidIdToken(Exception ex, WebRequest request) {
+    public final ResponseEntity<Object> handleInvalidIdTokenException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(NotActivatedEmailAuthException.class)
+    public final ResponseEntity<Object> handleNotActivatedEmailAuthException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * Email Exception
+     */
+
+    @ExceptionHandler(InvalidAuthCodeException.class)
+    public final ResponseEntity<Object> handleInvalidAuthCodeException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ExpiredAuthCodeTimeException.class)
+    public final ResponseEntity<Object> handleExpiredAuthCodeTimeException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.REQUEST_TIMEOUT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.REQUEST_TIMEOUT);
     }
 
 }
