@@ -11,11 +11,9 @@ import java.time.LocalDateTime;
 public class DefaultResponse {
 
     private String message;
-
     private DefaultResponse(String message) {
         this.message = message;
     }
-
     public static DefaultResponse from(String message) {
         return new DefaultResponse(message);
     }

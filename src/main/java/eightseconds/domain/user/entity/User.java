@@ -7,6 +7,7 @@ import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.user.constant.UserConstants.ELoginType;
 import eightseconds.domain.user.dto.UpdateUserRequest;
 import eightseconds.global.entity.BaseTimeEntity;
+import eightseconds.infra.email.entity.EmailAuth;
 import lombok.*;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -41,6 +42,8 @@ public class User extends BaseTimeEntity {
     @Column(name = "activated")
     private boolean activated;
 
+    private boolean emailAuthActivated;
+
     // oAuth2관련
     private String picture;
     @Enumerated(EnumType.STRING)
@@ -68,6 +71,9 @@ public class User extends BaseTimeEntity {
 //    @OneToMany(mappedBy = "user")
 //    private List<ChatMessage> chatMessages = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "email_auth_id")
+    private EmailAuth emailAuth;
 
 
     // 연관관계 메서드
@@ -121,6 +127,7 @@ public class User extends BaseTimeEntity {
                 .picture((String)attributes.get("picture"))
                 .authorities(Collections.singleton(authority))
                 .activated(true)
+                .emailAuthActivated(false)
                 .loginType(ELoginType.eApp)
                 .build();
     }
@@ -135,6 +142,7 @@ public class User extends BaseTimeEntity {
                 .picture((String)payload.get("picture"))
                 .authorities(Collections.singleton(authority))
                 .activated(true)
+                .emailAuthActivated(true)
                 .loginType(ELoginType.eGoogle)
                 .build();
     }
@@ -149,6 +157,7 @@ public class User extends BaseTimeEntity {
                 .picture(userInfo.get("profile_image").toString())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
+                .emailAuthActivated(true)
                 .loginType(ELoginType.eKakao)
                 .build();
     }
@@ -163,6 +172,7 @@ public class User extends BaseTimeEntity {
                 .picture(userInfo.get("profile_image").toString())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
+                .emailAuthActivated(true)
                 .loginType(ELoginType.eNaver)
                 .build();
     }

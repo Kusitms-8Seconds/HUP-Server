@@ -6,6 +6,7 @@ import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.Authority;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.exception.AlreadyRegisteredUserException;
+import eightseconds.domain.user.exception.NotActivatedEmailAuthException;
 import eightseconds.domain.user.exception.NotFoundUserException;
 import eightseconds.domain.user.exception.UserNotActivatedException;
 import eightseconds.domain.user.repository.UserRepository;
@@ -93,10 +94,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     public LoginResponse loginUser(LoginRequest loginRequest) {
-        String token = validateLogin(loginRequest);
         User user = getUserByLoginId(loginRequest.getLoginId());
+        validateEmailAuth(user);
+        String token = validateLogin(loginRequest);
+
         return LoginResponse.from(token, user.getId());
     }
+
 
     public User getUserByLoginId(String loginId) {
         Optional<User> user = userRepository.findUserByLoginId(loginId);
@@ -143,6 +147,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.createToken(authentication);
         return jwt;
+    }
+
+    private void validateEmailAuth(User user) {
+        if (!user.isEmailAuthActivated()) throw new NotActivatedEmailAuthException(EUserServiceImpl.eNotActivatedEmailAuthException.getValue());
     }
 
 }

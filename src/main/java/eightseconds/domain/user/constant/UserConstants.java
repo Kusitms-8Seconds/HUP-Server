@@ -106,6 +106,7 @@ public enum UserConstants {
         eUsernameNotFoundException(" -> 유저 이름을 데이터베이스에서 찾을 수 없습니다."),
         eUserNotActivatedException(" -> 유저가 활성화되어 있지 않습니다."),
         eNotFoundUserException("해당 유저아이디로 유저를 찾을 수 없습니다."),
+        eNotActivatedEmailAuthException("이메일 인증이 완료되지 않았습니다."),
         eTrue(true),
         eAuthorityRoleUser("ROLE_USER");
 
