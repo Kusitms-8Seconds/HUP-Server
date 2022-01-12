@@ -9,6 +9,7 @@ import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.dto.RegisterItemRequest;
 import eightseconds.domain.item.dto.RegisterItemResponse;
 import eightseconds.domain.item.entity.Item;
+import eightseconds.domain.item.exception.NotDesirableAuctionEndTimeException;
 import eightseconds.domain.item.exception.NotOnGoingException;
 import eightseconds.domain.item.exception.NotPriceSuggestionContentException;
 import eightseconds.domain.item.exception.NotSoldOutTimeException;
@@ -180,7 +181,7 @@ public class ItemServiceImpl implements ItemService {
     private void validateCreateSoldOutTime(LocalDateTime auctionClosingDate) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         if (!currentDateTime.isBefore(auctionClosingDate)) {
-            throw new NotSoldOutTimeException("경매종료일자가 현재시각보다 빠릅니다.");
+            throw new NotDesirableAuctionEndTimeException("경매종료일자가 현재시각보다 빠릅니다.");
         }
     }
 

@@ -1,17 +1,17 @@
 package eightseconds.domain.item.controller;
 
-import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.file.service.FileService;
+import eightseconds.domain.item.constant.ItemConstants.EItemApiController;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.service.ItemService;
 import eightseconds.domain.pricesuggestion.dto.SoldOutRequest;
-import eightseconds.domain.user.constant.UserConstants;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.dto.PaginationDto;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -36,6 +36,7 @@ public class ItemApiController {
     private final FileService fileService;
     private final UserService userService;
 
+    @ApiOperation(value = "아이템 생성", notes = "상품등록을 합니다.")
     @PostMapping
     public ResponseEntity<EntityModel<RegisterItemResponse>> createItem(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
                                                        @RequestPart(value = "userId") String userId,
@@ -51,7 +52,7 @@ public class ItemApiController {
                 , buyDate, itemStatePoint, description, auctionClosingDate, files));
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path(EItemApiController.eLocationIdPath.getValue())
                 .buildAndExpand(registerItemResponse.getId())
                 .toUri();
 
