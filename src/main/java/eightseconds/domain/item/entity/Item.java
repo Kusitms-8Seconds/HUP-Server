@@ -82,6 +82,7 @@ public class Item extends BaseTimeEntity {
         this.description = description;
         this.soldStatus = EItemSoldStatus.eOnGoing;
         this.auctionClosingDate = auctionClosingDate;
+
     }
 
     // 연관관계 메서드
@@ -90,5 +91,9 @@ public class Item extends BaseTimeEntity {
             myFiles.add(file);
             file.setItem(this);
         }
+    }
+    public void setUser(User user) {
+        this.user = user;
+        user.getItems().add(this);
     }
 }

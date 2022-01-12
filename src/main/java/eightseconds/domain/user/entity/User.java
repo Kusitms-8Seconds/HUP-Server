@@ -79,7 +79,7 @@ public class User extends BaseTimeEntity {
     // 연관관계 메서드
     public void addItem(Item item) {
         this.items.add(item);
-        item.setUser(this);
+        //item.setUser(this);
     }
 
     public void getAuthority(Long id){

@@ -126,8 +126,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     public User getUserByUserId(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        return user.get();
+        return validateUserId(userId);
     }
 
     /**

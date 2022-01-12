@@ -62,4 +62,13 @@ public class ItemConstants {
             return EItemSoldStatus.valueOf(s);
         }
     }
+
+//    @Getter
+//    @AllArgsConstructor
+//    @NoArgsConstructor
+//    public enum EItemApiController{
+//
+//
+//
+//    }
 }

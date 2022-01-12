@@ -28,23 +28,23 @@ public class PriceSuggestionApiController {
 
     @GetMapping("/list/item/{itemId}")
     public ResponseEntity<PaginationDto<List<PriceSuggestionListResponse>>> findAllByItemId(@PageableDefault Pageable pageable, @PathVariable Long itemId) {
-        itemService.validationItemId(itemId);
-        itemService.validationSoldStatusByItemId(itemId);
+        itemService.validateItemId(itemId);
+        itemService.validateSoldStatusByItemId(itemId);
         return ResponseEntity.ok(priceSuggestionService.getAllPriceSuggestionsByItemId(pageable, itemId));
     }
 
     @GetMapping("/maximumPrice/{itemId}")
     public ResponseEntity<MaximumPriceResponse> findMaximumPrice(@PathVariable Long itemId) {
-        itemService.validationItemId(itemId);
-        itemService.validationSoldStatusByItemId(itemId);
+        itemService.validateItemId(itemId);
+        itemService.validateSoldStatusByItemId(itemId);
         int maximumPrice = priceSuggestionService.getMaximumPrice(itemId);
         return ResponseEntity.ok(MaximumPriceResponse.from(maximumPrice));
     }
 
     @GetMapping("/participant/{itemId}")
     public ResponseEntity<ParticipantsResponse> findParticipants(@PathVariable Long itemId) {
-        itemService.validationItemId(itemId);
-        itemService.validationSoldStatusByItemId(itemId);
+        itemService.validateItemId(itemId);
+        itemService.validateSoldStatusByItemId(itemId);
         int participants = priceSuggestionService.getParticipants(itemId);
         return ResponseEntity.ok(ParticipantsResponse.from(participants));
     }
