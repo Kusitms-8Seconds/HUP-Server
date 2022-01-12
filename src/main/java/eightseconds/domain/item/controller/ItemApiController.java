@@ -60,12 +60,11 @@ public class ItemApiController {
 
     }
 
+    @ApiOperation(value = "아이템 삭제", notes = "등록되어있는 상품을 지웁니다.")
     @DeleteMapping("/{id}")
     public ResponseEntity<DefaultResponse> deleteItem(@PathVariable Long id) {
-        itemService.validateItemId(id);
-        fileService.deleteAllByItemId(id);
         itemService.deleteByItemId(id);
-        return ResponseEntity.ok(DefaultResponse.from("삭제를 완료했습니다."));
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
