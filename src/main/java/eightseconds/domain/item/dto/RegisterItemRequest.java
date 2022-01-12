@@ -7,10 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -25,14 +27,13 @@ public class RegisterItemRequest {
     @NotNull private int itemStatePoint;
     private String description;
     @NotNull private LocalDateTime auctionClosingDate;
+    private List<MultipartFile> files;
 
     public static RegisterItemRequest of(String itemName, String category, String initPrice, String buyDate, String itemStatePoint
-            , String description, String auctionClosingDate) {
+            , String description, String auctionClosingDate, List<MultipartFile> files) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         LocalDateTime buyDateFormatted = LocalDateTime.parse(buyDate, formatter);
         LocalDateTime auctionClosingDateFormatted = LocalDateTime.parse(auctionClosingDate, formatter);
-
-        System.out.println("밸류오브카테고리"+EItemCategory.valueOf(category));
 
         return RegisterItemRequest.builder()
                 .itemName(itemName)
@@ -42,6 +43,7 @@ public class RegisterItemRequest {
                 .itemStatePoint(Integer.valueOf(itemStatePoint))
                 .description(description)
                 .auctionClosingDate(auctionClosingDateFormatted)
+                .files(files)
                 .build();
     }
 

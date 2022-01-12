@@ -8,19 +8,23 @@ import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.service.ItemService;
 import eightseconds.domain.pricesuggestion.dto.SoldOutRequest;
+import eightseconds.domain.user.constant.UserConstants;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.dto.PaginationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -33,8 +37,8 @@ public class ItemApiController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<RegisterItemResponse> create(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
-                                                       @RequestPart(value = "userId", required = true) String userId,
+    public ResponseEntity<EntityModel<RegisterItemResponse>> createItem(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                                       @RequestPart(value = "userId") String userId,
                                                        @RequestPart(value = "itemName", required = false) String itemName,
                                                        @RequestPart(value = "category", required = false) String category,
                                                        @RequestPart(value = "initPrice", required = false) String initPrice,
@@ -43,28 +47,29 @@ public class ItemApiController {
                                                        @RequestPart(value = "description", required = false) String description,
                                                        @RequestPart(value = "auctionClosingDate", required = false) String auctionClosingDate) throws IOException {
 
-        Item item = itemService.saveItem(Long.valueOf(userId), RegisterItemRequest.of(itemName, category, initPrice
-                , buyDate, itemStatePoint, description, auctionClosingDate));
-        System.out.println("files널이아닌지?"+files);
-        if(files != null ){
-            System.out.println("files널이아닌지22?"+files);
-            List<MyFile> saveFiles = fileService.save(files);
-            itemService.addFiles(item, saveFiles); }
-        return ResponseEntity.ok(RegisterItemResponse.from(item));
+        RegisterItemResponse registerItemResponse = itemService.saveItem(Long.valueOf(userId), RegisterItemRequest.of(itemName, category, initPrice
+                , buyDate, itemStatePoint, description, auctionClosingDate, files));
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(registerItemResponse.getId())
+                .toUri();
+
+        return  ResponseEntity.created(location).body(EntityModel.of(registerItemResponse));
 
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<DefaultResponse> delete(@PathVariable Long id) {
-        itemService.validationItemId(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<DefaultResponse> deleteItem(@PathVariable Long id) {
+        itemService.validateItemId(id);
         fileService.deleteAllByItemId(id);
         itemService.deleteByItemId(id);
         return ResponseEntity.ok(DefaultResponse.from("삭제를 완료했습니다."));
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<ItemDetailsResponse> find(@PathVariable Long id) { ;
-        itemService.validationItemId(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<ItemDetailsResponse> getItem(@PathVariable Long id) {
+        itemService.validateItemId(id);
         Item item = itemService.getItem(id);
         return ResponseEntity.ok(ItemDetailsResponse.from(item));
     }
@@ -86,8 +91,8 @@ public class ItemApiController {
 
     @GetMapping("/status/{id}")
     public ResponseEntity<?> findSoldStatus(@PathVariable Long id) {
-        itemService.validationItemId(id);
-        itemService.validationSoldStatusByItemId(id);
+        itemService.validateItemId(id);
+        itemService.validateSoldStatusByItemId(id);
         Item item = itemService.getItem(id);
         return ResponseEntity.ok(item.getSoldStatus());
     }
