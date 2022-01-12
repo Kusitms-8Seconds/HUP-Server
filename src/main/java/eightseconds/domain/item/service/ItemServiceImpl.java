@@ -67,9 +67,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item getItem(Long id) {
-        Item item = itemRepository.getById(id);
-        return item;
+    public ItemDetailsResponse getItem(Long id) {
+        validateItemId(id);
+        return ItemDetailsResponse.from(itemRepository.getById(id));
+    }
+
+    @Override
+    public Item getItemByItemId(Long id) {
+        validateItemId(id);
+        return itemRepository.getById(id);
     }
 
     @Override
@@ -97,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Item soldOutItem(Long itemId) {
-        Item item = getItem(itemId);
+        Item item = getItemByItemId(itemId);
         validateItemId(item.getId());
         validateSoldStatusByItemId(item.getId());
         validateSoldOutTime(item.getAuctionClosingDate());
