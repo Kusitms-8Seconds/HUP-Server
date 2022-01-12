@@ -44,7 +44,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     public PriceSuggestion priceSuggestionItem(Long userId, Long itemId, int suggestionPrice) {
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getByUserIdAndItemId(userId, itemId);
         User user = userService.getUserByUserId(userId);
-        Item item = itemService.getItem(itemId);
+        Item item = itemService.getItemByItemId(itemId);
         if(!priceSuggestion.isEmpty()){
             validationPrice(priceSuggestion.get().getSuggestionPrice(), suggestionPrice);
             priceSuggestion.get().setSuggestionPrice(suggestionPrice);
@@ -110,7 +110,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     @Override
     public void validationPriceSuggestionsItemId(Long itemId) {
         List<PriceSuggestion> priceSuggestions= priceSuggestionRepository.findAllByItemId(itemId);
-        Item item = itemService.getItem(itemId);
+        Item item = itemService.getItemByItemId(itemId);
         validationOnGoingItem(item);
         validationAcceptStatusPriceSuggestion(priceSuggestions);
     }

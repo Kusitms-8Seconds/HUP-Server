@@ -33,7 +33,7 @@ public class PriceSuggestionSTOMPController {
         Long userId = priceSuggestionRequest.getUserId();
         priceSuggestionService.validationPriceSuggestionsItemId(itemId);
         PriceSuggestion priceSuggestion = priceSuggestionService.priceSuggestionItem(userId, itemId, suggestionPrice);
-        Item item = itemService.getItem(itemId);
+        Item item = itemService.getItemByItemId(itemId);
         User user = userService.getUserByUserId(userId);
         int maximumPrice = priceSuggestionService.getMaximumPrice(itemId);
         int participants = priceSuggestionService.getParticipants(itemId);

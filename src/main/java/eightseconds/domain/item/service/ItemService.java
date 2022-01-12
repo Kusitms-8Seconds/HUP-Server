@@ -22,7 +22,8 @@ public interface ItemService{
     void addFiles(Item item, List<MyFile> saveFiles);
     void deleteByItemId(Long id);
     void validateItemId(Long id);
-    Item getItem(Long id);
+    ItemDetailsResponse getItem(Long id);
+    Item getItemByItemId(Long id);
     void validateUserAndItem(List<Item> items, Long id);
     PaginationDto<List<ItemDetailsResponse>> getAllItems(Pageable pageable, EItemSoldStatus itemSoldStatus);
     PaginationDto<List<ItemDetailsResponse>> getItemsByCategory(Pageable pageable, EItemCategory category);

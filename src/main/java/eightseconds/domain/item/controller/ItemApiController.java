@@ -67,11 +67,10 @@ public class ItemApiController {
         return ResponseEntity.noContent().build();
     }
 
+    @ApiOperation(value = "아이템 조회", notes = "상품을 조회합니다.")
     @GetMapping("/{id}")
-    public ResponseEntity<ItemDetailsResponse> getItem(@PathVariable Long id) {
-        itemService.validateItemId(id);
-        Item item = itemService.getItem(id);
-        return ResponseEntity.ok(ItemDetailsResponse.from(item));
+    public ResponseEntity<EntityModel<ItemDetailsResponse>> getItem(@PathVariable Long id) {
+        return ResponseEntity.ok(EntityModel.of(itemService.getItem(id)));
     }
 
     @GetMapping("/list/status/{itemSoldStatus}")
@@ -93,7 +92,7 @@ public class ItemApiController {
     public ResponseEntity<?> findSoldStatus(@PathVariable Long id) {
         itemService.validateItemId(id);
         itemService.validateSoldStatusByItemId(id);
-        Item item = itemService.getItem(id);
+        ItemDetailsResponse item = itemService.getItem(id);
         return ResponseEntity.ok(item.getSoldStatus());
     }
 

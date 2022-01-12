@@ -32,7 +32,7 @@ public class ScrapApiController {
     public ResponseEntity<ScrapRegisterResponse> create(@Valid @RequestBody ScrapRegisterRequest scrapRegisterRequest) throws Exception {
 
         User user = userService.getUserByUserId(scrapRegisterRequest.getUserId());
-        Item item = itemService.getItem(scrapRegisterRequest.getItemId());
+        Item item = itemService.getItemByItemId(scrapRegisterRequest.getItemId());
         Scrap scrap = scrapService.saveScrap(user, item);
         return ResponseEntity.ok(ScrapRegisterResponse.from("스크랩을 완료했습니다.", scrap.getId()));
     }
