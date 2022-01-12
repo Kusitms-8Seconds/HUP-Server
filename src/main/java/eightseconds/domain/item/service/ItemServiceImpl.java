@@ -9,10 +9,7 @@ import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.dto.RegisterItemRequest;
 import eightseconds.domain.item.dto.RegisterItemResponse;
 import eightseconds.domain.item.entity.Item;
-import eightseconds.domain.item.exception.NotDesirableAuctionEndTimeException;
-import eightseconds.domain.item.exception.NotOnGoingException;
-import eightseconds.domain.item.exception.NotPriceSuggestionContentException;
-import eightseconds.domain.item.exception.NotSoldOutTimeException;
+import eightseconds.domain.item.exception.*;
 import eightseconds.domain.item.repository.ItemRepository;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.repository.PriceSuggestionRepository;
@@ -64,6 +61,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public void deleteByItemId(Long id) {
+        validateItemId(id);
+        fileService.deleteAllByItemId(id);
         itemRepository.deleteById(id);
     }
 
@@ -138,9 +137,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void validateItemId(Long itemId) {
-        if (itemRepository.findById(itemId).isEmpty()) {
-            throw new IllegalArgumentException("해당 아이디로 상품을 찾을 수 없습니다.");
-        }
+        itemRepository.findById(itemId).orElseThrow(() -> new NotFoundItemException("해당 아이디로 상품을 찾을 수 없습니다."));
     }
 
     @Override
