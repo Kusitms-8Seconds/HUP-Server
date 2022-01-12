@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 public class ItemConstants {
 
@@ -63,12 +64,15 @@ public class ItemConstants {
         }
     }
 
-//    @Getter
-//    @AllArgsConstructor
-//    @NoArgsConstructor
-//    public enum EItemApiController{
-//
-//
-//
-//    }
+    @Getter
+    @RequiredArgsConstructor
+    public enum EItemApiController{
+
+        eLocationIdPath("/{id}"),
+        eGetMethod("get"),
+        eDeleteMethod("delete"),
+        eUpdateMethod("update");
+        private final String value;
+
+    }
 }

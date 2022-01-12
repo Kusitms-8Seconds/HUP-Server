@@ -1,5 +1,6 @@
 package eightseconds.global.exception;
 
+import eightseconds.domain.item.exception.NotDesirableAuctionEndTimeException;
 import eightseconds.domain.user.exception.*;
 import eightseconds.global.dto.ErrorResultResponse;
 import eightseconds.infra.email.exception.ExpiredAuthCodeTimeException;
@@ -104,6 +105,16 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<Object> handleExpiredAuthCodeTimeException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.REQUEST_TIMEOUT.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.REQUEST_TIMEOUT);
+    }
+
+    /**
+     * Item Exception
+     */
+
+    @ExceptionHandler(NotDesirableAuctionEndTimeException.class)
+    public final ResponseEntity<Object> handleNotDesirableAuctionEndTimeException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.PRECONDITION_FAILED.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.PRECONDITION_FAILED);
     }
 
 }
