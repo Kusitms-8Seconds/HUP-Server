@@ -1,5 +1,6 @@
 package eightseconds.global.exception;
 
+import eightseconds.domain.item.exception.InvalidCategoryException;
 import eightseconds.domain.item.exception.InvalidItemSoldStatusException;
 import eightseconds.domain.item.exception.NotDesirableAuctionEndTimeException;
 import eightseconds.domain.item.exception.NotFoundItemException;
@@ -127,8 +128,14 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
 
     @ExceptionHandler(InvalidItemSoldStatusException.class)
     public final ResponseEntity<Object> handleInvalidItemSoldStatusException(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
-        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.PRECONDITION_FAILED.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.PRECONDITION_FAILED);
+    }
+
+    @ExceptionHandler(InvalidCategoryException.class)
+    public final ResponseEntity<Object> handleInvalidCategoryException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.PRECONDITION_FAILED.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.PRECONDITION_FAILED);
     }
 
 }
