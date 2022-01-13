@@ -32,6 +32,6 @@ public interface ItemService{
     void validateSoldOutTime(LocalDateTime auctionClosingDate);
     Item soldOutItem(Long itemId);
 
-    List<BestItemResponse> getAllBestItems(EItemSoldStatus itemSoldStatus);
+    List<BestItemResponse> getAllBestItemsByItemSoldStatus(String itemSoldStatus);
 
 }

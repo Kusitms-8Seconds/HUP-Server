@@ -87,6 +87,24 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public List<BestItemResponse> getAllBestItemsByItemSoldStatus(String itemSoldStatus) {
+        validateItemSoldStatus(itemSoldStatus);
+        List<Item> items = itemRepository.findAllItemsByStatus(EItemSoldStatus.from(itemSoldStatus));
+        List<BestItemResponse> bestItems = new ArrayList<>();
+        for (Item item : items) { bestItems.add(BestItemResponse.from(item, item.getScraps().size())); }
+        Collections.sort(bestItems, new ItemComparator());
+        return bestItems;
+    }
+    class ItemComparator implements Comparator<BestItemResponse> {
+        @Override
+        public int compare(BestItemResponse a,BestItemResponse b){
+            if(a.getHeart()<b.getHeart()) return 1;
+            if(a.getHeart()>b.getHeart()) return -1;
+            return 0;
+        }
+    }
+
+    @Override
     public PaginationDto<List<ItemDetailsResponse>> getItemsByCategory(Pageable pageable, EItemCategory category) {
         validateExistingItemsByCategory(pageable, category);
         Page<Item> page = itemRepository.findAllByCategory(Pageable.ofSize(30), category);
@@ -114,25 +132,6 @@ public class ItemServiceImpl implements ItemService {
         priceSuggestion.get().setAcceptState(true);
         item.setSoldPrice(priceSuggestion.get().getSuggestionPrice());
         return item;
-    }
-
-    @Override
-    public List<BestItemResponse> getAllBestItems(EItemSoldStatus itemSoldStatus) {
-        List<Item> items = itemRepository.findAllItemsByStatus(itemSoldStatus);
-        List<BestItemResponse> bestItems = new ArrayList<>();
-        for (Item item : items) {
-            bestItems.add(BestItemResponse.from(item, item.getScraps().size())); }
-        Collections.sort(bestItems, new ItemComparator());
-
-        return bestItems;
-    }
-    class ItemComparator implements Comparator<BestItemResponse> {
-        @Override
-        public int compare(BestItemResponse a,BestItemResponse b){
-            if(a.getHeart()<b.getHeart()) return 1;
-            if(a.getHeart()>b.getHeart()) return -1;
-            return 0;
-        }
     }
 
     /**
