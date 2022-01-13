@@ -79,8 +79,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public PaginationDto<List<ItemDetailsResponse>> getAllItemsByItemSoldStatus(Pageable pageable, EItemSoldStatus itemSoldStatus) {
-        Page<Item> page = itemRepository.findAllByStatus(pageable, itemSoldStatus);
+    public PaginationDto<List<ItemDetailsResponse>> getAllItemsByItemSoldStatus(Pageable pageable, String itemSoldStatus) {
+        validateItemSoldStatus(itemSoldStatus);
+        Page<Item> page = itemRepository.findAllByStatus(pageable, EItemSoldStatus.from(itemSoldStatus));
         List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -137,6 +138,13 @@ public class ItemServiceImpl implements ItemService {
     /**
      * validate
      */
+
+    private void validateItemSoldStatus(String itemSoldStatus) {
+        Arrays.stream(EItemSoldStatus.values())
+                .filter(eItemSoldStatus -> itemSoldStatus.equals(eItemSoldStatus.name()))
+                .findAny()
+                .orElseThrow(() -> new InvalidItemSoldStatusException("유효하지 않은 상품판매상태입니다."));
+    }
 
     @Override
     public void validateItemId(Long itemId) {

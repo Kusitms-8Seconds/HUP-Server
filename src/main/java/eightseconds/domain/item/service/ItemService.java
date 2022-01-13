@@ -25,7 +25,7 @@ public interface ItemService{
     ItemDetailsResponse getItem(Long id);
     Item getItemByItemId(Long id);
     void validateUserAndItem(List<Item> items, Long id);
-    PaginationDto<List<ItemDetailsResponse>> getAllItemsByItemSoldStatus(Pageable pageable, EItemSoldStatus itemSoldStatus);
+    PaginationDto<List<ItemDetailsResponse>> getAllItemsByItemSoldStatus(Pageable pageable, String itemSoldStatus);
     PaginationDto<List<ItemDetailsResponse>> getItemsByCategory(Pageable pageable, EItemCategory category);
     void validateSoldStatusByItemId(Long itemId);
     PaginationDto<List<ItemDetailsResponse>> getItemsByStatusAndUserId(Pageable pageable, EItemSoldStatus soldStatus, Long userId);
