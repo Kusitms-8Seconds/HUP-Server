@@ -73,13 +73,15 @@ public class ItemApiController {
         return ResponseEntity.ok(EntityModel.of(itemService.getItem(id)));
     }
 
-    @GetMapping("/list/status/{itemSoldStatus}")
-    public ResponseEntity<PaginationDto<List<ItemDetailsResponse>>> list(@PageableDefault Pageable pageable, @PathVariable EItemSoldStatus itemSoldStatus) {
-        return ResponseEntity.ok(itemService.getAllItems(pageable, itemSoldStatus));
+    @ApiOperation(value = "아이템 판매상태별 조회", notes = "상품을 판매상태별로 조회합니다.")
+    @GetMapping("/statuses/{itemSoldStatus}")
+    public ResponseEntity<PaginationDto<List<ItemDetailsResponse>>> getAllItemsByItemSoldStatus(@PageableDefault Pageable pageable, @PathVariable EItemSoldStatus itemSoldStatus) {
+        return ResponseEntity.ok(itemService.getAllItemsByItemSoldStatus(pageable, itemSoldStatus));
     }
 
-    @GetMapping("/list/status/heart/{itemSoldStatus}")
-    public ResponseEntity<List<BestItemResponse>> listBestItems(@PathVariable EItemSoldStatus itemSoldStatus) {
+    @ApiOperation(value = "아이템 판매상태별, 스크랩많은순 조회", notes = "상품을 판매상태별, 스크립이 많은순으로 조회합니다.")
+    @GetMapping("/statuses/hearts/{itemSoldStatus}")
+    public ResponseEntity<List<BestItemResponse>> getAllItemsByItemSoldStatusAndHeart(@PathVariable EItemSoldStatus itemSoldStatus) {
         return ResponseEntity.ok(itemService.getAllBestItems(itemSoldStatus));
     }
 
