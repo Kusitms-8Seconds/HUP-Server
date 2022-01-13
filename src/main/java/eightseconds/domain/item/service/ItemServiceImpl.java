@@ -79,8 +79,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public PaginationDto<List<ItemDetailsResponse>> getAllItems(Pageable pageable, EItemSoldStatus itemSoldStatus) {
-        Page<Item> page = itemRepository.findAllByStatus(Pageable.ofSize(30), itemSoldStatus);
+    public PaginationDto<List<ItemDetailsResponse>> getAllItemsByItemSoldStatus(Pageable pageable, EItemSoldStatus itemSoldStatus) {
+        Page<Item> page = itemRepository.findAllByStatus(pageable, itemSoldStatus);
         List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -123,9 +123,6 @@ public class ItemServiceImpl implements ItemService {
             bestItems.add(BestItemResponse.from(item, item.getScraps().size())); }
         Collections.sort(bestItems, new ItemComparator());
 
-        for (BestItemResponse bestItem : bestItems) {
-            System.out.println("bestItem정렬"+bestItem.getHeart());
-        };
         return bestItems;
     }
     class ItemComparator implements Comparator<BestItemResponse> {
