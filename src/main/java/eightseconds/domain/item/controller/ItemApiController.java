@@ -79,15 +79,16 @@ public class ItemApiController {
         return ResponseEntity.ok(EntityModel.of(itemService.getAllItemsByItemSoldStatus(pageable, itemSoldStatus)));
     }
 
-    @ApiOperation(value = "아이템 판매상태별, 스크랩많은순 조회", notes = "상품을 판매상태별, 스크립이 많은순으로 조회합니다.")
+    @ApiOperation(value = "아이템 판매상태별, 스크랩많은순 조회", notes = "상품을 판매상태별, 스크랩이 많은순으로 조회합니다.")
     @GetMapping("/statuses/hearts/{itemSoldStatus}")
     public ResponseEntity<List<BestItemResponse>> getAllItemsByItemSoldStatusAndHeart(@PathVariable String itemSoldStatus) {
         return ResponseEntity.ok(itemService.getAllBestItemsByItemSoldStatus(itemSoldStatus));
     }
 
-    @GetMapping("/list/category/{category}")
-    public ResponseEntity<PaginationDto<List<ItemDetailsResponse>>> listByCategory(@PageableDefault Pageable pageable, @PathVariable EItemCategory category) { ;
-        return ResponseEntity.ok(itemService.getItemsByCategory(pageable, category));
+    @ApiOperation(value = "아이템 카테고리별 조회", notes = "상품을 카테고리별로 조회합니다.")
+    @GetMapping("/categories/{category}")
+    public ResponseEntity<EntityModel<PaginationDto<List<ItemDetailsResponse>>>> getAllItemsByCategory(@PageableDefault Pageable pageable, @PathVariable String category) { ;
+        return ResponseEntity.ok(EntityModel.of(itemService.getAllItemsByCategory(pageable, category)));
     }
 
     @GetMapping("/status/{id}")

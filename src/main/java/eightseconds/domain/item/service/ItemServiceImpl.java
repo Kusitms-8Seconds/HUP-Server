@@ -105,9 +105,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public PaginationDto<List<ItemDetailsResponse>> getItemsByCategory(Pageable pageable, EItemCategory category) {
-        validateExistingItemsByCategory(pageable, category);
-        Page<Item> page = itemRepository.findAllByCategory(Pageable.ofSize(30), category);
+    public PaginationDto<List<ItemDetailsResponse>> getAllItemsByCategory(Pageable pageable, String category) {
+        validateCategory(category);
+        validateExistingItemsByCategory(pageable, EItemCategory.from(category));
+        Page<Item> page = itemRepository.findAllByCategory(pageable, EItemCategory.from(category));
         List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -145,6 +146,23 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new InvalidItemSoldStatusException("유효하지 않은 상품판매상태입니다."));
     }
 
+    private void validateCategory(String category) {
+        Arrays.stream(EItemCategory.values())
+                .filter(eItemCategory -> category.equals(eItemCategory.name()))
+                .findAny()
+                .orElseThrow(() -> new InvalidCategoryException("유효하지 않은 카테고리입니다."));
+    }
+
+    private void validateExistingItemsByCategory(Pageable pageable, EItemCategory category) {
+        itemRepository.findAllByCategory(pageable, category)
+                .stream()
+                .findAny()
+                .orElseThrow(() -> new NotFoundItemException("해당 카테고리에 해당하는 상품이 없습니다."));
+//        if (itemRepository.findAllByCategory(pageable, category).isEmpty()) {
+//            throw new IllegalArgumentException("해당 카테고리에 해당하는 상품이 없습니다.");
+//        }
+    }
+
     @Override
     public void validateItemId(Long itemId) {
         itemRepository.findById(itemId).orElseThrow(() -> new NotFoundItemException("해당 아이디로 상품을 찾을 수 없습니다."));
@@ -160,12 +178,6 @@ public class ItemServiceImpl implements ItemService {
         }
         if (check == false) {
             throw new IllegalArgumentException("해당 상품에 대한 유저 권한이 없습니다.");
-        }
-    }
-
-    private void validateExistingItemsByCategory(Pageable pageable, EItemCategory category) {
-        if (itemRepository.findAllByCategory(pageable, category).isEmpty()) {
-            throw new IllegalArgumentException("해당 카테고리에 해당하는 상품이 없습니다.");
         }
     }
 
