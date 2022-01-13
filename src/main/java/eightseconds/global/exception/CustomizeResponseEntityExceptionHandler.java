@@ -1,5 +1,6 @@
 package eightseconds.global.exception;
 
+import eightseconds.domain.item.exception.InvalidItemSoldStatusException;
 import eightseconds.domain.item.exception.NotDesirableAuctionEndTimeException;
 import eightseconds.domain.item.exception.NotFoundItemException;
 import eightseconds.domain.user.exception.*;
@@ -120,6 +121,12 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
 
     @ExceptionHandler(NotFoundItemException.class)
     public final ResponseEntity<Object> handleNotFoundItemException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidItemSoldStatusException.class)
+    public final ResponseEntity<Object> handleInvalidItemSoldStatusException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }

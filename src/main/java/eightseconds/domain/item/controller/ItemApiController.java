@@ -75,7 +75,7 @@ public class ItemApiController {
 
     @ApiOperation(value = "아이템 판매상태별 조회", notes = "상품을 판매상태별로 조회합니다.")
     @GetMapping("/statuses/{itemSoldStatus}")
-    public ResponseEntity<PaginationDto<List<ItemDetailsResponse>>> getAllItemsByItemSoldStatus(@PageableDefault Pageable pageable, @PathVariable EItemSoldStatus itemSoldStatus) {
+    public ResponseEntity<PaginationDto<List<ItemDetailsResponse>>> getAllItemsByItemSoldStatus(@PageableDefault Pageable pageable, @PathVariable String itemSoldStatus) {
         return ResponseEntity.ok(itemService.getAllItemsByItemSoldStatus(pageable, itemSoldStatus));
     }
 
