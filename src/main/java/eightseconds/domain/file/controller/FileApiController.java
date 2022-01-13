@@ -32,11 +32,16 @@ public class FileApiController {
 
     @GetMapping(value = "image/{name}", produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
-    public ResponseEntity<byte[]> find(@PathVariable String name){
+    public ResponseEntity<byte[]> find(@PathVariable String name) {
         try (InputStream imageStream = new FileInputStream(System.getProperty("user.dir") + "/images/" + name)) {
             return new ResponseEntity<byte[]>(IOUtils.toByteArray(imageStream), HttpStatus.OK);
         } catch (IOException e) {
             throw new IllegalArgumentException("해당 파일을 찾을 수 없습니다.");
         }
+    }
+
+    @GetMapping("/")
+    public String test() {
+        return "hijenkins";
     }
 }
