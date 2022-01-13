@@ -2,7 +2,6 @@ package eightseconds.domain.item.controller;
 
 import eightseconds.domain.file.service.FileService;
 import eightseconds.domain.item.constant.ItemConstants.EItemApiController;
-import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.entity.Item;
@@ -87,7 +86,7 @@ public class ItemApiController {
 
     @ApiOperation(value = "아이템 카테고리별 조회", notes = "상품을 카테고리별로 조회합니다.")
     @GetMapping("/categories/{category}")
-    public ResponseEntity<EntityModel<PaginationDto<List<ItemDetailsResponse>>>> getAllItemsByCategory(@PageableDefault Pageable pageable, @PathVariable String category) { ;
+    public ResponseEntity<EntityModel<PaginationDto<List<ItemDetailsResponse>>>> getAllItemsByCategory(@PageableDefault Pageable pageable, @PathVariable String category) {
         return ResponseEntity.ok(EntityModel.of(itemService.getAllItemsByCategory(pageable, category)));
     }
 
