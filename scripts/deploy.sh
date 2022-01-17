@@ -1,24 +1,15 @@
-#!/bin/bash
-BUILD_JAR=$(ls /home/ec2-user/jenkins/build/libs/*.jar)     # jar가 위치하는 곳
-JAR_NAME=$(basename $BUILD_JAR)
-echo "> build 파일명: $JAR_NAME" >> /home/ec2-user/deploy.log
+# 가동중인 awsstudy 도커 중단 및 삭제
+sudo docker ps -a -q --filter "name=hup-server" | grep -q . && docker stop hup-server && docker rm hup-server | true
+sudo docker ps -a -q --filter "name=hup-database" | grep -q . && docker stop hup-database && docker rm hup-database | true
 
-echo "> build 파일 복사" >> /home/ec2-user/deploy.log
-DEPLOY_PATH=/home/ec2-user/
-cp $BUILD_JAR $DEPLOY_PATH
+# 기존 이미지 삭제
+sudo docker rmi rlawjddn5980/hup-server
 
-echo "> 현재 실행중인 애플리케이션 pid 확인" >> /home/ec2-user/deploy.log
-CURRENT_PID=$(pgrep -f $JAR_NAME)
+# 도커허브 이미지 pull
+sudo docker pull rlawjddn5980/hup-server
 
-if [ -z $CURRENT_PID ]
-then
-  echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다." >> /home/ec2-user/deploy.log
-else
-  echo "> kill -15 $CURRENT_PID"
-  kill -15 $CURRENT_PID
-  sleep 5
-fi
+# 도커 run
+sudo docker-compose up
 
-DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
-echo "> DEPLOY_JAR 배포"    >> /home/ec2-user/deploy.log
-nohup java -jar $DEPLOY_JAR >> /home/ec2-user/deploy.log 2>/home/ec2-user/deploy_err.log &
+# 사용하지 않는 불필요한 이미지 삭제 -> 현재 컨테이너가 물고 있는 이미지는 삭제되지 않습니다.
+sudo docker rmi -f $(docker images -f "dangling=true" -q) || true
