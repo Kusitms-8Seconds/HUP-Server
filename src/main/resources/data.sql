@@ -6,3 +6,4 @@ INSERT INTO authority (AUTHORITY_NAME) values ('ROLE_ADMIN');
 
 INSERT INTO user_authority (USER_ID, AUTHORITY_NAME) values (100, 'ROLE_USER');
 INSERT INTO user_authority (USER_ID, AUTHORITY_NAME) values (100, 'ROLE_ADMIN');
+
