@@ -1,6 +1,4 @@
-# 가동중인 awsstudy 도커 중단 및 삭제
-sudo docker ps -a -q --filter "name=hup-server" | grep -q . && docker stop hup-server && docker rm hup-server | true
-sudo docker ps -a -q --filter "name=hup-database" | grep -q . && docker stop hup-database && docker rm hup-database | true
+sudo docker-compose down
 
 # 기존 이미지 삭제
 sudo docker rmi rlawjddn5980/hup-server

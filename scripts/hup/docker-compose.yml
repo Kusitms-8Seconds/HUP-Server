@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb
+    ports:
+      - 4500:4500
+    command: --lower_case_table_names=1
+    volumes:
+      - ./hup-database/db/conf.d:/etc/mysql/conf.d
+      - ./hup-database/db/data:/var/lib/mysql
+      - ./hup-database/db/initdb.d:/docker-entrypoint-initdb.d
+    env_file: ./hup-database/.env
+    environment:
+      TZ: Asia/Seoul
+    container_name: hup-database
+    networks:
+      - hup-network
+    restart: always
+
+  application:
+    image: rlawjddn5980/hup-server:latest
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:4500/auction?useUnicode=true&characterEncoding=utf8
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - 8080:8080
+    container_name: hup-server
+    networks:
+      - hup-network
+    depends_on:
+      - db
+
+networks:
+  hup-network:
