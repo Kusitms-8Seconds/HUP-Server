@@ -1,8 +1,7 @@
-# HUP-Server
+# 💰 HUP-Server
 
 <p align="center"><img src="https://user-images.githubusercontent.com/61726631/149874766-fcb10202-e727-4841-bfa4-2ebddc515b8d.jpg" width="400" height="400"/><p>
-<p style="display: table-cell; text-align: center; vertical-align: middle; color: #000; font-size: 20px; font-weight: bold;">HURRY UP! HUP!</p>
-<p align="center"><strong>#### 중고거래에 실시간의 재미를 더하다, 실시간 중고 물품 경매 중개 플랫폼입니다.:grinning:</strong></p>
+<div align="center"><h2>HURRY UP! HUP! </br> 중고거래에 실시간의 재미를 더하다, 실시간 중고 물품 경매 중개 플랫폼입니다.:grinning:</h2></div>
   
 ## :raising_hand: Introduce
 
@@ -17,4 +16,14 @@
 
  <p align="center"><img src="https://user-images.githubusercontent.com/61726631/149875042-4a0d2719-c8c3-48b9-905d-693234d99310.png" width="800" height="1200"/><p>
 
-## Back
+## ⚙️ Back-End CI/CD
+  
+ <p align="center"><img src="https://user-images.githubusercontent.com/61726631/149875210-3e394e02-a4f7-4924-b9c5-86880ed02a84.jpg" width="800" height="400"/><p>
+   
+ <h3>Back-End CI/CD는 다음과 같은 절차를 따릅니다.</br></h3>
+ 1. Local에서 Github로 푸쉬합니다.</br>
+ 2. Github의 WebHook을 이용해 Jenkins에 전달합니다.</br>
+ 3. Jenkins는 Github의 코드를 받아 빌드와 테스트를 진행하고 Dockerfile을 이용해 이미지를 빌드한 후 Dockerhub에 푸쉬합니다.</br>
+ 4. Jenkins는 각종 배포에 필요한 파일들을 Jenkins의 SSH2Easy Plugin을 이용해 운영EC2에 명령어와 같이 전송합니다.</br>
+ 5. 각종 배포에 필요한 파일들에는 DockerHub에서 이미지를 받아오고, 실행시키는 코드가 담겨있습니다.</br>
+ 6. 마지막으로, 운영용 EC2에서 배포에 필요한 파일들을 실행하여 Docker로 SpringBoot와 MariaDB를 띄웁니다.</br>
