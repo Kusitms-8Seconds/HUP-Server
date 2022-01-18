@@ -1,7 +1,7 @@
 # HUP-Server
 
 <p align="center"><img src="https://user-images.githubusercontent.com/61726631/149874766-fcb10202-e727-4841-bfa4-2ebddc515b8d.jpg" width="400" height="400"/><p>
-<p align="center"><strong>#### HURRY UP! HUP!</strong></p>
+<p style="display: table-cell; text-align: center; vertical-align: middle; color: #000; font-size: 20px; font-weight: bold;">HURRY UP! HUP!</p>
 <p align="center"><strong>#### 중고거래에 실시간의 재미를 더하다, 실시간 중고 물품 경매 중개 플랫폼입니다.:grinning:</strong></p>
   
 ## :raising_hand: Introduce
