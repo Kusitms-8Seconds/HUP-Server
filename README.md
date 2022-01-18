@@ -1,7 +1,6 @@
 # HUP-Server
 
-![HUP2](https://user-images.githubusercontent.com/61726631/149874766-fcb10202-e727-4841-bfa4-2ebddc515b8d.jpg)
-
+<img src="https://user-images.githubusercontent.com/61726631/149874766-fcb10202-e727-4841-bfa4-2ebddc515b8d.jpg" width="400" height="400"/>
 HURRY UP! HUP!
 중고거래에 실시간의 재미를 더하다, 실시간 중고거래 플랫폼입니다.
 
