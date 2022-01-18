@@ -34,8 +34,8 @@
 ----- | ----- 
 Language | JAVA
 Framework | Spring, Spring Boot, Spring Security, Spring Validation, Hibernate, Swagger
-DMBS | MairaDB
+DBMS | MairaDB
 Library | Lombok, Querydsl, STOMP, JWT, Hateoas 
 API | Google Login API, Kakao Login API, Naver Login API
-ETC | Amazon EC2, Docker, Docker hub, Jenkins, Git
+Etc | Amazon EC2, Docker, Docker hub, Jenkins, Git
 
