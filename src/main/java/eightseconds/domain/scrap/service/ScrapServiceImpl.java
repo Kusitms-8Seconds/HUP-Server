@@ -1,14 +1,15 @@
 package eightseconds.domain.scrap.service;
 
-import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.repository.ItemRepository;
-import eightseconds.domain.scrap.dto.ScrapCheckedRequest;
-import eightseconds.domain.scrap.dto.ScrapCheckedResponse;
-import eightseconds.domain.scrap.dto.ScrapDetailsResponse;
+import eightseconds.domain.item.service.ItemService;
+import eightseconds.domain.scrap.constant.ScrapConstants.EScrapServiceImpl;
+import eightseconds.domain.scrap.dto.*;
 import eightseconds.domain.scrap.entity.Scrap;
+import eightseconds.domain.scrap.exception.AlreadyScrapException;
 import eightseconds.domain.scrap.repository.ScrapRepository;
 import eightseconds.domain.user.entity.User;
+import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.PaginationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,20 +24,23 @@ import java.util.stream.Collectors;
 @Service
 public class ScrapServiceImpl implements ScrapService{
 
+    private final ItemService itemService;
+    private final UserService userService;
+
     private final ScrapRepository scrapRepository;
-    private final ItemRepository itemRepository;
 
     @Override
-    public Scrap saveScrap(User user, Item item) {
+    public ScrapRegisterResponse saveScrap(ScrapRegisterRequest scrapRegisterRequest) {
 
+        User user = userService.getUserByUserId(scrapRegisterRequest.getUserId());
+        Item item = itemService.getItemByItemId(scrapRegisterRequest.getItemId());
         validationExistingScrap(user, item.getId());
-        validationIsExistingItem(item.getId());
         Scrap scrap = Scrap.builder()
                 .user(user)
                 .item(item)
                 .build();
-        Scrap save = scrapRepository.save(scrap);
-        return save;
+
+        return ScrapRegisterResponse.from(scrapRepository.save(scrap));
     }
 
     @Override
@@ -47,15 +51,6 @@ public class ScrapServiceImpl implements ScrapService{
         scrap.setItem(null);
         scrapRepository.deleteById(scrapId);
     }
-
-//    @Override
-//    public void deleteScrap(User user, Item item, Long deleteScrapId) {
-//        validationIsExistingScrap(deleteScrapId);
-//        Scrap scrap = scrapRepository.findById(deleteScrapId).get();
-//        scrap.setUser(null);
-//        scrap.setItem(null);
-//        scrapRepository.deleteById(deleteScrapId);
-//    }
 
     @Override
     public PaginationDto<List<ScrapDetailsResponse>> getAllScrapsByUserId(Pageable pageable, Long userId) {
@@ -85,30 +80,23 @@ public class ScrapServiceImpl implements ScrapService{
      * validation
      */
 
-    private void validationIsExistingItem(Long itemId) {
-        Optional<Item> item = itemRepository.findById(itemId);
-        if(item.isEmpty() == true){
-            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
-        }
-    }
-
-    private void validationIsExistingScrap(Long deleteScrapId) {
-        Optional<Scrap> scrap = scrapRepository.findById(deleteScrapId);
-        if(scrap.isEmpty() == true){
-            throw new IllegalArgumentException("존재하지 않는 스크랩입니다.");
-        }
+    private Scrap validationIsExistingScrap(Long deleteScrapId) {
+        return scrapRepository.findById(deleteScrapId)
+                .stream()
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스크랩입니다."));
     }
 
     private void validationExistingScrap(User user, Long itemId) {
-        if (scrapRepository.findAll().isEmpty() != true) {
+        if (!scrapRepository.findAll().isEmpty()) {
             List<Scrap> scraps = scrapRepository.findAllByUserId(user.getId());
             for (Scrap scrap : scraps) {
                 if(scrap.getItem().getId() == itemId){
-                    throw new IllegalArgumentException("이미 스크랩한 상품입니다."); } } }
+                    throw new AlreadyScrapException(EScrapServiceImpl.eAlreadyScrapExceptionMessage.getValue()); } } }
     }
 
     private void validationExistingScrapByUserId(Pageable pageable, Long userId) {
-        if (scrapRepository.findAllByUserId(pageable, userId).isEmpty() == true) {
+        if (scrapRepository.findAllByUserId(pageable, userId).isEmpty()) {
             throw new IllegalArgumentException("해당 유저의 스크랩 내역이 존재하지 않습니다.");
         }
     }
