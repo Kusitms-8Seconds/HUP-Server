@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetAllItemsByStatusRequest {
+public class ItemOfUserRequest {
 
     @NotNull private Long userId;
     @NotNull @Enumerated(EnumType.STRING) private ItemConstants.EItemSoldStatus soldStatus;

@@ -110,8 +110,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public PaginationDto<List<ItemDetailsResponse>> getItemsByStatusAndUserId(Pageable pageable, EItemSoldStatus soldStatus, Long userId) {
-        Page<Item> page = itemRepository.findAllByStatusAndUserId(Pageable.ofSize(30), soldStatus, userId);
+    public PaginationDto<List<ItemDetailsResponse>> getAllItemsOfUser(Pageable pageable, ItemOfUserRequest itemOfUserRequest) {
+        User user = userService.validateUserId(itemOfUserRequest.getUserId());
+        validateItemSoldStatus(itemOfUserRequest.getSoldStatus().toString());
+        Page<Item> page = itemRepository.findAllByStatusAndUserId(pageable, itemOfUserRequest.getSoldStatus(), user.getId());
         List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -160,19 +162,6 @@ public class ItemServiceImpl implements ItemService {
     public Item validateItemId(Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundItemException("해당 아이디로 상품을 찾을 수 없습니다."));
         return item;
-    }
-
-    @Override
-    public void validateUserAndItem(List<Item> items, Long id) {
-        boolean check = false;
-        for (Item item : items) {
-            if (item.getId() == id) {
-                check = true;
-            }
-        }
-        if (check == false) {
-            throw new IllegalArgumentException("해당 상품에 대한 유저 권한이 없습니다.");
-        }
     }
 
     @Override

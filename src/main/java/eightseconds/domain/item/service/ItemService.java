@@ -20,12 +20,10 @@ public interface ItemService{
     Item validateItemId(Long id);
     ItemDetailsResponse getItem(Long id);
     Item getItemByItemId(Long id);
-    void validateUserAndItem(List<Item> items, Long id);
     void validateSoldStatusByItemId(Long itemId);
-    PaginationDto<List<ItemDetailsResponse>> getItemsByStatusAndUserId(Pageable pageable, EItemSoldStatus soldStatus, Long userId);
+    PaginationDto<List<ItemDetailsResponse>> getAllItemsOfUser(Pageable pageable, ItemOfUserRequest itemOfUserRequest);
     void validateSoldOutTime(LocalDateTime auctionClosingDate);
     Item soldOutItem(Long itemId);
-
     PaginationDto<List<ItemDetailsResponse>> getAllItemsByItemSoldStatus(Pageable pageable, String itemSoldStatus);
     List<BestItemResponse> getAllBestItemsByItemSoldStatus(String itemSoldStatus);
     PaginationDto<List<ItemDetailsResponse>> getAllItemsByCategory(Pageable pageable, String category);

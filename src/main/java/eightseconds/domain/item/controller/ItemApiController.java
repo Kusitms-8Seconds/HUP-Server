@@ -2,7 +2,6 @@ package eightseconds.domain.item.controller;
 
 import eightseconds.domain.file.service.FileService;
 import eightseconds.domain.item.constant.ItemConstants.EItemApiController;
-import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.service.ItemService;
@@ -91,13 +90,10 @@ public class ItemApiController {
     }
 
     @ApiOperation(value = "유저가 등록한 상품을 판매 상태별로 조회", notes = "해당 유저가 등록한 상품을 판매 상태별로 조회합니다.")
-    @GetMapping("/users/{id}")
-    public ResponseEntity<PaginationDto<List<ItemDetailsResponse>>> findListByStatus(@PageableDefault Pageable pageable,
-                                              @Valid @RequestBody GetAllItemsByStatusRequest getAllItemsByStatusRequest) {
-        Long userId = getAllItemsByStatusRequest.getUserId();
-        EItemSoldStatus soldStatus = getAllItemsByStatusRequest.getSoldStatus();
-        userService.validateUserId(userId);
-        return ResponseEntity.ok(itemService.getItemsByStatusAndUserId(pageable, soldStatus, userId));
+    @GetMapping("/users")
+    public ResponseEntity<EntityModel<PaginationDto<List<ItemDetailsResponse>>>> getAllItemsOfUser(@PageableDefault Pageable pageable,
+                                              @Valid @RequestBody ItemOfUserRequest itemOfUserRequest) {
+        return ResponseEntity.ok(EntityModel.of(itemService.getAllItemsOfUser(pageable, itemOfUserRequest)));
     }
 
     // 낙찰 Test용도임 이걸로쓰면 안됨!
