@@ -1,6 +1,7 @@
 package eightseconds.domain.scrap.controller;
 
 
+import eightseconds.domain.scrap.constant.ScrapConstants.EScrapApiController;
 import eightseconds.domain.scrap.dto.*;
 import eightseconds.domain.scrap.service.ScrapService;
 import eightseconds.global.dto.DefaultResponse;
@@ -18,6 +19,11 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/scraps")
@@ -32,7 +38,9 @@ public class ScrapApiController {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .buildAndExpand()
                 .toUri();
-        return ResponseEntity.created(location).body(EntityModel.of(scrapService.saveScrap(scrapRegisterRequest)));
+        return ResponseEntity.created(location).body(EntityModel.of(scrapService.saveScrap(scrapRegisterRequest))
+                .add(linkTo(methodOn(this.getClass()).createScrap(scrapRegisterRequest)).withSelfRel())
+                .add(linkTo(methodOn(this.getClass()).deleteScrap(null)).withRel(EScrapApiController.eDeleteMethod.getValue())));
     }
 
     @ApiOperation(value = "스크랩 삭제", notes = "스크랩을 삭제 합니다.")
@@ -44,20 +52,19 @@ public class ScrapApiController {
 
     @ApiOperation(value = "유저의 스크랩 내역 조회", notes = "유저의 스크랩 내역을 조회합니다.")
     @GetMapping("/users/{userId}")
-    public ResponseEntity<PaginationDto<List<ScrapDetailsResponse>>> getAllScrapsOfUser(@PageableDefault Pageable pageable, @PathVariable Long userId){
-        return ResponseEntity.ok(scrapService.getAllScrapsByUserId(pageable, userId));
+    public ResponseEntity<EntityModel<PaginationDto<List<ScrapDetailsResponse>>>> getAllScrapsOfUser(@PageableDefault Pageable pageable, @PathVariable Long userId){
+        return ResponseEntity.ok(EntityModel.of(scrapService.getAllScrapsByUserId(pageable, userId)));
     }
 
-    @ApiOperation(value = "유저의 스크랩 내역 조회", notes = "유저의 스크랩 내역을 조회합니다.")
+    @ApiOperation(value = "상품의 좋아요 수 조회", notes = "상품의 좋아요 수를 조회합니다.")
     @GetMapping("/hearts/{itemId}")
-    public ResponseEntity<ScrapCountResponse> getHeart(@PathVariable Long itemId){
-        Long heart = scrapService.getAllScrapsByItemIdQuantity(itemId);
-        return ResponseEntity.ok(ScrapCountResponse.from(heart));
+    public ResponseEntity<EntityModel<ScrapCountResponse>> getHeart(@PathVariable Long itemId){
+        return ResponseEntity.ok(EntityModel.of(scrapService.getAllScraps(itemId)));
     }
 
-    @PostMapping("/hearts")
-    public ResponseEntity<ScrapCheckedResponse> checkScrap(@Valid @RequestBody ScrapCheckedRequest scrapCheckedRequest){
-        ScrapCheckedResponse checkedScrap = scrapService.isCheckedScrap(scrapCheckedRequest);
-        return ResponseEntity.ok(checkedScrap);
+    @ApiOperation(value = "유저가 해당 상품을 스크랩중인지 조회", notes = "유저가 해당 상품을 스크랩중인지 조회합니다.")
+    @GetMapping("/hearts")
+    public ResponseEntity<EntityModel<ScrapCheckedResponse>> checkScrap(@Valid @RequestBody ScrapCheckedRequest scrapCheckedRequest){
+        return ResponseEntity.ok(EntityModel.of(scrapService.isCheckedScrap(scrapCheckedRequest)));
     }
 }

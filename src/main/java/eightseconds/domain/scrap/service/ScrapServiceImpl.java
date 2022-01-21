@@ -60,20 +60,17 @@ public class ScrapServiceImpl implements ScrapService{
     }
 
     @Override
-    public Long getAllScrapsByItemIdQuantity(Long id) {
-        Long itemCountByItemId = scrapRepository.findItemCountByItemId(id);
-        return itemCountByItemId;
+    public ScrapCountResponse getAllScraps(Long id) {
+        itemService.validateItemId(id);
+        return ScrapCountResponse.from(scrapRepository.findItemCountByItemId(id));
     }
 
     @Override
     public ScrapCheckedResponse isCheckedScrap(ScrapCheckedRequest scrapCheckedRequest) {
         Optional<Scrap> scrap = scrapRepository.findByUserIdAndItemId(scrapCheckedRequest.getUserId(), scrapCheckedRequest.getItemId());
-        if(scrap.isEmpty()){
-            return ScrapCheckedResponse.from(false, null); }
-        else
-            return ScrapCheckedResponse.from(true, scrap.get().getId());
+        if(scrap.isEmpty()){return ScrapCheckedResponse.from(false, null); }
+        else return ScrapCheckedResponse.from(true, scrap.get().getId());
     }
-
 
     /**
      * validation
@@ -83,7 +80,7 @@ public class ScrapServiceImpl implements ScrapService{
         return scrapRepository.findById(deleteScrapId)
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new NotFoundItemException("존재하지 않는 스크랩입니다."));
+                .orElseThrow(() -> new NotFoundItemException(EScrapServiceImpl.eNotFoundItemExceptionMessage.getValue()));
     }
 
     private void validationExistingScrap(User user, Long itemId) {
