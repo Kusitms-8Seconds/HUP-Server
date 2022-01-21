@@ -35,7 +35,7 @@ public class EmailController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> sendEmailAuthCode(
-            @Valid @RequestBody @ApiParam(value="이메일정보 정보", required = true) EmailAuthCodeRequest emailAuthCodeRequest) throws Exception {
+            @Valid @RequestBody @ApiParam(value="이메일정보", required = true) EmailAuthCodeRequest emailAuthCodeRequest) throws Exception {
         DefaultResponse defaultResponse = emailService.sendSimpleMessage(emailAuthCodeRequest.getEmail());
         return ResponseEntity.status(200).body(defaultResponse);
     }
