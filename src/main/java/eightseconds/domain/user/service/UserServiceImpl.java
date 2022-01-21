@@ -134,9 +134,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
 
     public User validateUserId(Long userId){
-        Optional<User> user = userRepository.findById(userId);
-        if(!user.isEmpty()){ return user.get(); }
-        else throw new NotFoundUserException(EUserServiceImpl.eNotFoundUserException.getValue());
+        return userRepository.findById(userId)
+                .stream()
+                .findAny()
+                .orElseThrow(() -> new NotFoundUserException(EUserServiceImpl.eNotFoundUserException.getValue()));
     }
 
     public String validateLogin(LoginRequest loginRequest) {
