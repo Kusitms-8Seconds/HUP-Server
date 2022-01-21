@@ -2,6 +2,7 @@ package eightseconds.domain.item.service;
 
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.file.service.FileService;
+import eightseconds.domain.item.constant.ItemConstants.EItemServiceImpl;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.dto.*;
@@ -42,7 +43,7 @@ public class ItemServiceImpl implements ItemService {
         Item savedItem = itemRepository.save(registerItemRequest.toEntity());
         User user = userService.getUserByUserId(userId);
         savedItem.setUser(user);
-        if(registerItemRequest.getFiles() != null ){
+        if(registerItemRequest.getFiles() != null){
         List<MyFile> saveFiles = fileService.save(registerItemRequest.getFiles());
         addFiles(savedItem, saveFiles);}
         return RegisterItemResponse.from(savedItem);
@@ -141,26 +142,27 @@ public class ItemServiceImpl implements ItemService {
         Arrays.stream(EItemSoldStatus.values())
                 .filter(eItemSoldStatus -> itemSoldStatus.equals(eItemSoldStatus.name()))
                 .findAny()
-                .orElseThrow(() -> new InvalidItemSoldStatusException("유효하지 않은 상품판매상태입니다."));
+                .orElseThrow(() -> new InvalidItemSoldStatusException(EItemServiceImpl.eInvalidItemSoldStatusExceptionMessage.getValue()));
     }
 
     private void validateCategory(String category) {
         Arrays.stream(EItemCategory.values())
                 .filter(eItemCategory -> category.equals(eItemCategory.name()))
                 .findAny()
-                .orElseThrow(() -> new InvalidCategoryException("유효하지 않은 카테고리입니다."));
+                .orElseThrow(() -> new InvalidCategoryException(EItemServiceImpl.eInvalidCategoryExceptionMessage.getValue()));
     }
 
     private void validateExistingItemsByCategory(Pageable pageable, EItemCategory category) {
         itemRepository.findAllByCategory(pageable, category)
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new NotFoundItemException("해당 카테고리에 해당하는 상품이 없습니다."));
+                .orElseThrow(() -> new NotFoundItemException(EItemServiceImpl.eNotFoundItemExceptionForCategoryMessage.getValue()));
     }
 
     @Override
     public Item validateItemId(Long itemId) {
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundItemException("해당 아이디로 상품을 찾을 수 없습니다."));
+        Item item = itemRepository.findById(itemId).orElseThrow(() ->
+                new NotFoundItemException(EItemServiceImpl.eNotFoundItemExceptionForDefaultMessage.getValue()));
         return item;
     }
 
@@ -168,7 +170,7 @@ public class ItemServiceImpl implements ItemService {
     public void validateSoldStatusByItemId(Long itemId) {
         Optional<Item> item = itemRepository.findById(itemId);
         if (!item.get().getSoldStatus().equals(EItemSoldStatus.eOnGoing)) {
-            throw new NotOnGoingException("경매중인 상품이 아닙니다.");
+            throw new NotOnGoingException(EItemServiceImpl.eNotOnGoingExceptionMessage.getValue());
         }
     }
 
@@ -176,19 +178,19 @@ public class ItemServiceImpl implements ItemService {
     public void validateSoldOutTime(LocalDateTime auctionClosingDate) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         if (!currentDateTime.isAfter(auctionClosingDate)) {
-            throw new NotSoldOutTimeException("낙찰시간이 아닙니다.");
+            throw new NotSoldOutTimeException(EItemServiceImpl.eNotSoldOutTimeExceptionMessage.getValue());
         }
     }
 
     private void validateCreateSoldOutTime(LocalDateTime auctionClosingDate) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         if (!currentDateTime.isBefore(auctionClosingDate)) {
-            throw new NotDesirableAuctionEndTimeException("경매종료일자가 현재시각보다 빠릅니다.");
+            throw new NotDesirableAuctionEndTimeException(EItemServiceImpl.eNotDesirableAuctionEndTimeExceptionMessage.getValue());
         }
     }
 
     private void validatePriceSuggestion(Optional<PriceSuggestion> priceSuggestion) {
         if(priceSuggestion.isEmpty())
-            throw new NotPriceSuggestionContentException("경매입찰내역이 없습니다.");
+            throw new NotPriceSuggestionContentException(EItemServiceImpl.eNotPriceSuggestionContentExceptionMessage.getValue());
     }
 }
