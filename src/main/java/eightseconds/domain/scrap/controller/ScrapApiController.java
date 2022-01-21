@@ -40,15 +40,14 @@ public class ScrapApiController {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .buildAndExpand()
                 .toUri();
-
         return ResponseEntity.created(location).body(EntityModel.of(scrapService.saveScrap(scrapRegisterRequest)));
     }
 
     @ApiOperation(value = "스크랩 삭제", notes = "스크랩을 삭제 합니다.")
     @DeleteMapping("/{scrapId}")
-    public ResponseEntity<DefaultResponse> deleteScrap(@PathVariable Long scrapId) throws Exception {
+    public ResponseEntity<DefaultResponse> deleteScrap(@PathVariable Long scrapId){
         scrapService.deleteScrap(scrapId);
-        return ResponseEntity.ok(DefaultResponse.from("스크랩 삭제를 완료했습니다."));
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/users/{userId}")

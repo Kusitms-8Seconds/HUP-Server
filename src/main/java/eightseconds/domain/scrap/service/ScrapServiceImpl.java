@@ -1,7 +1,6 @@
 package eightseconds.domain.scrap.service;
 
 import eightseconds.domain.item.entity.Item;
-import eightseconds.domain.item.repository.ItemRepository;
 import eightseconds.domain.item.service.ItemService;
 import eightseconds.domain.scrap.constant.ScrapConstants.EScrapServiceImpl;
 import eightseconds.domain.scrap.dto.*;
@@ -39,17 +38,15 @@ public class ScrapServiceImpl implements ScrapService{
                 .user(user)
                 .item(item)
                 .build();
-
         return ScrapRegisterResponse.from(scrapRepository.save(scrap));
     }
 
     @Override
     public void deleteScrap(Long scrapId) {
-        validationIsExistingScrap(scrapId);
-        Scrap scrap = scrapRepository.findById(scrapId).get();
+        Scrap scrap = validationIsExistingScrap(scrapId);
         scrap.setUser(null);
         scrap.setItem(null);
-        scrapRepository.deleteById(scrapId);
+        scrapRepository.deleteById(scrap.getId());
     }
 
     @Override
