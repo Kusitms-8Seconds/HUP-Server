@@ -3,6 +3,7 @@ package eightseconds.domain.item.dto;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.item.entity.Item;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
+@ApiModel(description = "상품들의 상세정보를 좋아요 순으로 조회하기 위한 응답 객체")
 public class BestItemResponse {
 
     private Long id;

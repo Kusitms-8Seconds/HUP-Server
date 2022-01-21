@@ -55,22 +55,6 @@ public class Item extends BaseTimeEntity {
 //    @OneToMany(mappedBy = "item")
 //    private List<ChatRoom> chatRooms = new ArrayList<>();
 
-//    @Builder
-//    public Item(String itemName, Enum category, int initPrice, int soldPrice,
-//                                  LocalDateTime buyDate, int itemStatePoint, String description, MyFile... myFiles) {
-//        this.itemName = itemName;
-//        this.category = category;
-//        this.initPrice = initPrice;
-//        this.soldPrice = soldPrice;
-//        this.buyDate = buyDate;
-//        this.itemStatePoint = itemStatePoint;
-//        this.description = description;
-//        for (MyFile myFile : myFiles) {
-//            //this.myFiles.add(myFile);
-//            this.addFiles(myFile);
-//        }
-//    }
-
     @Builder
     public Item(String itemName, EItemCategory category, int initPrice,
                 LocalDateTime buyDate, int itemStatePoint, String description, LocalDateTime auctionClosingDate) {

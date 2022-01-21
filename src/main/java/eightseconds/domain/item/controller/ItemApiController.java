@@ -3,9 +3,7 @@ package eightseconds.domain.item.controller;
 import eightseconds.domain.file.service.FileService;
 import eightseconds.domain.item.constant.ItemConstants.EItemApiController;
 import eightseconds.domain.item.dto.*;
-import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.service.ItemService;
-import eightseconds.domain.pricesuggestion.dto.SoldOutRequest;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.dto.PaginationDto;
@@ -96,10 +94,10 @@ public class ItemApiController {
         return ResponseEntity.ok(EntityModel.of(itemService.getAllItemsOfUser(pageable, itemOfUserRequest)));
     }
 
-    // 낙찰 Test용도임 이걸로쓰면 안됨!
-    @PostMapping("/soldOutTest")
-    public ResponseEntity<ItemDetailsResponse> soldOut(@RequestBody SoldOutRequest soldOutRequest) throws Exception {
-        Item item = itemService.soldOutItem(soldOutRequest.getItemId());
-        return ResponseEntity.ok(ItemDetailsResponse.from(item));
-    }
+//    // 낙찰 Test용도임 이걸로쓰면 안됨!
+//    @PostMapping("/soldOutTest")
+//    public ResponseEntity<ItemDetailsResponse> soldOut(@RequestBody SoldOutRequest soldOutRequest) throws Exception {
+//        Item item = itemService.soldOutItem(soldOutRequest.getItemId());
+//        return ResponseEntity.ok(ItemDetailsResponse.from(item));
+//    }
 }
