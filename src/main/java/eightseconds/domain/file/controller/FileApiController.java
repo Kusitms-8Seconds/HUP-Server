@@ -3,6 +3,7 @@ package eightseconds.domain.file.controller;
 import eightseconds.domain.file.constant.FileConstants.EFileApiController;
 import eightseconds.domain.file.exception.FileNotFoundException;
 import eightseconds.domain.file.service.FileService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpStatus;
@@ -23,12 +24,14 @@ public class FileApiController {
 
     private final FileService fileService;
 
+    @ApiOperation(value = "이미지 파일 생성", notes = "이미지 파일 등록을 합니다.")
     @PostMapping
     public ResponseEntity<?> createFile(@RequestPart List<MultipartFile> files) throws Exception {
         fileService.save(files);
         return ResponseEntity.ok(null);
     }
 
+    @ApiOperation(value = "이미지 파일 가져오기", notes = "이미지 파일을 조회 합니다.")
     @GetMapping(value = "{name}", produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
     public ResponseEntity<byte[]> getFile(@PathVariable String name) {

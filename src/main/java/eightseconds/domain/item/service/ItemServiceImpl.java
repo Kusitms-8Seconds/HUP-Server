@@ -161,9 +161,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item validateItemId(Long itemId) {
-        Item item = itemRepository.findById(itemId).orElseThrow(() ->
+        return itemRepository.findById(itemId).orElseThrow(() ->
                 new NotFoundItemException(EItemServiceImpl.eNotFoundItemExceptionForDefaultMessage.getValue()));
-        return item;
     }
 
     @Override
