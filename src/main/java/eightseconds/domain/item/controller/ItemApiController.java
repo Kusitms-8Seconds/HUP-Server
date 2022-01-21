@@ -90,15 +90,8 @@ public class ItemApiController {
         return ResponseEntity.ok(EntityModel.of(itemService.getAllItemsByCategory(pageable, category)));
     }
 
-    @GetMapping("/status/{id}")
-    public ResponseEntity<?> findSoldStatus(@PathVariable Long id) {
-        itemService.validateItemId(id);
-        itemService.validateSoldStatusByItemId(id);
-        ItemDetailsResponse item = itemService.getItem(id);
-        return ResponseEntity.ok(item.getSoldStatus());
-    }
-
-    @PostMapping("/list/status")
+    @ApiOperation(value = "유저가 등록한 상품을 판매 상태별로 조회", notes = "해당 유저가 등록한 상품을 판매 상태별로 조회합니다.")
+    @GetMapping("/users/{id}")
     public ResponseEntity<PaginationDto<List<ItemDetailsResponse>>> findListByStatus(@PageableDefault Pageable pageable,
                                               @Valid @RequestBody GetAllItemsByStatusRequest getAllItemsByStatusRequest) {
         Long userId = getAllItemsByStatusRequest.getUserId();

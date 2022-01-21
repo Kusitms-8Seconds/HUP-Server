@@ -110,7 +110,6 @@ public enum UserConstants {
         eTrue(true),
         eAuthorityRoleUser("ROLE_USER");
 
-
         private boolean check;
         private String value;
 

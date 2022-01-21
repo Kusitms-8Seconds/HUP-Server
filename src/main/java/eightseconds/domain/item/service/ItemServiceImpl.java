@@ -4,17 +4,13 @@ import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.file.service.FileService;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
-import eightseconds.domain.item.dto.BestItemResponse;
-import eightseconds.domain.item.dto.ItemDetailsResponse;
-import eightseconds.domain.item.dto.RegisterItemRequest;
-import eightseconds.domain.item.dto.RegisterItemResponse;
+import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.*;
 import eightseconds.domain.item.repository.ItemRepository;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.repository.PriceSuggestionRepository;
 import eightseconds.domain.user.entity.User;
-import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.PaginationDto;
 import lombok.RequiredArgsConstructor;
@@ -158,14 +154,12 @@ public class ItemServiceImpl implements ItemService {
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new NotFoundItemException("해당 카테고리에 해당하는 상품이 없습니다."));
-//        if (itemRepository.findAllByCategory(pageable, category).isEmpty()) {
-//            throw new IllegalArgumentException("해당 카테고리에 해당하는 상품이 없습니다.");
-//        }
     }
 
     @Override
-    public void validateItemId(Long itemId) {
-        itemRepository.findById(itemId).orElseThrow(() -> new NotFoundItemException("해당 아이디로 상품을 찾을 수 없습니다."));
+    public Item validateItemId(Long itemId) {
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundItemException("해당 아이디로 상품을 찾을 수 없습니다."));
+        return item;
     }
 
     @Override
