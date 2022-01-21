@@ -1,6 +1,5 @@
 package eightseconds.domain.item.dto;
 
-import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.entity.Item;
 import io.swagger.annotations.ApiModel;
@@ -12,8 +11,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -27,23 +24,23 @@ public class RegisterItemRequest {
 
     @NotBlank(message = "등록하고자 하는 상품의 이름을 입력해주세요.")
     @ApiModelProperty(notes = "상품 이름을 입력해 주세요.")
-    @NotNull private String itemName;
+    private String itemName;
 
     @NotBlank(message = "등록하고자 하는 상품의 카테고리를 입력해주세요.")
     @ApiModelProperty(notes = "상품 카테고리를 입력해 주세요.")
-    @NotNull private EItemCategory category;
+    private EItemCategory category;
 
     @NotBlank(message = "등록하고자 하는 상품의 초기가격을 입력해주세요.")
     @ApiModelProperty(notes = "상품의 초기가격을 입력해 주세요.")
-    @NotNull private int initPrice;
+    private int initPrice;
 
     @NotBlank(message = "등록하고자 하는 상품의 구매날짜를 입력해주세요.")
     @ApiModelProperty(notes = "상품의 구매날짜를 입력해 주세요.")
-    @NotNull private LocalDateTime buyDate;
+    private LocalDateTime buyDate;
 
     @NotBlank(message = "등록하고자 하는 상품의 상태점수를 입력해주세요.")
     @ApiModelProperty(notes = "상품의 상태점수를 입력해 주세요.")
-    @NotNull private int itemStatePoint;
+    private int itemStatePoint;
 
     @NotBlank(message = "등록하고자 하는 상품의 설명을 입력해주세요.")
     @ApiModelProperty(notes = "상품의 설명을 입력해 주세요.")
@@ -51,7 +48,7 @@ public class RegisterItemRequest {
 
     @NotBlank(message = "등록하고자 하는 상품의 경매종료일자를 입력해주세요.")
     @ApiModelProperty(notes = "상품의 경매종료일자를 입력해 주세요.")
-    @NotNull private LocalDateTime auctionClosingDate;
+    private LocalDateTime auctionClosingDate;
 
     @NotBlank(message = "등록하고자 하는 상품의 이미지를 입력해주세요.")
     @ApiModelProperty(notes = "상품의 이미지를 입력해 주세요.")

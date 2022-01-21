@@ -11,7 +11,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Getter
 @AllArgsConstructor
@@ -19,12 +18,13 @@ import javax.validation.constraints.Size;
 @ApiModel(description = "회원의 상품들을 조회하기 위한 요청 객체")
 public class ItemOfUserRequest {
 
-    @NotBlank(message = "회원의 userId를 입력해주세요.")
+    @NotNull(message = "회원의 userId를 입력해주세요.")
     @ApiModelProperty(notes = "userId를 입력해 주세요.")
-    @NotNull private Long userId;
+    private Long userId;
 
-    @NotBlank(message = "찾고자 하는 아이템들의 판매상태를 입력해주세요.")
+    @NotNull(message = "찾고자 하는 아이템들의 판매상태를 입력해주세요.")
     @ApiModelProperty(notes = "아이템의 판매상태를 입력해 주세요.")
-    @NotNull @Enumerated(EnumType.STRING) private ItemConstants.EItemSoldStatus soldStatus;
+    @Enumerated(EnumType.STRING)
+    private ItemConstants.EItemSoldStatus soldStatus;
 
 }
