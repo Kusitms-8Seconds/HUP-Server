@@ -1,11 +1,13 @@
 package eightseconds.domain.scrap.service;
 
 import eightseconds.domain.item.entity.Item;
+import eightseconds.domain.item.exception.NotFoundItemException;
 import eightseconds.domain.item.service.ItemService;
 import eightseconds.domain.scrap.constant.ScrapConstants.EScrapServiceImpl;
 import eightseconds.domain.scrap.dto.*;
 import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.scrap.exception.AlreadyScrapException;
+import eightseconds.domain.scrap.exception.NotExistingScrapOfUserException;
 import eightseconds.domain.scrap.repository.ScrapRepository;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
@@ -25,7 +27,6 @@ public class ScrapServiceImpl implements ScrapService{
 
     private final ItemService itemService;
     private final UserService userService;
-
     private final ScrapRepository scrapRepository;
 
     @Override
@@ -51,8 +52,9 @@ public class ScrapServiceImpl implements ScrapService{
 
     @Override
     public PaginationDto<List<ScrapDetailsResponse>> getAllScrapsByUserId(Pageable pageable, Long userId) {
+        userService.validateUserId(userId);
         validationExistingScrapByUserId(pageable, userId);
-        Page<Scrap> page = scrapRepository.findAllByUserId(Pageable.ofSize(30), userId);
+        Page<Scrap> page = scrapRepository.findAllByUserId(pageable, userId);
         List<ScrapDetailsResponse> data = page.get().map(ScrapDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -81,7 +83,7 @@ public class ScrapServiceImpl implements ScrapService{
         return scrapRepository.findById(deleteScrapId)
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스크랩입니다."));
+                .orElseThrow(() -> new NotFoundItemException("존재하지 않는 스크랩입니다."));
     }
 
     private void validationExistingScrap(User user, Long itemId) {
@@ -94,7 +96,7 @@ public class ScrapServiceImpl implements ScrapService{
 
     private void validationExistingScrapByUserId(Pageable pageable, Long userId) {
         if (scrapRepository.findAllByUserId(pageable, userId).isEmpty()) {
-            throw new IllegalArgumentException("해당 유저의 스크랩 내역이 존재하지 않습니다.");
+            throw new NotExistingScrapOfUserException(EScrapServiceImpl.eNotExistingScrapOfUserExceptionMessage.getValue());
         }
     }
 }

@@ -6,6 +6,8 @@ import eightseconds.domain.item.exception.InvalidCategoryException;
 import eightseconds.domain.item.exception.InvalidItemSoldStatusException;
 import eightseconds.domain.item.exception.NotDesirableAuctionEndTimeException;
 import eightseconds.domain.item.exception.NotFoundItemException;
+import eightseconds.domain.scrap.exception.AlreadyScrapException;
+import eightseconds.domain.scrap.exception.NotExistingScrapOfUserException;
 import eightseconds.domain.user.exception.*;
 import eightseconds.global.dto.ErrorResultResponse;
 import eightseconds.infra.email.exception.ExpiredAuthCodeTimeException;
@@ -154,6 +156,22 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<Object> handleFileToSaveNotExistException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.PRECONDITION_FAILED.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.PRECONDITION_FAILED);
+    }
+
+    /**
+     * Scrap Exception
+     */
+
+    @ExceptionHandler(AlreadyScrapException.class)
+    public final ResponseEntity<Object> handleAlreadyScrapException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NotExistingScrapOfUserException.class)
+    public final ResponseEntity<Object> handleNotExistingScrapOfUserException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
 }
