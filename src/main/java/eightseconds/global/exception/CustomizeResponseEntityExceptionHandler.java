@@ -1,5 +1,7 @@
 package eightseconds.global.exception;
 
+import eightseconds.domain.file.exception.FileNotFoundException;
+import eightseconds.domain.file.exception.FileToSaveNotExistException;
 import eightseconds.domain.item.exception.InvalidCategoryException;
 import eightseconds.domain.item.exception.InvalidItemSoldStatusException;
 import eightseconds.domain.item.exception.NotDesirableAuctionEndTimeException;
@@ -134,6 +136,22 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
 
     @ExceptionHandler(InvalidCategoryException.class)
     public final ResponseEntity<Object> handleInvalidCategoryException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.PRECONDITION_FAILED.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.PRECONDITION_FAILED);
+    }
+
+    /**
+     * File Exception
+     */
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public final ResponseEntity<Object> handleFileNotFoundException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(FileToSaveNotExistException.class)
+    public final ResponseEntity<Object> handleFileToSaveNotExistException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.PRECONDITION_FAILED.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.PRECONDITION_FAILED);
     }

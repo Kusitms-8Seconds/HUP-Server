@@ -1,6 +1,7 @@
 package eightseconds.domain.file.service;
 
 import eightseconds.domain.file.entity.MyFile;
+import eightseconds.domain.file.exception.FileToSaveNotExistException;
 import eightseconds.domain.file.repository.FileRepository;
 import eightseconds.domain.file.constant.FileConstants.EFileServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -23,16 +24,17 @@ public class FileServiceImpl implements FileService {
     private final FileRepository fileRepository;
 
     public List<MyFile> save(List<MultipartFile> files) throws IOException {
-        //if (files.isEmpty()) throw new FileToSaveNotExistException(EFileServiceImpl.FILE_TO_SAVE_NOT_EXIST_EXCEPTION_MESSAGE.getMessage());
+        validateFiles(files);
         List<MyFile> savedFiles = new ArrayList<>();
             for (MultipartFile file : files) {
                 String originFilename = file.getOriginalFilename();
                 String extension = FilenameUtils.getExtension(Objects.requireNonNull(originFilename)).toLowerCase();
-                String path = System.getProperty(EFileServiceImpl.BASE_DIR.getMessage()) + "/" + EFileServiceImpl.IMAGES_DIR.getMessage();
+                String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) + EFileServiceImpl.eSlash.getValue()
+                        + EFileServiceImpl.eImagesDir.getValue();
                 File saveFile;
                 String fileName;
                 do {
-                    fileName = UUID.randomUUID() + "." + extension;
+                    fileName = UUID.randomUUID() + EFileServiceImpl.eDot.getValue() + extension;
                     saveFile = new File(path + fileName);
                 } while (saveFile.exists());
                 saveFile.mkdirs();
@@ -53,5 +55,12 @@ public class FileServiceImpl implements FileService {
         fileRepository.deleteAllByItemId(id);
     }
 
+    /**
+     * validate
+     */
+
+    private void validateFiles(List<MultipartFile> files) {
+        if (files.isEmpty()) throw new FileToSaveNotExistException(EFileServiceImpl.eFileToSaveNotExistExceptionMessage.getValue());
+    }
 
 }
