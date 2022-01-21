@@ -4,6 +4,7 @@ import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.entity.Item;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
+@ApiModel(description = "상품들의 상세정보를 조회하기 위한 응답 객체")
 public class ItemDetailsResponse {
 
     @NotNull private Long id;
