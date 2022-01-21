@@ -1,10 +1,8 @@
 package eightseconds.domain.item.controller;
 
-import eightseconds.domain.file.service.FileService;
 import eightseconds.domain.item.constant.ItemConstants.EItemApiController;
 import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.service.ItemService;
-import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.dto.PaginationDto;
 import io.swagger.annotations.ApiOperation;
@@ -23,14 +21,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/items")
 public class ItemApiController {
 
     private final ItemService itemService;
-    private final FileService fileService;
-    private final UserService userService;
 
     @ApiOperation(value = "아이템 생성", notes = "상품등록을 합니다.")
     @PostMapping
@@ -52,8 +51,20 @@ public class ItemApiController {
                 .buildAndExpand(registerItemResponse.getId())
                 .toUri();
 
-        return  ResponseEntity.created(location).body(EntityModel.of(registerItemResponse));
+        return ResponseEntity.created(location).body(EntityModel.of(registerItemResponse)
+                .add(linkTo(methodOn(this.getClass()).createItem(files, userId, itemName, category, initPrice,
+                        buyDate, itemStatePoint, description, auctionClosingDate)).withSelfRel())
+                .add(linkTo(methodOn(this.getClass()).getItem(registerItemResponse.getId())).withRel(EItemApiController.eGetMethod.getValue()))
+                .add(linkTo(methodOn(this.getClass()).deleteItem(registerItemResponse.getId())).withRel(EItemApiController.eDeleteMethod.getValue())));
 
+    }
+
+    @ApiOperation(value = "아이템 조회", notes = "상품을 조회합니다.")
+    @GetMapping("/{id}")
+    public ResponseEntity<EntityModel<ItemDetailsResponse>> getItem(@PathVariable Long id) {
+        return ResponseEntity.ok(EntityModel.of(itemService.getItem(id))
+                .add(linkTo(methodOn(this.getClass()).getItem(id)).withSelfRel())
+                .add(linkTo(methodOn(this.getClass()).deleteItem(id)).withRel(EItemApiController.eDeleteMethod.getValue())));
     }
 
     @ApiOperation(value = "아이템 삭제", notes = "등록되어있는 상품을 지웁니다.")
@@ -61,12 +72,6 @@ public class ItemApiController {
     public ResponseEntity<DefaultResponse> deleteItem(@PathVariable Long id) {
         itemService.deleteByItemId(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @ApiOperation(value = "아이템 조회", notes = "상품을 조회합니다.")
-    @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<ItemDetailsResponse>> getItem(@PathVariable Long id) {
-        return ResponseEntity.ok(EntityModel.of(itemService.getItem(id)));
     }
 
     @ApiOperation(value = "아이템 판매상태별 조회", notes = "상품을 판매상태별로 조회합니다.")

@@ -16,7 +16,6 @@ public class ItemConstants {
         IMAGES_DIR("images/"),
         FILE_NOT_FOUND_EXCEPTION_MESSAGE("파일이 존재하지 않습니다."),
         FILE_TO_SAVE_NOT_EXIST_EXCEPTION_MESSAGE("저장할 파일이 존재하지 않습니다.");
-
         private String message;
     }
 
@@ -67,12 +66,24 @@ public class ItemConstants {
     @Getter
     @RequiredArgsConstructor
     public enum EItemApiController{
-
         eLocationIdPath("/{id}"),
         eGetMethod("get"),
         eDeleteMethod("delete"),
         eUpdateMethod("update");
         private final String value;
+    }
 
+    @Getter
+    @RequiredArgsConstructor
+    public enum EItemServiceImpl{
+        eInvalidItemSoldStatusExceptionMessage("유효하지 않은 상품판매상태입니다."),
+        eInvalidCategoryExceptionMessage("유효하지 않은 카테고리입니다."),
+        eNotFoundItemExceptionForCategoryMessage("해당 카테고리에 해당하는 상품이 없습니다."),
+        eNotFoundItemExceptionForDefaultMessage("해당 아이디로 상품을 찾을 수 없습니다."),
+        eNotOnGoingExceptionMessage("경매중인 상품이 아닙니다."),
+        eNotSoldOutTimeExceptionMessage("낙찰시간이 아닙니다."),
+        eNotDesirableAuctionEndTimeExceptionMessage("경매종료일자가 현재시각보다 빠릅니다."),
+        eNotPriceSuggestionContentExceptionMessage("경매입찰내역이 없습니다.");
+        private final String value;
     }
 }
