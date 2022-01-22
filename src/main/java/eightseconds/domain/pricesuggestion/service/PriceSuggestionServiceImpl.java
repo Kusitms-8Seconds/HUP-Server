@@ -6,6 +6,8 @@ import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.NotOnGoingException;
 import eightseconds.domain.item.service.ItemService;
 import eightseconds.domain.pricesuggestion.dto.BidderResponse;
+import eightseconds.domain.pricesuggestion.dto.MaximumPriceResponse;
+import eightseconds.domain.pricesuggestion.dto.ParticipantsResponse;
 import eightseconds.domain.pricesuggestion.dto.PriceSuggestionListResponse;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.exception.AlreadySoldOutException;
@@ -34,7 +36,9 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
 
     @Override
     public PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByItemId(Pageable pageable, Long itemId) {
-        Page<PriceSuggestion> page = priceSuggestionRepository.findAllByItemId(Pageable.ofSize(30), itemId);
+        itemService.validateItemId(itemId);
+        itemService.validateSoldStatusByItemId(itemId);
+        Page<PriceSuggestion> page = priceSuggestionRepository.findAllByItemId(pageable, itemId);
         List<PriceSuggestionListResponse> data = page.get().map(PriceSuggestionListResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -56,24 +60,25 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     }
 
     @Override
-    public int getMaximumPrice(Long itemId) {
+    public MaximumPriceResponse getMaximumPrice(Long itemId) {
+        itemService.validateItemId(itemId);
+        itemService.validateSoldStatusByItemId(itemId);
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getMaximumPriceByItemId(itemId);
-        if(priceSuggestion.isEmpty()){
-            return 0; }
-        else{
-            int maximumPriceByItemId = priceSuggestionRepository.getMaximumPriceByItemId(itemId).get().getSuggestionPrice();
-            return maximumPriceByItemId; }
+        if(priceSuggestion.isEmpty()){ return MaximumPriceResponse.from(0); }
+        else{ return MaximumPriceResponse.from(priceSuggestionRepository.getMaximumPriceByItemId(itemId).get().getSuggestionPrice());}
     }
 
     @Override
-    public int getParticipants(Long itemId) {
-        int count = priceSuggestionRepository.findPriceSuggestionCountByItemId(itemId);
-        return count;
+    public ParticipantsResponse getParticipants(Long itemId) {
+        itemService.validateItemId(itemId);
+        itemService.validateSoldStatusByItemId(itemId);
+        return ParticipantsResponse.from(priceSuggestionRepository.findPriceSuggestionCountByItemId(itemId));
     }
 
     @Override
     public PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByUserId(Pageable pageable, Long userId) {
-        Page<PriceSuggestion> page = priceSuggestionRepository.findAllByUserId(Pageable.ofSize(30), userId);
+        userService.validateUserId(userId);
+        Page<PriceSuggestion> page = priceSuggestionRepository.findAllByUserId(pageable, userId);
         List<PriceSuggestionListResponse> data = page.get().map(PriceSuggestionListResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
