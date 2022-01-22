@@ -11,6 +11,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -76,7 +78,7 @@ public class PriceSuggestionApiController {
 
     // 입찰 Test용도
     @PostMapping("/priceSuggestionTest")
-    public ResponseEntity<PriceSuggestionResponse> priceSuggestion(@RequestBody PriceSuggestionRequest priceSuggestionRequest) throws Exception {
+    public ResponseEntity<PriceSuggestionResponse> priceSuggestion(@Valid @RequestBody PriceSuggestionRequest priceSuggestionRequest) throws Exception {
         return ResponseEntity.ok(priceSuggestionService.priceSuggestionItem(priceSuggestionRequest));
     }
 
