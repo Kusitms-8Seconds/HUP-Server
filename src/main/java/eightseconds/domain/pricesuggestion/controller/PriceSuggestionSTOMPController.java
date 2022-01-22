@@ -27,17 +27,18 @@ public class PriceSuggestionSTOMPController {
     @SendTo("/topic/priceSuggestion")
     @Transactional
     public PriceSuggestionResponse priceSuggestion(PriceSuggestionRequest priceSuggestionRequest) throws Exception {
-        Thread.sleep(100); // delay
-        Long itemId = priceSuggestionRequest.getItemId();
-        int suggestionPrice = priceSuggestionRequest.getSuggestionPrice();
-        Long userId = priceSuggestionRequest.getUserId();
-        priceSuggestionService.validationPriceSuggestionsItemId(itemId);
-        PriceSuggestion priceSuggestion = priceSuggestionService.priceSuggestionItem(userId, itemId, suggestionPrice);
-        Item item = itemService.getItemByItemId(itemId);
-        User user = userService.getUserByUserId(userId);
-        int maximumPrice = priceSuggestionService.getMaximumPrice(itemId);
-        int participants = priceSuggestionService.getParticipants(itemId);
-        EItemSoldStatus soldStatus = itemService.getItem(itemId).getSoldStatus();
-        return PriceSuggestionResponse.from(item, user, priceSuggestion, maximumPrice, participants, soldStatus);
+//        Thread.sleep(100); // delay
+//        Long itemId = priceSuggestionRequest.getItemId();
+//        int suggestionPrice = priceSuggestionRequest.getSuggestionPrice();
+//        Long userId = priceSuggestionRequest.getUserId();
+//        priceSuggestionService.validationPriceSuggestionsItemId(itemId);
+//        PriceSuggestion priceSuggestion = priceSuggestionService.priceSuggestionItem(userId, itemId, suggestionPrice);
+//        Item item = itemService.getItemByItemId(itemId);
+//        User user = userService.getUserByUserId(userId);
+//        int maximumPrice = priceSuggestionService.getMaximumPrice(itemId);
+//        int participants = priceSuggestionService.getParticipants(itemId);
+//        EItemSoldStatus soldStatus = itemService.getItem(itemId).getSoldStatus();
+//        return PriceSuggestionResponse.from(item, user, priceSuggestion, maximumPrice, participants, soldStatus);
+        return null;
     }
 }
