@@ -1,9 +1,6 @@
 package eightseconds.domain.pricesuggestion.service;
 
-import eightseconds.domain.pricesuggestion.dto.BidderResponse;
-import eightseconds.domain.pricesuggestion.dto.MaximumPriceResponse;
-import eightseconds.domain.pricesuggestion.dto.ParticipantsResponse;
-import eightseconds.domain.pricesuggestion.dto.PriceSuggestionListResponse;
+import eightseconds.domain.pricesuggestion.dto.*;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.global.dto.PaginationDto;
 import org.springframework.data.domain.Page;
@@ -16,7 +13,7 @@ public interface PriceSuggestionService {
     PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByItemId(Pageable pageable, Long itemId);
     MaximumPriceResponse getMaximumPrice(Long itemId);
     void validationPriceSuggestionsItemId(Long itemId);
-    PriceSuggestion priceSuggestionItem(Long userId, Long itemId, int suggestionPrice);
+    PriceSuggestionResponse priceSuggestionItem(PriceSuggestionRequest priceSuggestionRequest);
     ParticipantsResponse getParticipants(Long itemId);
     PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByUserId(Pageable pageable, Long userId);
     BidderResponse getBidder(Long itemId);

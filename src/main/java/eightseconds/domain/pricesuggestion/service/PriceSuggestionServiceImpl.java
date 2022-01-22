@@ -1,14 +1,11 @@
 package eightseconds.domain.pricesuggestion.service;
 
 import eightseconds.domain.item.constant.ItemConstants;
-import eightseconds.domain.item.dto.ItemDetailsResponse;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.NotOnGoingException;
 import eightseconds.domain.item.service.ItemService;
-import eightseconds.domain.pricesuggestion.dto.BidderResponse;
-import eightseconds.domain.pricesuggestion.dto.MaximumPriceResponse;
-import eightseconds.domain.pricesuggestion.dto.ParticipantsResponse;
-import eightseconds.domain.pricesuggestion.dto.PriceSuggestionListResponse;
+import eightseconds.domain.pricesuggestion.constant.PriceSuggestionConstants;
+import eightseconds.domain.pricesuggestion.dto.*;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.exception.AlreadySoldOutException;
 import eightseconds.domain.pricesuggestion.exception.PriorPriceSuggestionException;
@@ -45,18 +42,31 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
 
     @Override
     @Transactional
-    public PriceSuggestion priceSuggestionItem(Long userId, Long itemId, int suggestionPrice) {
+    public PriceSuggestionResponse priceSuggestionItem(PriceSuggestionRequest priceSuggestionRequest) {
+
+        Long userId = priceSuggestionRequest.getUserId();
+        Long itemId = priceSuggestionRequest.getItemId();
+        int suggestionPrice = priceSuggestionRequest.getSuggestionPrice();
+
+        PriceSuggestion resultPriceSuggestion;
+        User user = userService.validateUserId(userId);
+        Item item = itemService.validateItemId(itemId);
+        validationPriceSuggestionsItemId(itemId);
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getByUserIdAndItemId(userId, itemId);
-        User user = userService.getUserByUserId(userId);
-        Item item = itemService.getItemByItemId(itemId);
+        int maximumPrice = getMaximumPrice(itemId).getMaximumPrice();
+        int participants = getParticipants(itemId).getParticipantsCount();
+        ItemConstants.EItemSoldStatus soldStatus = itemService.getItem(itemId).getSoldStatus();
+
         if(!priceSuggestion.isEmpty()){
             validationPrice(priceSuggestion.get().getSuggestionPrice(), suggestionPrice);
             priceSuggestion.get().setSuggestionPrice(suggestionPrice);
-            return priceSuggestion.get(); }
-        else{
-            PriceSuggestion entity = PriceSuggestion.toEntity(user, item, suggestionPrice);
+            resultPriceSuggestion = priceSuggestion.get(); }
+
+        else{ PriceSuggestion entity = PriceSuggestion.toEntity(user, item, suggestionPrice);
             priceSuggestionRepository.save(entity);
-            return entity; }
+            resultPriceSuggestion = entity; }
+
+        return PriceSuggestionResponse.from(item, user, resultPriceSuggestion, maximumPrice, participants, soldStatus);
     }
 
     @Override
@@ -96,20 +106,20 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
 
     private void validationOnGoingItem(Item item) {
         if(!item.getSoldStatus().equals(ItemConstants.EItemSoldStatus.eOnGoing)){
-            throw new NotOnGoingException("경매 진행중인 상품이 아닙니다.");
+            throw new NotOnGoingException(PriceSuggestionConstants.EPriceSuggestionServiceImpl.eNotOnGoingExceptionMessage.getValue());
         }
     }
 
     private void validationAcceptStatusPriceSuggestion(List<PriceSuggestion> priceSuggestions) {
-        if (priceSuggestions.size() != 0) {
+        if (priceSuggestions.size() != PriceSuggestionConstants.EPriceSuggestionServiceImpl.eZero.getSize()) {
             for (PriceSuggestion priceSuggestion : priceSuggestions) {
                 if(priceSuggestion.isAcceptState() == true){
-                    throw new AlreadySoldOutException("이미 팔린 상품입니다."); } } }
+                    throw new AlreadySoldOutException(PriceSuggestionConstants.EPriceSuggestionServiceImpl.eAlreadySoldOutExceptionMessage.getValue()); } } }
     }
 
     private void validationPrice(int priorSuggestionPrice, int suggestionPrice) {
         if(priorSuggestionPrice >= suggestionPrice){
-            throw new PriorPriceSuggestionException("이전의 입찰가격이 지금의 입찰보다 높거나 같습니다."); }
+            throw new PriorPriceSuggestionException(PriceSuggestionConstants.EPriceSuggestionServiceImpl.ePriorPriceSuggestionExceptionMessage.getValue()); }
     }
 
     @Override

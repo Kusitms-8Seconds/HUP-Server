@@ -2,10 +2,9 @@ package eightseconds.global.exception;
 
 import eightseconds.domain.file.exception.FileNotFoundException;
 import eightseconds.domain.file.exception.FileToSaveNotExistException;
-import eightseconds.domain.item.exception.InvalidCategoryException;
-import eightseconds.domain.item.exception.InvalidItemSoldStatusException;
-import eightseconds.domain.item.exception.NotDesirableAuctionEndTimeException;
-import eightseconds.domain.item.exception.NotFoundItemException;
+import eightseconds.domain.item.exception.*;
+import eightseconds.domain.pricesuggestion.exception.AlreadySoldOutException;
+import eightseconds.domain.pricesuggestion.exception.PriorPriceSuggestionException;
 import eightseconds.domain.scrap.exception.AlreadyScrapException;
 import eightseconds.domain.scrap.exception.NotExistingScrapOfUserException;
 import eightseconds.domain.user.exception.*;
@@ -142,6 +141,12 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.PRECONDITION_FAILED);
     }
 
+    @ExceptionHandler(NotOnGoingException.class)
+    public final ResponseEntity<Object> handleNotOnGoingException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
     /**
      * File Exception
      */
@@ -172,6 +177,22 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<Object> handleNotExistingScrapOfUserException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * PriceSuggestion Exception
+     */
+
+    @ExceptionHandler(AlreadySoldOutException.class)
+    public final ResponseEntity<Object> handleAlreadySoldOutException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(PriorPriceSuggestionException.class)
+    public final ResponseEntity<Object> handlePriorPriceSuggestionException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
     }
 
 }
