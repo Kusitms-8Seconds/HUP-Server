@@ -11,7 +11,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -41,7 +40,7 @@ public class PriceSuggestionApiController {
     public ResponseEntity<EntityModel<MaximumPriceResponse>> getMaximumPrice(@PathVariable Long itemId) {
         return ResponseEntity.ok(EntityModel.of(priceSuggestionService.getMaximumPrice(itemId))
                 .add(linkTo(methodOn(this.getClass()).getMaximumPrice(itemId)).withSelfRel())
-                .add(linkTo(methodOn(this.getClass()).getAllPriceSuggestions(Pageable.ofSize(EPriceSuggestionApiController.ePageableZero.getPage()), itemId))
+                .add(linkTo(methodOn(this.getClass()).getAllPriceSuggestions(Pageable.ofSize(EPriceSuggestionApiController.ePageableOne.getPage()), itemId))
                         .withRel(EPriceSuggestionApiController.eGetMethod.getValue()))
                 .add(linkTo(methodOn(this.getClass()).getParticipants(itemId)).withRel(EPriceSuggestionApiController.eGetMethod.getValue()))
                 .add(linkTo(methodOn(this.getClass()).getBidderName(itemId)).withRel(EPriceSuggestionApiController.eGetMethod.getValue())));
@@ -52,7 +51,7 @@ public class PriceSuggestionApiController {
     public ResponseEntity<EntityModel<ParticipantsResponse>> getParticipants(@PathVariable Long itemId) {
         return ResponseEntity.ok(EntityModel.of(priceSuggestionService.getParticipants(itemId))
                 .add(linkTo(methodOn(this.getClass()).getParticipants(itemId)).withSelfRel())
-                .add(linkTo(methodOn(this.getClass()).getAllPriceSuggestions(Pageable.ofSize(EPriceSuggestionApiController.ePageableZero.getPage()), itemId))
+                .add(linkTo(methodOn(this.getClass()).getAllPriceSuggestions(Pageable.ofSize(EPriceSuggestionApiController.ePageableOne.getPage()), itemId))
                         .withRel(EPriceSuggestionApiController.eGetMethod.getValue()))
                 .add(linkTo(methodOn(this.getClass()).getMaximumPrice(itemId)).withRel(EPriceSuggestionApiController.eGetMethod.getValue()))
                 .add(linkTo(methodOn(this.getClass()).getBidderName(itemId)).withRel(EPriceSuggestionApiController.eGetMethod.getValue())));
@@ -63,7 +62,7 @@ public class PriceSuggestionApiController {
     public ResponseEntity<EntityModel<BidderResponse>> getBidderName(@PathVariable Long itemId) {
         return ResponseEntity.ok(EntityModel.of(priceSuggestionService.getBidder(itemId))
                 .add(linkTo(methodOn(this.getClass()).getBidderName(itemId)).withSelfRel())
-                .add(linkTo(methodOn(this.getClass()).getAllPriceSuggestions(Pageable.ofSize(EPriceSuggestionApiController.ePageableZero.getPage()), itemId))
+                .add(linkTo(methodOn(this.getClass()).getAllPriceSuggestions(Pageable.ofSize(EPriceSuggestionApiController.ePageableOne.getPage()), itemId))
                         .withRel(EPriceSuggestionApiController.eGetMethod.getValue()))
                 .add(linkTo(methodOn(this.getClass()).getMaximumPrice(itemId)).withRel(EPriceSuggestionApiController.eGetMethod.getValue()))
                 .add(linkTo(methodOn(this.getClass()).getParticipants(itemId)).withRel(EPriceSuggestionApiController.eGetMethod.getValue())));
@@ -75,21 +74,10 @@ public class PriceSuggestionApiController {
         return ResponseEntity.ok(EntityModel.of(priceSuggestionService.getAllPriceSuggestionsByUserId(pageable, userId)));
     }
 
-    // 입찰 Test용도임 이걸로쓰면 안됨!
+    // 입찰 Test용도
     @PostMapping("/priceSuggestionTest")
     public ResponseEntity<PriceSuggestionResponse> priceSuggestion(@RequestBody PriceSuggestionRequest priceSuggestionRequest) throws Exception {
-//        Long itemId = priceSuggestionRequest.getItemId();
-//        int suggestionPrice = priceSuggestionRequest.getSuggestionPrice();
-//        Long userId = priceSuggestionRequest.getUserId();
-//        priceSuggestionService.validationPriceSuggestionsItemId(itemId);
-//        PriceSuggestion priceSuggestion = priceSuggestionService.priceSuggestionItem(userId, itemId, suggestionPrice);
-//        Item item = itemService.getItemByItemId(itemId);
-//        User user = userService.getUserByUserId(userId);
-//        int maximumPrice = priceSuggestionService.getMaximumPrice(itemId);
-//        int participants = priceSuggestionService.getParticipants(itemId);
-//        ItemConstants.EItemSoldStatus soldStatus = itemService.getItem(itemId).getSoldStatus();
-//        return ResponseEntity.ok(PriceSuggestionResponse.from(item, user, priceSuggestion, maximumPrice, participants, soldStatus));
-        return null;
+        return ResponseEntity.ok(priceSuggestionService.priceSuggestionItem(priceSuggestionRequest));
     }
 
 }
