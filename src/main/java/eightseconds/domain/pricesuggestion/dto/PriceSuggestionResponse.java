@@ -4,6 +4,7 @@ import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.user.entity.User;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
+@ApiModel(description = "입찰하기 위한 응답 객체")
 public class PriceSuggestionResponse {
 
     private Long itemId;
