@@ -27,7 +27,7 @@ public class EmailServiceImpl implements EmailService{
     private final JavaMailSender emailSender;
     private final UserRepository userRepository;
     private final EmailAuthRepository emailAuthRepository;
-    public static final String authCode = createKey();
+    public String authCode;
 
     @Override
     public DefaultResponse sendSimpleMessage(String email) throws Exception {
@@ -63,6 +63,8 @@ public class EmailServiceImpl implements EmailService{
 
         message.addRecipients(RecipientType.TO, to);//보내는 대상
         message.setSubject("HUP회원가입 이메일 인증");//제목
+
+        authCode = createKey();
 
         String msgg="";
         msgg+= "<div style='margin:100px;'>";
