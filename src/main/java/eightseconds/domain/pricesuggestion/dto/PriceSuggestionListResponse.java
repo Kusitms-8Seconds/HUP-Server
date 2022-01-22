@@ -2,6 +2,7 @@ package eightseconds.domain.pricesuggestion.dto;
 
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
+@ApiModel(description = "해당 유저의 경매 참여내역을 조회하기 위한 응답 객체")
 public class PriceSuggestionListResponse {
 
     private Long priceSuggestionId;
