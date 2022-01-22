@@ -11,17 +11,6 @@ public class ItemConstants {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public enum EFileServiceImpl {
-        BASE_DIR("user.dir"),
-        IMAGES_DIR("images/"),
-        FILE_NOT_FOUND_EXCEPTION_MESSAGE("파일이 존재하지 않습니다."),
-        FILE_TO_SAVE_NOT_EXIST_EXCEPTION_MESSAGE("저장할 파일이 존재하지 않습니다.");
-        private String message;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
     public enum EItemCategory{
         eDigital("디지털 기기"),
         eHouseHoldAppliance("생활가전"),
