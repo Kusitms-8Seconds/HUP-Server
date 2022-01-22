@@ -19,7 +19,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v1/priceSuggestion")
+@RequestMapping("api/v1/priceSuggestions")
 public class PriceSuggestionApiController {
 
     private final ItemService itemService;
