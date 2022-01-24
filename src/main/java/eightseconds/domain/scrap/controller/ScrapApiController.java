@@ -1,7 +1,7 @@
 package eightseconds.domain.scrap.controller;
 
 
-import eightseconds.domain.scrap.constant.ScrapConstants.EScrapApiController;
+import eightseconds.domain.scrap.constant.ScrapConstants;
 import eightseconds.domain.scrap.dto.*;
 import eightseconds.domain.scrap.service.ScrapService;
 import eightseconds.global.dto.DefaultResponse;
@@ -40,7 +40,7 @@ public class ScrapApiController {
                 .toUri();
         return ResponseEntity.created(location).body(EntityModel.of(scrapService.saveScrap(scrapRegisterRequest))
                 .add(linkTo(methodOn(this.getClass()).createScrap(scrapRegisterRequest)).withSelfRel())
-                .add(linkTo(methodOn(this.getClass()).deleteScrap(null)).withRel(EScrapApiController.eDeleteMethod.getValue())));
+                .add(linkTo(methodOn(this.getClass()).deleteScrap(null)).withRel(ScrapConstants.EScrapApiController.eDeleteMethod.getValue())));
     }
 
     @ApiOperation(value = "스크랩 삭제", notes = "스크랩을 삭제 합니다.")

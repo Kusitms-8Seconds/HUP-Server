@@ -6,6 +6,7 @@ import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.exception.NotFoundUserException;
 import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.dto.DefaultResponse;
+import eightseconds.infra.email.constant.EmailConstants.EEmailServiceImpl;
 import eightseconds.infra.email.entity.EmailAuth;
 import eightseconds.infra.email.exception.InvalidAuthCodeException;
 import eightseconds.infra.email.repository.EmailAuthRepository;
@@ -44,29 +45,28 @@ public class EmailServiceImpl implements EmailService{
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-        return DefaultResponse.from("이메일로 인증코드를 보냈습니다.");
+        return DefaultResponse.from(EEmailServiceImpl.eSendAuthCodeMessage.getValue());
     }
 
     @Override
     @Transactional
     public DefaultResponse checkAuthCode(String authCode) {
-        EmailAuth emailAuth = emailAuthRepository.findByAuthCode(authCode).orElseThrow(() -> new InvalidAuthCodeException("잘못된 인증코드 입니다."));
+        EmailAuth emailAuth = emailAuthRepository.findByAuthCode(authCode)
+                .orElseThrow(() -> new InvalidAuthCodeException(EEmailServiceImpl.eInvalidAuthCodeExceptionMessage.getValue()));
         emailAuth.validateValidPeriod(emailAuth);
         emailAuth.getUser().setEmailAuthActivated(true);
-        return DefaultResponse.from("인증이 완료되었습니다.");
+        return DefaultResponse.from(EEmailServiceImpl.eCompleteAuthMessage.getValue());
     }
 
     private MimeMessage createMessage(String to) throws Exception{
-        System.out.println("보내는 대상 : "+ to);
-        System.out.println("인증 번호 : "+ authCode);
         MimeMessage message = emailSender.createMimeMessage();
 
-        message.addRecipients(RecipientType.TO, to);//보내는 대상
-        message.setSubject("HUP회원가입 이메일 인증");//제목
+        message.addRecipients(RecipientType.TO, to);
+        message.setSubject(EEmailServiceImpl.eSubject.getValue());
 
         authCode = createKey();
 
-        String msgg="";
+        String msgg=EEmailServiceImpl.eEmpty.getValue();
         msgg+= "<div style='margin:100px;'>";
         msgg+= "<h1> 안녕하세요 HUP입니다. </h1>";
         msgg+= "<br>";
@@ -92,7 +92,6 @@ public class EmailServiceImpl implements EmailService{
 
         for (int i = 0; i < 8; i++) { // 인증코드 8자리
             int index = rnd.nextInt(3); // 0~2 까지 랜덤
-
             switch (index) {
                 case 0:
                     key.append((char) ((int) (rnd.nextInt(26)) + 97));
@@ -111,9 +110,5 @@ public class EmailServiceImpl implements EmailService{
 
         return key.toString();
     }
-
-    /**
-     * validate
-     */
 
 }
