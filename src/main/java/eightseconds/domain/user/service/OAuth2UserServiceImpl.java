@@ -145,17 +145,17 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            JsonObject properties = element.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoPropertiesAttribute.getValue()).getAsJsonObject();
             JsonObject kakao_account = element.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoAccountAttribute.getValue()).getAsJsonObject();
 
-            String nickname = properties.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoNickNameAttribute.getValue()).getAsString();
-            String profile_image = properties.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoProfileImageAttribute.getValue()).getAsString();
-            if(kakao_account!= null){
+            if(kakao_account != null){
+                JsonObject profile = kakao_account.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoProfile.getValue()).getAsJsonObject();
+                String nickname = profile.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoNickNameAttribute.getValue()).getAsString();
+                String profile_image = profile.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoProfileImageAttribute.getValue()).getAsString();
                 String email = kakao_account.getAsJsonObject().get(EOAuth2UserServiceImpl.eKakaoEmailAttribute.getValue()).getAsString();
-                userInfo.put(EOAuth2UserServiceImpl.eKakaoEmailAttribute.getValue(), email);}
-
-            userInfo.put(EOAuth2UserServiceImpl.eKakaoNickNameAttribute.getValue(), nickname);
-            userInfo.put(EOAuth2UserServiceImpl.eKakaoProfileImageAttribute.getValue(), profile_image);
+                userInfo.put(EOAuth2UserServiceImpl.eKakaoNickNameAttribute.getValue(), nickname);
+                userInfo.put(EOAuth2UserServiceImpl.eKakaoProfileImageAttribute.getValue(), profile_image);
+                userInfo.put(EOAuth2UserServiceImpl.eKakaoEmailAttribute.getValue(), email);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

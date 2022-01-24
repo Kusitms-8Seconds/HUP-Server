@@ -1,6 +1,5 @@
 package eightseconds.infra.email.constant;
 
-import eightseconds.infra.email.exception.InvalidAuthCodeException;
 import lombok.Getter;
 
 public class EmailConstants {
@@ -39,10 +38,6 @@ public class EmailConstants {
         eSendMessageSubType("html"),
         eSendMessageAddress("hup.contact.auth@gmail.com"),
         eSendMessagePersonal("HUP");
-
-
-
-
 
         private String value;
         private int size;

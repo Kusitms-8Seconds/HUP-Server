@@ -154,7 +154,7 @@ public class User extends BaseTimeEntity {
         return User.builder()
                 .email(userInfo.get("email").toString())
                 .username(userInfo.get("nickname").toString())
-                .picture(userInfo.get("profile_image").toString())
+                .picture(userInfo.get("profile_image_url").toString())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .emailAuthActivated(true)
