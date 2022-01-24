@@ -28,16 +28,27 @@ public class EmailConstants {
         eSendMessage4("<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>"),
         eSendMessage5("<br>"),
         eSendMessage6("<p>감사합니다!<p>"),
-        eSendMessage7("<div align='center' style='border:1px solid black; font-family:verdana';>"),
-        eSendMessage8("<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>"),
-        eSendMessage9("<div style='font-size:130%'>"),
-        eSendMessage10("CODE : <strong>"),
-        eSendMessage11("</strong><div><br/> "),
-        eSendMessage12("</div>"),
+        eSendMessage7("<br>"),
+        eSendMessage8("<div align='center' style='border:1px solid black; font-family:verdana';>"),
+        eSendMessage9("<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>"),
+        eSendMessage10("<div style='font-size:130%'>"),
+        eSendMessage11("CODE : <strong>"),
+        eSendMessage12("</strong><div><br/> "),
+        eSendMessage13("</div>"),
         eSendMessageCharset("utf-8"),
         eSendMessageSubType("html"),
         eSendMessageAddress("hup.contact.auth@gmail.com"),
-        eSendMessagePersonal("HUP");
+        eSendMessagePersonal("HUP"),
+        eZero(0),
+        eEight(8),
+        eTwentySix(26),
+        eNinetySeven(97),
+        eThree(3),
+        eOne(1),
+        eTwo(2),
+        eSixtyFive(65),
+        eTen(10);
+
 
         private String value;
         private int size;
