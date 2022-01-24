@@ -18,8 +18,8 @@
 
 ## ⚙️ Back-End CI/CD
   
- <p align="center"><img src="https://user-images.githubusercontent.com/61726631/149875210-3e394e02-a4f7-4924-b9c5-86880ed02a84.jpg" width="800" height="400"/><p>
-   
+ <p align="center"><img src="https://user-images.githubusercontent.com/61726631/150817970-74cbb33e-0a20-4180-963c-540d47f4cda5.jpg" width="1000" height="500"/><p>
+
  <h3>Back-End CI/CD는 다음과 같은 절차로 작동합니다.</br></h3>
  1. Local에서 Github로 푸쉬합니다.</br>
  2. Github의 WebHook을 이용해 Jenkins에 전달합니다.</br>
@@ -34,7 +34,7 @@
 ----- | ----- 
 Language | JAVA
 Framework | Spring, Spring Boot, Spring Security, Spring Validation, Hibernate, Swagger
-DBMS | MairaDB
+DBMS | MariaDB
 Library | Lombok, Querydsl, STOMP, JWT, Hateoas 
 API | Google Login API, Kakao Login API, Naver Login API
 Etc | Amazon EC2, Docker, Docker hub, Jenkins, Git
