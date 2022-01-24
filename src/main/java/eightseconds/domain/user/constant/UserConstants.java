@@ -8,13 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-@Getter
-@RequiredArgsConstructor
-public enum UserConstants {
-
-    SUCCESS_SIGN_UP("회원가입을 완료했습니다.");
-
-    private final String message;
+public class UserConstants {
 
     @Getter
     @AllArgsConstructor
@@ -71,6 +65,8 @@ public enum UserConstants {
         eKakaoGetMethod("GET"),
         eKakaoAuthorization("Authorization"),
         eKakaoBearer("Bearer "),
+        eKakaoContentType("Content-Type"),
+        eKakaoContentTypeUrlencoded("application/x-www-form-urlencoded"),
         eKakaoResponseCode("responseCode : "),
         eKakaoEmpty(""),
         eKakaoPropertiesAttribute("properties"),
@@ -117,6 +113,5 @@ public enum UserConstants {
         EUserServiceImpl(String value) {this.value = value;}
 
     }
-
 
 }

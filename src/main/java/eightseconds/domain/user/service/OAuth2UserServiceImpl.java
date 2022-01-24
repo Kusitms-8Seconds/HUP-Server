@@ -132,9 +132,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(EOAuth2UserServiceImpl.eKakaoGetMethod.getValue());
             conn.setRequestProperty(EOAuth2UserServiceImpl.eKakaoAuthorization.getValue(), EOAuth2UserServiceImpl.eKakaoBearer.getValue() + access_Token);
-
-            int responseCode = conn.getResponseCode();
-            System.out.println(EOAuth2UserServiceImpl.eKakaoResponseCode.getValue() + responseCode);
+            conn.setRequestProperty(EOAuth2UserServiceImpl.eKakaoContentType.getValue(), EOAuth2UserServiceImpl.eKakaoContentTypeUrlencoded.getValue());
 
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 

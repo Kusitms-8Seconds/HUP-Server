@@ -37,7 +37,7 @@ public class EmailController {
     public ResponseEntity<?> sendEmailAuthCode(
             @Valid @RequestBody @ApiParam(value="이메일정보", required = true) EmailAuthCodeRequest emailAuthCodeRequest) throws Exception {
         DefaultResponse defaultResponse = emailService.sendSimpleMessage(emailAuthCodeRequest.getEmail());
-        return ResponseEntity.status(200).body(defaultResponse);
+        return ResponseEntity.ok(defaultResponse);
     }
 
     @PostMapping("/verify")
@@ -51,7 +51,7 @@ public class EmailController {
     public ResponseEntity<?> verifyAuthCode(
             @Valid @RequestBody @ApiParam(value="인증 코드", required = true) CheckAuthCodeRequest checkAuthCodeRequest){
         DefaultResponse defaultResponse = emailService.checkAuthCode(checkAuthCodeRequest.getAuthCode());
-        return ResponseEntity.status(200).body(defaultResponse);
+        return ResponseEntity.ok(defaultResponse);
     }
 
 }

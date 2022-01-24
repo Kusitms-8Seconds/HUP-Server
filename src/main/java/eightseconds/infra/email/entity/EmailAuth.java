@@ -2,6 +2,7 @@ package eightseconds.infra.email.entity;
 
 import eightseconds.domain.user.entity.User;
 import eightseconds.global.entity.BaseTimeEntity;
+import eightseconds.infra.email.constant.EmailConstants.EEmailAuth;
 import eightseconds.infra.email.exception.ExpiredAuthCodeTimeException;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,6 +50,7 @@ public class EmailAuth extends BaseTimeEntity {
     public void validateValidPeriod(EmailAuth emailAuth) {
         LocalDateTime createdDateTime = emailAuth.getCreatedDate();
         LocalDateTime currentDateTime = LocalDateTime.now();
-        if (createdDateTime.until(currentDateTime, ChronoUnit.MINUTES) > 30) throw new ExpiredAuthCodeTimeException("인증코드가 유효한 시간인 30분을 초과했습니다.");
+        if (createdDateTime.until(currentDateTime, ChronoUnit.MINUTES) > EEmailAuth.eEmailValidationTime.getMinutes()) throw new ExpiredAuthCodeTimeException(
+                EEmailAuth.eExpiredAuthCodeTimeExceptionMessage.getValue());
     }
 }

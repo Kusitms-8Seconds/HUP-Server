@@ -8,6 +8,7 @@ import eightseconds.domain.user.dto.OAuth2KakaoLoginRequest;
 import eightseconds.domain.user.dto.OAuth2NaverLoginRequest;
 import eightseconds.domain.user.service.OAuth2UserService;
 import eightseconds.global.jwt.JwtFilter;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +32,7 @@ public class OAuth2UserApiController {
 
     private final OAuth2UserService oAuth2UserService;
 
+    @ApiOperation(value = "구글 로그인", notes = "구글 로그인을 합니다.")
     @PostMapping("/google-login")
     public ResponseEntity<EntityModel<LoginResponse>> googleLogin(@RequestBody OAuth2GoogleLoginRequest oAuth2GoogleLoginRequest) throws GeneralSecurityException, IOException {
         LoginResponse loginResponse = oAuth2UserService.validateGoogleIdToken(oAuth2GoogleLoginRequest);
@@ -44,6 +46,7 @@ public class OAuth2UserApiController {
                         .withRel(EOAuth2UserApiController.eUpdateMethod.getValue())), httpHeaders, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "카카오 로그인", notes = "카카오 로그인을 합니다.")
     @PostMapping("/kakao-login")
     public ResponseEntity<EntityModel<LoginResponse>> kakaoLogin(@RequestBody OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) throws IOException, ParseException, org.json.simple.parser.ParseException {
         LoginResponse loginResponse = oAuth2UserService.validateKakaoAccessToken(oAuth2KakaoLoginRequest);
@@ -57,6 +60,7 @@ public class OAuth2UserApiController {
                         .withRel(EOAuth2UserApiController.eUpdateMethod.getValue())), httpHeaders, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "네이버 로그인", notes = "네이버 로그인을 합니다.")
     @PostMapping("/naver-login")
     public ResponseEntity<EntityModel<LoginResponse>> naverLogin(@RequestBody OAuth2NaverLoginRequest oAuth2NaverLoginRequest){
         LoginResponse loginResponse = oAuth2UserService.validateNaverAccessToken(oAuth2NaverLoginRequest);
