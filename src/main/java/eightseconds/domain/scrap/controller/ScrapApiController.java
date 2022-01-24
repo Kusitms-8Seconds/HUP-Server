@@ -63,7 +63,7 @@ public class ScrapApiController {
     }
 
     @ApiOperation(value = "유저가 해당 상품을 스크랩중인지 조회", notes = "유저가 해당 상품을 스크랩중인지 조회합니다.")
-    @GetMapping("/hearts")
+    @PostMapping("/hearts")
     public ResponseEntity<EntityModel<ScrapCheckedResponse>> checkScrap(@Valid @RequestBody ScrapCheckedRequest scrapCheckedRequest){
         return ResponseEntity.ok(EntityModel.of(scrapService.isCheckedScrap(scrapCheckedRequest)));
     }
