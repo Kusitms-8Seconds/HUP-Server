@@ -1,5 +1,7 @@
 package eightseconds.infra.email.controller;
 
+import eightseconds.domain.user.constant.UserConstants;
+import eightseconds.domain.user.controller.UserApiController;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.infra.email.dto.CheckAuthCodeRequest;
 import eightseconds.infra.email.dto.EmailAuthCodeRequest;
@@ -9,6 +11,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,10 +40,12 @@ public class EmailController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> sendEmailAuthCode(
+    public ResponseEntity<EntityModel<DefaultResponse>> sendEmailAuthCode(
             @Valid @RequestBody @ApiParam(value="이메일정보", required = true) EmailAuthCodeRequest emailAuthCodeRequest) throws Exception {
         DefaultResponse defaultResponse = emailService.sendSimpleMessage(emailAuthCodeRequest.getEmail());
-        return ResponseEntity.ok(defaultResponse);
+        return ResponseEntity.ok((EntityModel.of(defaultResponse)
+                .add(linkTo(methodOn(this.getClass()).sendEmailAuthCode(emailAuthCodeRequest)).withSelfRel())
+                .add(linkTo(methodOn(this.getClass()).verifyAuthCode(null)).withRel("get"))));
     }
 
     @PostMapping("/verify")
@@ -51,7 +59,8 @@ public class EmailController {
     public ResponseEntity<?> verifyAuthCode(
             @Valid @RequestBody @ApiParam(value="인증 코드", required = true) CheckAuthCodeRequest checkAuthCodeRequest){
         DefaultResponse defaultResponse = emailService.checkAuthCode(checkAuthCodeRequest.getAuthCode());
-        return ResponseEntity.ok(defaultResponse);
+        return ResponseEntity.ok((EntityModel.of(defaultResponse)
+                .add(linkTo(methodOn(this.getClass()).verifyAuthCode(checkAuthCodeRequest)).withSelfRel())));
     }
 
 }
