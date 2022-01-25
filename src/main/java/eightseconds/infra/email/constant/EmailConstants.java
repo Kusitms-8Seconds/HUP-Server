@@ -54,6 +54,6 @@ public class EmailConstants {
         private int size;
 
         EEmailServiceImpl(String value) {this.value = value;}
-        EEmailServiceImpl(int minutes) {this.size = size;}
+        EEmailServiceImpl(int size) {this.size = size;}
     }
 }

@@ -78,7 +78,7 @@ public class EmailServiceImpl implements EmailService{
         msgg+= EEmailServiceImpl.eSendMessage9.getValue();
         msgg+= EEmailServiceImpl.eSendMessage10.getValue();
         msgg+= EEmailServiceImpl.eSendMessage11.getValue();
-        msgg+= authCode+EEmailServiceImpl.eSendMessage12.getValue();
+        msgg+= authCode + EEmailServiceImpl.eSendMessage12.getValue();
         msgg+= EEmailServiceImpl.eSendMessage13.getValue();
         message.setText(msgg, EEmailServiceImpl.eSendMessageCharset.getValue(), EEmailServiceImpl.eSendMessageSubType.getValue());//내용
         message.setFrom(new InternetAddress(EEmailServiceImpl.eSendMessageAddress.getValue(),EEmailServiceImpl.eSendMessagePersonal.getValue()));//보내는 사람
