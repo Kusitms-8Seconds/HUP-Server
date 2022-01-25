@@ -5,12 +5,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(description = "회원 정보 수정을 위한 업데이트 요청 객체")
@@ -37,4 +39,5 @@ public class UpdateUserRequest {
     @NotBlank(message = "수정하고자 하는 전화번호를 입력해주세요.")
     @ApiModelProperty(notes = "수정하고자 하는 전화번호를 입력해 주세요.")
     private String phoneNumber;
+
 }
