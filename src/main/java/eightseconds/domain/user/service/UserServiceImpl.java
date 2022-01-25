@@ -121,6 +121,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest) {
         User user = validateUserId(updateUserRequest.getUserId());
+        updateUserRequest.setPassword(passwordEncoder.encode(updateUserRequest.getPassword()));
         User updatedUser = userRepository.save(user.updateUserByUpdateUserRequest(updateUserRequest));
         return UpdateUserResponse.from(updatedUser);
     }
