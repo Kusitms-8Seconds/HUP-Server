@@ -5,10 +5,7 @@ import eightseconds.domain.user.constant.UserConstants.EUserServiceImpl;
 import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.Authority;
 import eightseconds.domain.user.entity.User;
-import eightseconds.domain.user.exception.AlreadyRegisteredUserException;
-import eightseconds.domain.user.exception.NotActivatedEmailAuthException;
-import eightseconds.domain.user.exception.NotFoundUserException;
-import eightseconds.domain.user.exception.UserNotActivatedException;
+import eightseconds.domain.user.exception.*;
 import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.jwt.TokenProvider;
 import eightseconds.global.util.SecurityUtil;
@@ -69,11 +66,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(final String loginId) {
         return userRepository.findOneWithAuthoritiesByLoginId(loginId)
                 .map(user -> createUser(loginId, user))
-                .orElseThrow(() -> new UsernameNotFoundException(loginId + EUserServiceImpl.eUsernameNotFoundException.getValue()));
+                .orElseThrow(() -> new UsernameNotFoundException(loginId + EUserServiceImpl.eUsernameNotFoundExceptionMessage.getValue()));
     }
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
-        if (!user.isActivated()) throw new UserNotActivatedException(username + EUserServiceImpl.eUserNotActivatedException.getValue());
+        if (!user.isActivated()) throw new UserNotActivatedException(username + EUserServiceImpl.eUserNotActivatedExceptionMessage.getValue());
 
         List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
@@ -130,6 +127,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return validateUserId(userId);
     }
 
+
     /**
      * validate
      */
@@ -138,7 +136,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findById(userId)
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new NotFoundUserException(EUserServiceImpl.eNotFoundUserException.getValue()));
+                .orElseThrow(() -> new NotFoundUserException(EUserServiceImpl.eNotFoundUserExceptionMessage.getValue()));
     }
 
     public String validateLogin(LoginRequest loginRequest) {
@@ -151,7 +149,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     private void validateEmailAuth(User user) {
-        if (!user.isEmailAuthActivated()) throw new NotActivatedEmailAuthException(EUserServiceImpl.eNotActivatedEmailAuthException.getValue());
+        if (!user.isEmailAuthActivated()) throw new NotActivatedEmailAuthException(EUserServiceImpl.eNotActivatedEmailAuthExceptionMessage.getValue());
+    }
+
+    public User validationEmail(String email) {
+        return userRepository.findByEmail(email)
+                .stream()
+                .findAny()
+                .orElseThrow(() -> new NotFoundRegisteredUserException(EUserServiceImpl
+                        .eNotFoundRegisteredUserExceptionMessage.getValue()));
+
     }
 
 }
