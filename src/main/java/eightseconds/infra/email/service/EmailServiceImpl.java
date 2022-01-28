@@ -1,10 +1,7 @@
 package eightseconds.infra.email.service;
 
-import eightseconds.domain.user.constant.UserConstants.ELoginType;
-import eightseconds.domain.user.constant.UserConstants.EUserServiceImpl;
 import eightseconds.domain.user.entity.User;
-import eightseconds.domain.user.exception.NotFoundUserException;
-import eightseconds.domain.user.repository.UserRepository;
+import eightseconds.domain.user.service.UserServiceImpl;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.infra.email.constant.EmailConstants.EEmailServiceImpl;
 import eightseconds.infra.email.entity.EmailAuth;
@@ -26,15 +23,16 @@ import java.util.Random;
 public class EmailServiceImpl implements EmailService{
 
     private final JavaMailSender emailSender;
-    private final UserRepository userRepository;
+    private final UserServiceImpl userService;
     private final EmailAuthRepository emailAuthRepository;
     public String authCode;
 
     @Override
     public DefaultResponse sendSimpleMessage(String email) throws Exception {
 
-        User user = userRepository.findByEmailAndLoginType(email, ELoginType.eApp).orElseThrow(()
-                -> new NotFoundUserException(EUserServiceImpl.eNotFoundUserException.getValue()));
+
+        User user = userService.validationEmail(email);
+
 
         MimeMessage message = createMessage(email);
         try{

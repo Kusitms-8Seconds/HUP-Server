@@ -1,12 +1,8 @@
 package eightseconds.domain.user.constant;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import eightseconds.domain.item.constant.ItemConstants;
-import eightseconds.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 public class UserConstants {
 
@@ -100,10 +96,11 @@ public class UserConstants {
     public enum EUserServiceImpl{
         eAlreadyRegisteredUserExceptionMessage("이미 가입되어 있는 유저입니다."),
         eSuccessSignUpMessage("회원가입을 완료했습니다."),
-        eUsernameNotFoundException(" -> 유저 이름을 데이터베이스에서 찾을 수 없습니다."),
-        eUserNotActivatedException(" -> 유저가 활성화되어 있지 않습니다."),
-        eNotFoundUserException("해당 유저아이디로 유저를 찾을 수 없습니다."),
-        eNotActivatedEmailAuthException("이메일 인증이 완료되지 않았습니다."),
+        eUsernameNotFoundExceptionMessage(" -> 유저 이름을 데이터베이스에서 찾을 수 없습니다."),
+        eUserNotActivatedExceptionMessage(" -> 유저가 활성화되어 있지 않습니다."),
+        eNotFoundUserExceptionMessage("해당 유저아이디로 유저를 찾을 수 없습니다."),
+        eNotFoundRegisteredUserExceptionMessage("해당 이메일로 회원가입된 유저가 없습니다."),
+        eNotActivatedEmailAuthExceptionMessage("이메일 인증이 완료되지 않았습니다."),
         eTrue(true),
         eAuthorityRoleUser("ROLE_USER");
 

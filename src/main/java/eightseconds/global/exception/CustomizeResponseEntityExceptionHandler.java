@@ -95,6 +95,12 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(NotFoundRegisteredUserException.class)
+    public final ResponseEntity<Object> handleNotFoundRegisteredUserException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
     /**
      * Email Exception
      */
