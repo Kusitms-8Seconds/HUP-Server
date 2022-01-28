@@ -81,6 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/email/send").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/email/verify").permitAll()
+                .antMatchers("/api/v1/files/**").permitAll()
                 .antMatchers("/api/v1/users/login").permitAll()
                 .antMatchers("/api/v1/users/google-login").permitAll()
                 .antMatchers("/api/v1/users/kakao-login").permitAll()

@@ -93,7 +93,7 @@ public class ItemApiController {
     }
 
     @ApiOperation(value = "유저가 등록한 상품을 판매 상태별로 조회", notes = "해당 유저가 등록한 상품을 판매 상태별로 조회합니다.")
-    @GetMapping("/users")
+    @PostMapping("/users")
     public ResponseEntity<EntityModel<PaginationDto<List<ItemDetailsResponse>>>> getAllItemsOfUser(@PageableDefault Pageable pageable,
                                               @Valid @RequestBody ItemOfUserRequest itemOfUserRequest) {
         return ResponseEntity.ok(EntityModel.of(itemService.getAllItemsOfUser(pageable, itemOfUserRequest)));
