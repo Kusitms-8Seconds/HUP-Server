@@ -30,9 +30,8 @@ public class EmailServiceImpl implements EmailService{
     @Override
     public DefaultResponse sendSimpleMessage(String email) throws Exception {
 
-
-        User user = userService.validationEmail(email);
-
+        userService.validateIsAlreadyRegisteredUser(email);
+        User user = userService.validateEmail(email);
 
         MimeMessage message = createMessage(email);
         try{
