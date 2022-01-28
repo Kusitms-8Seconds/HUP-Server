@@ -152,13 +152,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (!user.isEmailAuthActivated()) throw new NotActivatedEmailAuthException(EUserServiceImpl.eNotActivatedEmailAuthExceptionMessage.getValue());
     }
 
-    public User validationEmail(String email) {
+    public User validateEmail(String email) {
         return userRepository.findByEmail(email)
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new NotFoundRegisteredUserException(EUserServiceImpl
                         .eNotFoundRegisteredUserExceptionMessage.getValue()));
 
+    }
+
+    public void validateIsAlreadyRegisteredUser(String email) {
+        userRepository.findByEmailAndLoginTypeAndEmailAuthActivated(email, ELoginType.eApp, true)
+                .ifPresent(u -> { throw new AlreadyRegisteredUserException(EUserServiceImpl
+                        .eAlreadyRegisteredUserExceptionMessage.getValue()); });
     }
 
 }

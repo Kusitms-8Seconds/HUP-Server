@@ -15,4 +15,5 @@ public interface UserService {
     User getUserByUserId(Long userId);
     User validateUserId(Long userId);
     UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest);
+    void validateIsAlreadyRegisteredUser(String email);
 }
