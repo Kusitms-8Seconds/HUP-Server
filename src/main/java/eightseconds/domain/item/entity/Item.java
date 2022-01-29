@@ -43,13 +43,13 @@ public class Item extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<PriceSuggestion> priceSuggestions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<Scrap> scraps = new ArrayList<>();
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<MyFile> myFiles = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "item")

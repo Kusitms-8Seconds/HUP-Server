@@ -17,4 +17,5 @@ public interface PriceSuggestionService {
     ParticipantsResponse getParticipants(Long itemId);
     PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByUserId(Pageable pageable, Long userId);
     BidderResponse getBidder(Long itemId);
+    void deletePriceSuggestion(Long priceSuggestionId);
 }
