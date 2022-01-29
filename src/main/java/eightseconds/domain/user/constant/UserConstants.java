@@ -95,12 +95,14 @@ public class UserConstants {
     @Getter
     public enum EUserServiceImpl{
         eAlreadyRegisteredUserExceptionMessage("이미 가입되어 있는 유저입니다."),
+        eAlreadyRegisteredLoginIdExceptionMessage("이미 등록되어 있는 아이디입니다."),
         eSuccessSignUpMessage("회원가입을 완료했습니다."),
         eUsernameNotFoundExceptionMessage(" -> 유저 이름을 데이터베이스에서 찾을 수 없습니다."),
         eUserNotActivatedExceptionMessage(" -> 유저가 활성화되어 있지 않습니다."),
         eNotFoundUserExceptionMessage("해당 유저아이디로 유저를 찾을 수 없습니다."),
         eNotFoundRegisteredUserExceptionMessage("해당 이메일로 회원가입된 유저가 없습니다."),
         eNotActivatedEmailAuthExceptionMessage("이메일 인증이 완료되지 않았습니다."),
+        eNotDuplicatedLoginIdMessage("해당 아이디로 회원가입을 할 수 있습니다."),
         eTrue(true),
         eAuthorityRoleUser("ROLE_USER");
 
