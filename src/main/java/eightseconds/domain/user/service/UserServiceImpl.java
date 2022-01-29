@@ -146,6 +146,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.createToken(authentication);
         return jwt;
+
     }
 
     private void validateEmailAuth(User user) {
@@ -153,7 +154,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     public User validateEmail(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailAndLoginType(email, ELoginType.eApp)
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new NotFoundRegisteredUserException(EUserServiceImpl

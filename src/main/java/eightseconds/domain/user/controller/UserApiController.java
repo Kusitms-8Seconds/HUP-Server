@@ -84,4 +84,11 @@ public class UserApiController {
                 .add(linkTo(methodOn(this.getClass()).deleteUser(updateUserResponse.getUserId())).withRel(EUserApiController.eDeleteMethod.getValue()))));
     }
 
+//    @ApiOperation(value = "아이디 중복 체크", notes = "아이디가 중복인지 체크합니다.")
+//    @GetMapping("/check/{loginId}")
+//    public ResponseEntity<EntityModel<UserInfoResponse>> getIsRegisteredLoginId(@PathVariable String loginId) {
+//
+//        return ResponseEntity.ok((EntityModel.of(userService.validateLoginId(loginId)));
+//    }
+
 }

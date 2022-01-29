@@ -89,7 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/priceSuggestions/maximumPrices/**").permitAll()
                 .antMatchers("/api/v1/priceSuggestions/participants/**").permitAll()
                 .antMatchers("/api/v1/scraps/hearts/**").permitAll()
-                .antMatchers("/api/v1/items/statuses/{itemSoldStatus}").permitAll()
+                .antMatchers("/api/v1/items/statuses/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider))
