@@ -7,6 +7,7 @@ import eightseconds.domain.user.entity.Authority;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.exception.*;
 import eightseconds.domain.user.repository.UserRepository;
+import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.jwt.TokenProvider;
 import eightseconds.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -166,6 +167,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.findByEmailAndLoginTypeAndEmailAuthActivated(email, ELoginType.eApp, true)
                 .ifPresent(u -> { throw new AlreadyRegisteredUserException(EUserServiceImpl
                         .eAlreadyRegisteredUserExceptionMessage.getValue()); });
+    }
+
+    @Override
+    public DefaultResponse validateLoginId(String loginId) {
+        userRepository.findUserByLoginId(loginId)
+                .stream()
+                .findAny()
+                .ifPresent((u -> { throw new AlreadyRegisteredUserException(EUserServiceImpl
+                        .eAlreadyRegisteredLoginIdExceptionMessage.getValue()); }));
+        return DefaultResponse.from(EUserServiceImpl.eNotDuplicatedLoginIdMessage.getValue());
     }
 
 }

@@ -2,6 +2,7 @@ package eightseconds.domain.user.service;
 
 import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.User;
+import eightseconds.global.dto.DefaultResponse;
 
 import java.util.Optional;
 
@@ -16,4 +17,5 @@ public interface UserService {
     User validateUserId(Long userId);
     UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest);
     void validateIsAlreadyRegisteredUser(String email);
+    DefaultResponse validateLoginId(String loginId);
 }

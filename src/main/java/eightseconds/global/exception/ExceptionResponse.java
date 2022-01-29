@@ -14,5 +14,5 @@ import java.util.List;
 public class ExceptionResponse {
     private Date timeStamp;
     private String status;
-    private List<String> errors;
+    private List<String> messages;
 }
