@@ -4,10 +4,11 @@ import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.NotOnGoingException;
 import eightseconds.domain.item.service.ItemService;
-import eightseconds.domain.pricesuggestion.constant.PriceSuggestionConstants;
+import eightseconds.domain.pricesuggestion.constant.PriceSuggestionConstants.EPriceSuggestionServiceImpl;
 import eightseconds.domain.pricesuggestion.dto.*;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.exception.AlreadySoldOutException;
+import eightseconds.domain.pricesuggestion.exception.NotFoundPriceSuggestionException;
 import eightseconds.domain.pricesuggestion.exception.PriorPriceSuggestionException;
 import eightseconds.domain.pricesuggestion.repository.PriceSuggestionRepository;
 import eightseconds.domain.user.entity.User;
@@ -99,6 +100,10 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         return BidderResponse.from(priceSuggestion.get().getUser().getUsername());
     }
 
+    public void deletePriceSuggestion(Long priceSuggestionId) {
+        validatePriceSuggestionId(priceSuggestionId);
+        priceSuggestionRepository.deleteById(priceSuggestionId);
+    }
 
     /**
      * validation
@@ -106,20 +111,20 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
 
     private void validationOnGoingItem(Item item) {
         if(!item.getSoldStatus().equals(ItemConstants.EItemSoldStatus.eOnGoing)){
-            throw new NotOnGoingException(PriceSuggestionConstants.EPriceSuggestionServiceImpl.eNotOnGoingExceptionMessage.getValue());
+            throw new NotOnGoingException(EPriceSuggestionServiceImpl.eNotOnGoingExceptionMessage.getValue());
         }
     }
 
     private void validationAcceptStatusPriceSuggestion(List<PriceSuggestion> priceSuggestions) {
-        if (priceSuggestions.size() != PriceSuggestionConstants.EPriceSuggestionServiceImpl.eZero.getSize()) {
+        if (priceSuggestions.size() != EPriceSuggestionServiceImpl.eZero.getSize()) {
             for (PriceSuggestion priceSuggestion : priceSuggestions) {
                 if(priceSuggestion.isAcceptState() == true){
-                    throw new AlreadySoldOutException(PriceSuggestionConstants.EPriceSuggestionServiceImpl.eAlreadySoldOutExceptionMessage.getValue()); } } }
+                    throw new AlreadySoldOutException(EPriceSuggestionServiceImpl.eAlreadySoldOutExceptionMessage.getValue()); } } }
     }
 
     private void validationPrice(int priorSuggestionPrice, int suggestionPrice) {
         if(priorSuggestionPrice >= suggestionPrice){
-            throw new PriorPriceSuggestionException(PriceSuggestionConstants.EPriceSuggestionServiceImpl.ePriorPriceSuggestionExceptionMessage.getValue()); }
+            throw new PriorPriceSuggestionException(EPriceSuggestionServiceImpl.ePriorPriceSuggestionExceptionMessage.getValue()); }
     }
 
     @Override
@@ -128,6 +133,13 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         Item item = itemService.getItemByItemId(itemId);
         validationOnGoingItem(item);
         validationAcceptStatusPriceSuggestion(priceSuggestions);
+    }
+
+    private void validatePriceSuggestionId(Long priceSuggestionId) {
+        priceSuggestionRepository.findById(priceSuggestionId)
+                .stream()
+                .findAny()
+                .orElseThrow(() -> new NotFoundPriceSuggestionException(EPriceSuggestionServiceImpl.eNotFoundPriceSuggestionExceptionMessage.getValue()));
     }
 
 }

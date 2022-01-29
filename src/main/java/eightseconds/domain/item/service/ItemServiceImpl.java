@@ -11,6 +11,9 @@ import eightseconds.domain.item.exception.*;
 import eightseconds.domain.item.repository.ItemRepository;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.repository.PriceSuggestionRepository;
+import eightseconds.domain.pricesuggestion.service.PriceSuggestionService;
+import eightseconds.domain.scrap.entity.Scrap;
+import eightseconds.domain.scrap.service.ScrapService;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.PaginationDto;
@@ -59,7 +62,6 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public void deleteByItemId(Long id) {
         validateItemId(id);
-        fileService.deleteAllByItemId(id);
         itemRepository.deleteById(id);
     }
 
