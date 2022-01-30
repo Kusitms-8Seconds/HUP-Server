@@ -35,7 +35,6 @@ public class UserApiController {
                 .path(EUserApiController.eLocationIdPath.getValue())
                 .buildAndExpand(signUpResponse.getUserId())
                 .toUri();
-
         return ResponseEntity.created(location).body(EntityModel.of(signUpResponse)
                 .add(linkTo(methodOn(this.getClass()).createUser(signUpRequest)).withSelfRel())
                 .add(linkTo(methodOn(this.getClass()).getUser(signUpResponse.getUserId())).withRel(EUserApiController.eGetMethod.getValue()))
@@ -49,7 +48,6 @@ public class UserApiController {
         LoginResponse loginResponse = userService.loginUser(loginRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + loginResponse.getToken());
-
         return new ResponseEntity<>(EntityModel.of(loginResponse)
                 .add(linkTo(methodOn(this.getClass()).loginUser(loginRequest)).withSelfRel())
                 .add(linkTo(methodOn(this.getClass()).getUser(loginResponse.getUserId())).withRel(EUserApiController.eGetMethod.getValue()))
@@ -60,7 +58,6 @@ public class UserApiController {
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자의 정보를 조회합니다.")
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<UserInfoResponse>> getUser(@PathVariable Long id) {
-
         return ResponseEntity.ok((EntityModel.of(userService.getUserInfoByUserId(id))
                 .add(linkTo(methodOn(this.getClass()).getUser(id)).withSelfRel())
                 .add(linkTo(methodOn(this.getClass()).deleteUser(id)).withRel(EUserApiController.eDeleteMethod.getValue()))
@@ -78,7 +75,6 @@ public class UserApiController {
     @PutMapping
     public ResponseEntity<EntityModel<UpdateUserResponse>> updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest) {
         UpdateUserResponse updateUserResponse = userService.updateUser(updateUserRequest);
-
         return ResponseEntity.ok((EntityModel.of(updateUserResponse)
                 .add(linkTo(methodOn(this.getClass()).updateUser(updateUserRequest)).withSelfRel())
                 .add(linkTo(methodOn(this.getClass()).getUser(updateUserResponse.getUserId())).withRel(EUserApiController.eGetMethod.getValue()))
