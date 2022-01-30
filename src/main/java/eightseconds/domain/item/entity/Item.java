@@ -1,8 +1,10 @@
 package eightseconds.domain.item.entity;
 
 import eightseconds.domain.file.entity.MyFile;
+import eightseconds.domain.item.constant.ItemConstants.EItem;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
+import eightseconds.domain.item.exception.NotBidItemException;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.user.entity.User;
@@ -79,5 +81,19 @@ public class Item extends BaseTimeEntity {
     public void setUser(User user) {
         this.user = user;
         user.getItems().add(this);
+    }
+
+    // 비즈니스 로직
+    public PriceSuggestion getMaximumPriceEntity() {
+        int maximumPrice = EItem.eZero.getNumber();
+        PriceSuggestion priceSuggestionByMaximumPrice = null;
+        for (PriceSuggestion priceSuggestion : this.getPriceSuggestions()) {
+            if(maximumPrice < priceSuggestion.getSuggestionPrice()){
+                maximumPrice = priceSuggestion.getSuggestionPrice();
+                priceSuggestionByMaximumPrice = priceSuggestion;
+            }
+        }
+        if (maximumPrice == EItem.eZero.getNumber()) throw new NotBidItemException(EItem.eNotBidItemExceptionMessage.getValue());
+        return priceSuggestionByMaximumPrice;
     }
 }

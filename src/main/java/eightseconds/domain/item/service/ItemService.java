@@ -23,7 +23,7 @@ public interface ItemService{
     void validateSoldStatusByItemId(Long itemId);
     PaginationDto<List<ItemDetailsResponse>> getAllItemsOfUser(Pageable pageable, ItemOfUserRequest itemOfUserRequest);
     void validateSoldOutTime(LocalDateTime auctionClosingDate);
-    Item soldOutItem(Long itemId);
+    SoldResponse soldOutItem(SoldRequest soldRequest);
     PaginationDto<List<ItemDetailsResponse>> getAllItemsByItemSoldStatus(Pageable pageable, String itemSoldStatus);
     List<BestItemResponse> getAllBestItemsByItemSoldStatus(String itemSoldStatus);
     PaginationDto<List<ItemDetailsResponse>> getAllItemsByCategory(Pageable pageable, String category);
