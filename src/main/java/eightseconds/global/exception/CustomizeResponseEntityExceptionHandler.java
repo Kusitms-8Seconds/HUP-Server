@@ -107,6 +107,7 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
     }
 
+
     /**
      * Email Exception
      */
@@ -156,6 +157,19 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(NotBidItemException.class)
+    public final ResponseEntity<Object> handleNotBidItemException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NotSoldOutTimeException.class)
+    public final ResponseEntity<Object> handleNotSoldOutTimeException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
 
     /**
      * File Exception

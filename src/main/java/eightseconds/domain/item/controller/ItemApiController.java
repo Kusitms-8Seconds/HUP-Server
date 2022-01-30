@@ -99,10 +99,9 @@ public class ItemApiController {
         return ResponseEntity.ok(EntityModel.of(itemService.getAllItemsOfUser(pageable, itemOfUserRequest)));
     }
 
-//    // 낙찰 Test용도임 이걸로쓰면 안됨!
-//    @PostMapping("/soldOutTest")
-//    public ResponseEntity<ItemDetailsResponse> soldOut(@RequestBody SoldOutRequest soldOutRequest) throws Exception {
-//        Item item = itemService.soldOutItem(soldOutRequest.getItemId());
-//        return ResponseEntity.ok(ItemDetailsResponse.from(item));
-//    }
+    @ApiOperation(value = "상품을 낙찰합니다.", notes = "해당 유저가 등록한 상품을 낙찰합니다.")
+    @PostMapping("/sold")
+    public ResponseEntity<EntityModel<SoldResponse>> soldItem(@RequestBody SoldRequest soldRequest){
+        return ResponseEntity.ok(EntityModel.of(itemService.soldOutItem(soldRequest)));
+    }
 }

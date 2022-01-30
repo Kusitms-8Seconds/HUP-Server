@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
-    private final PriceSuggestionRepository priceSuggestionRepository;
 
     private final FileService fileService;
     private final UserService userService;
@@ -123,17 +122,16 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public Item soldOutItem(Long itemId) {
-        Item item = getItemByItemId(itemId);
+    public SoldResponse soldOutItem(SoldRequest soldRequest) {
+        Item item = getItemByItemId(soldRequest.getItemId());
         validateItemId(item.getId());
         validateSoldStatusByItemId(item.getId());
         validateSoldOutTime(item.getAuctionClosingDate());
         item.setSoldStatus(EItemSoldStatus.eSoldOut);
-        Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getMaximumPriceByItemId(item.getId());
-        validatePriceSuggestion(priceSuggestion);
-        priceSuggestion.get().setAcceptState(true);
-        item.setSoldPrice(priceSuggestion.get().getSuggestionPrice());
-        return item;
+        PriceSuggestion priceSuggestion = item.getMaximumPriceEntity();
+        priceSuggestion.setAcceptState(true);
+        item.setSoldPrice(priceSuggestion.getSuggestionPrice());
+        return SoldResponse.from(item, priceSuggestion);
     }
 
     /**
