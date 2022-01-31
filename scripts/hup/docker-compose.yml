@@ -25,6 +25,7 @@ services:
     networks:
       - hup-network
     restart: always
+    container_name: hup-redis
 
   application:
     image: rlawjddn5980/hup-server:latest
