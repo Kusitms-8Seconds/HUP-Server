@@ -12,10 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import eightseconds.domain.user.constant.UserConstants.EOAuth2UserServiceImpl;
 import eightseconds.domain.user.constant.UserConstants.ELoginType;
-import eightseconds.domain.user.dto.LoginResponse;
-import eightseconds.domain.user.dto.OAuth2GoogleLoginRequest;
-import eightseconds.domain.user.dto.OAuth2KakaoLoginRequest;
-import eightseconds.domain.user.dto.OAuth2NaverLoginRequest;
+import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.exception.InvalidIdToken;
 import eightseconds.domain.user.repository.UserRepository;
@@ -76,8 +73,8 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     public LoginResponse saveUserOrUpdateByGoogleIdToken(GoogleIdToken idToken) {
         Payload payload = idToken.getPayload();
         User user = saveOrUpdateGoogleUser(payload);
-        String jwt = makeAppToken(payload);
-        return LoginResponse.from(jwt, user.getId());
+        TokenInfoResponse tokenInfoResponse = makeAppToken(payload);
+        return LoginResponse.from(user.getId(), tokenInfoResponse);
     }
 
     private User saveOrUpdateGoogleUser(Payload payload) {
@@ -88,7 +85,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         return userRepository.save(user);
     }
 
-    private String makeAppToken(Payload payload) {
+    private TokenInfoResponse makeAppToken(Payload payload) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority(EOAuth2UserServiceImpl.eRoleUser.getValue()));
         Map<String, Object> map = new HashMap<>();
@@ -104,8 +101,8 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(userDetails, authorities, EOAuth2UserServiceImpl.eGoogleKeyAttribute.getValue());
         auth.setDetails(userDetails);
         SecurityContextHolder.getContext().setAuthentication(auth);
-        String jwt = tokenProvider.createToken(auth);
-        return jwt;
+        TokenInfoResponse tokenInfoResponse = tokenProvider.createToken(auth);
+        return tokenInfoResponse;
     }
 
     @Override
@@ -120,8 +117,8 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(userDetails, authorities, EOAuth2UserServiceImpl.eKakaoKeyAttribute.getValue());
         auth.setDetails(userDetails);
         SecurityContextHolder.getContext().setAuthentication(auth);
-        String jwt = tokenProvider.createToken(auth);
-        return LoginResponse.from(jwt, user.getId());
+        TokenInfoResponse tokenInfoResponse = tokenProvider.createToken(auth);
+        return LoginResponse.from(user.getId(), tokenInfoResponse);
     }
 
     public HashMap<String, Object> getUserInfo(String access_Token) {
@@ -189,8 +186,8 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(userDetails, authorities, EOAuth2UserServiceImpl.eNaverKeyAttribute.getValue());
         auth.setDetails(userDetails);
         SecurityContextHolder.getContext().setAuthentication(auth);
-        String jwt = tokenProvider.createToken(auth);
-        return LoginResponse.from(jwt, user.getId());
+        TokenInfoResponse tokenInfoResponse = tokenProvider.createToken(auth);
+        return LoginResponse.from(user.getId(), tokenInfoResponse);
 
     }
 

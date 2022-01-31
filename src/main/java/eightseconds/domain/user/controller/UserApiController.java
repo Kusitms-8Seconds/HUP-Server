@@ -47,12 +47,30 @@ public class UserApiController {
     public ResponseEntity<EntityModel<LoginResponse>> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
         LoginResponse loginResponse = userService.loginUser(loginRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + loginResponse.getToken());
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + loginResponse.getAccessToken());
         return new ResponseEntity<>(EntityModel.of(loginResponse)
                 .add(linkTo(methodOn(this.getClass()).loginUser(loginRequest)).withSelfRel())
                 .add(linkTo(methodOn(this.getClass()).getUser(loginResponse.getUserId())).withRel(EUserApiController.eGetMethod.getValue()))
                 .add(linkTo(methodOn(this.getClass()).deleteUser(loginResponse.getUserId())).withRel(EUserApiController.eDeleteMethod.getValue()))
                 .add(linkTo(methodOn(this.getClass()).updateUser(null)).withRel(EUserApiController.eUpdateMethod.getValue())), httpHeaders, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "로그아웃", notes = "사용자 로그아웃을 합니다.")
+    @PostMapping("/logout")
+    public ResponseEntity<EntityModel<DefaultResponse>> logoutUser(@Valid @RequestBody LogoutRequest logoutRequest) {
+        DefaultResponse defaultResponse = userService.logout(logoutRequest);
+        return ResponseEntity.ok(EntityModel.of(defaultResponse)
+                .add(linkTo(methodOn(this.getClass()).logoutUser(logoutRequest)).withSelfRel()));
+    }
+
+    @ApiOperation(value = "토큰 재발급", notes = "토큰 재발급을 합니다.")
+    @PostMapping("/reissue")
+    public ResponseEntity<EntityModel<ReissueResponse>> reissueToken(@Valid @RequestBody ReissueRequest reissueRequest) {
+        ReissueResponse reissueResponse = userService.reissueToken(reissueRequest);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + reissueResponse.getAccessToken());
+        return new ResponseEntity<>(EntityModel.of(reissueResponse)
+                .add(linkTo(methodOn(this.getClass()).reissueToken(reissueRequest)).withSelfRel()), httpHeaders, HttpStatus.OK);
     }
 
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자의 정보를 조회합니다.")

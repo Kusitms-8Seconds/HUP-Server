@@ -11,6 +11,7 @@ import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.jwt.TokenProvider;
 import eightseconds.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -22,11 +23,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -37,6 +40,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final RedisTemplate redisTemplate;
 
     @Override
     public SignUpResponse saveUser(SignUpRequest signUpRequest) {
@@ -94,9 +98,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public LoginResponse loginUser(LoginRequest loginRequest) {
         User user = getUserByLoginId(loginRequest.getLoginId());
         validateEmailAuth(user);
-        String token = validateLogin(loginRequest);
-
-        return LoginResponse.from(token, user.getId());
+        TokenInfoResponse tokenInfoResponse = validateLogin(loginRequest);
+        return LoginResponse.from(user.getId(), tokenInfoResponse);
     }
 
 
@@ -128,6 +131,59 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return validateUserId(userId);
     }
 
+    public ReissueResponse reissueToken(ReissueRequest reissue) {
+        // 1. Refresh Token 검증
+        if (!tokenProvider.validateToken(reissue.getRefreshToken())) {
+            throw new NotValidRefreshTokenException(EUserServiceImpl.eNotValidRefreshTokenExceptionMessage.getValue());}
+
+        // 2. Access Token 에서 User email 을 가져옵니다.
+        Authentication authentication = tokenProvider.getAuthentication(reissue.getAccessToken());
+
+        // 3. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
+        String refreshToken = (String)redisTemplate.opsForValue().get(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName());
+        // (추가) 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
+        if(ObjectUtils.isEmpty(refreshToken)) {
+            throw new WrongRefreshTokenRequestException(EUserServiceImpl.eWrongRefreshTokenRequestExceptionMessage.getValue());
+        }
+        if(!refreshToken.equals(reissue.getRefreshToken())) {
+            throw new NotMatchRefreshTokenException(EUserServiceImpl.eNotMatchRefreshTokenExceptionMessage.getValue());
+        }
+
+        // 4. 새로운 토큰 생성
+        TokenInfoResponse tokenInfoResponse = tokenProvider.createToken(authentication);
+
+        // 5. RefreshToken Redis 업데이트
+        redisTemplate.opsForValue()
+                .set(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName(),
+                        tokenInfoResponse.getRefreshToken(), tokenInfoResponse.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+
+        return ReissueResponse.from(tokenInfoResponse.getGrantType(), tokenInfoResponse.getAccessToken(),
+                tokenInfoResponse.getRefreshToken(), tokenInfoResponse.getRefreshTokenExpirationTime());
+    }
+
+    public DefaultResponse logout(LogoutRequest logoutRequest) {
+        // 1. Access Token 검증
+        if (!tokenProvider.validateToken(logoutRequest.getAccessToken())) {
+            throw new NotValidAccessTokenException(EUserServiceImpl.eNotValidAccessTokenExceptionMessage.getValue());
+        }
+
+        // 2. Access Token 에서 User email 을 가져옵니다.
+        Authentication authentication = tokenProvider.getAuthentication(logoutRequest.getAccessToken());
+
+        // 3. Redis 에서 해당 User email 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
+        if (redisTemplate.opsForValue().get(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName()) != null) {
+            // Refresh Token 삭제
+            redisTemplate.delete(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName());
+        }
+
+        // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
+        Long expiration = tokenProvider.getExpiration(logoutRequest.getAccessToken());
+        redisTemplate.opsForValue()
+                .set(logoutRequest.getAccessToken(), EUserServiceImpl.eLogout.getValue(), expiration, TimeUnit.MILLISECONDS);
+
+        return DefaultResponse.from(EUserServiceImpl.eLogoutMessage.getValue());
+    }
+
 
     /**
      * validate
@@ -140,13 +196,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .orElseThrow(() -> new NotFoundUserException(EUserServiceImpl.eNotFoundUserExceptionMessage.getValue()));
     }
 
-    public String validateLogin(LoginRequest loginRequest) {
+    public TokenInfoResponse validateLogin(LoginRequest loginRequest) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequest.getLoginId(), loginRequest.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.createToken(authentication);
-        return jwt;
+        TokenInfoResponse tokenInfoResponse = tokenProvider.createToken(authentication);
+        redisTemplate.opsForValue()
+                .set(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName(),
+                        tokenInfoResponse.getRefreshToken(), tokenInfoResponse.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+        return tokenInfoResponse;
 
     }
 

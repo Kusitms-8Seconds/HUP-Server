@@ -103,6 +103,13 @@ public class UserConstants {
         eNotFoundRegisteredUserExceptionMessage("해당 이메일로 회원가입된 유저가 없습니다."),
         eNotActivatedEmailAuthExceptionMessage("이메일 인증이 완료되지 않았습니다."),
         eNotDuplicatedLoginIdMessage("해당 아이디로 회원가입을 할 수 있습니다."),
+        eRefreshToken("RT:"),
+        eNotValidRefreshTokenExceptionMessage("Refresh Token 정보가 유효하지 않습니다."),
+        eNotMatchRefreshTokenExceptionMessage("Refresh Token 정보가 일치하지 않습니다."),
+        eWrongRefreshTokenRequestExceptionMessage("잘못된 요청입니다."),
+        eLogout("logout"),
+        eNotValidAccessTokenExceptionMessage("잘못된 요청입니다."),
+        eLogoutMessage("로그아웃 되었습니다."),
         eTrue(true),
         eAuthorityRoleUser("ROLE_USER");
 

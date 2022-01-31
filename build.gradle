@@ -65,7 +65,8 @@ dependencies {
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-
+	implementation 'com.google.firebase:firebase-admin:6.8.1'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 test {

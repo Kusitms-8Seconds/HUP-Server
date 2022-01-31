@@ -13,13 +13,15 @@ import lombok.NoArgsConstructor;
 @ApiModel(description = "로그인을 위한 응답 객체")
 public class LoginResponse {
 
-    private String token;
     private Long userId;
+    private String accessToken;
+    private String refreshToken;
 
-    public static LoginResponse from(String token, Long userId) {
+    public static LoginResponse from(Long userId, TokenInfoResponse tokenInfoResponse) {
         return LoginResponse.builder()
-                .token(token)
                 .userId(userId)
+                .accessToken(tokenInfoResponse.getAccessToken())
+                .refreshToken(tokenInfoResponse.getRefreshToken())
                 .build();
     }
 
