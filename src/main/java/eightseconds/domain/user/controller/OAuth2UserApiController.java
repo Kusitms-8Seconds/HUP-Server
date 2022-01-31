@@ -37,7 +37,7 @@ public class OAuth2UserApiController {
     public ResponseEntity<EntityModel<LoginResponse>> googleLogin(@RequestBody OAuth2GoogleLoginRequest oAuth2GoogleLoginRequest) throws GeneralSecurityException, IOException {
         LoginResponse loginResponse = oAuth2UserService.validateGoogleIdToken(oAuth2GoogleLoginRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, EOAuth2UserApiController.eBearerHeaderValue.getValue() + loginResponse.getToken());
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, EOAuth2UserApiController.eBearerHeaderValue.getValue() + loginResponse.getAccessToken());
         return new ResponseEntity<>(EntityModel.of(loginResponse)
                 .add(linkTo(methodOn(this.getClass()).googleLogin(oAuth2GoogleLoginRequest)).withSelfRel())
                 .add(linkTo(methodOn(UserApiController.class).getUser(loginResponse.getUserId())).withRel(EOAuth2UserApiController.eGetMethod.getValue()))
@@ -51,7 +51,7 @@ public class OAuth2UserApiController {
     public ResponseEntity<EntityModel<LoginResponse>> kakaoLogin(@RequestBody OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) throws IOException, ParseException, org.json.simple.parser.ParseException {
         LoginResponse loginResponse = oAuth2UserService.validateKakaoAccessToken(oAuth2KakaoLoginRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, EOAuth2UserApiController.eBearerHeaderValue.getValue() + loginResponse.getToken());
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, EOAuth2UserApiController.eBearerHeaderValue.getValue() + loginResponse.getAccessToken());
         return new ResponseEntity<>(EntityModel.of(loginResponse)
                 .add(linkTo(methodOn(this.getClass()).kakaoLogin(oAuth2KakaoLoginRequest)).withSelfRel())
                 .add(linkTo(methodOn(UserApiController.class).getUser(loginResponse.getUserId())).withRel(EOAuth2UserApiController.eGetMethod.getValue()))
@@ -65,7 +65,7 @@ public class OAuth2UserApiController {
     public ResponseEntity<EntityModel<LoginResponse>> naverLogin(@RequestBody OAuth2NaverLoginRequest oAuth2NaverLoginRequest){
         LoginResponse loginResponse = oAuth2UserService.validateNaverAccessToken(oAuth2NaverLoginRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, EOAuth2UserApiController.eBearerHeaderValue.getValue() + loginResponse.getToken());
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, EOAuth2UserApiController.eBearerHeaderValue.getValue() + loginResponse.getAccessToken());
         return new ResponseEntity<>(EntityModel.of(loginResponse)
                 .add(linkTo(methodOn(this.getClass()).naverLogin(oAuth2NaverLoginRequest)).withSelfRel())
                 .add(linkTo(methodOn(UserApiController.class).getUser(loginResponse.getUserId())).withRel(EOAuth2UserApiController.eGetMethod.getValue()))

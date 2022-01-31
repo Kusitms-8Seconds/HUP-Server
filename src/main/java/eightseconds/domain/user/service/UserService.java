@@ -4,12 +4,13 @@ import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.User;
 import eightseconds.global.dto.DefaultResponse;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
 
     SignUpResponse saveUser(SignUpRequest signUpRequest);
-    String validateLogin(LoginRequest loginRequest);
+    TokenInfoResponse validateLogin(LoginRequest loginRequest);
     User getUserByLoginId(String loginId);
     UserInfoResponse getUserInfoByUserId(Long userId);
     void deleteUserByUserId(Long userId);
@@ -18,4 +19,6 @@ public interface UserService {
     UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest);
     void validateIsAlreadyRegisteredUser(String email);
     DefaultResponse validateLoginId(String loginId);
+
+    ReissueResponse reissueToken(ReissueRequest reissueRequest);
 }

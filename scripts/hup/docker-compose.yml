@@ -18,6 +18,14 @@ services:
       - hup-network
     restart: always
 
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    networks:
+      - hup-network
+    restart: always
+
   application:
     image: rlawjddn5980/hup-server:latest
     environment:
@@ -31,6 +39,7 @@ services:
       - hup-network
     depends_on:
       - db
+      - redis
 
 networks:
   hup-network:

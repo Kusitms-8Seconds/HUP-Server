@@ -1,6 +1,7 @@
 package eightseconds.global.config.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eightseconds.domain.user.dto.TokenInfoResponse;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.jwt.TokenProvider;
@@ -46,9 +47,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(userDetails, authorities, "key");
         auth.setDetails(userDetails);
         SecurityContextHolder.getContext().setAuthentication(auth);
-        String jwt = tokenProvider.createToken(authentication);
+        TokenInfoResponse tokenInfoResponse = tokenProvider.createToken(authentication);
 
-        writeTokenResponse(response, jwt);
+        writeTokenResponse(response, tokenInfoResponse.getAccessToken());
     }
 
     private void writeTokenResponse(HttpServletResponse response, String jwt)
