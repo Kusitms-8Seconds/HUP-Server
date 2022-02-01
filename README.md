@@ -14,11 +14,11 @@
 
 ## :mag_right: ItemPoster
 
- <p align="center"><img src="https://user-images.githubusercontent.com/61726631/149875042-4a0d2719-c8c3-48b9-905d-693234d99310.png" width="800" height="1200"/><p>
+ <p align="center"><img src="https://user-images.githubusercontent.com/61726631/149875042-4a0d2719-c8c3-48b9-905d-693234d99310.png" width="630" height="900"/><p>
 
 ## ⚙️ Back-End CI/CD
   
- <p align="center"><img src="https://user-images.githubusercontent.com/61726631/151904433-ed469fb2-f696-4f4f-b6b2-fcad6ce88268.jpg" width="1000" height="550"/><p>
+ <p align="center"><img src="https://user-images.githubusercontent.com/61726631/151904433-ed469fb2-f696-4f4f-b6b2-fcad6ce88268.jpg" width="960" height="540"/><p>
 
  <h3>Back-End CI/CD는 다음과 같은 절차로 작동합니다.</br></h3>
  1. Local에서 Github로 푸쉬합니다.</br>
