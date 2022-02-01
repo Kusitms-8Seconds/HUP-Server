@@ -18,7 +18,7 @@
 
 ## ⚙️ Back-End CI/CD
   
- <p align="center"><img src="https://user-images.githubusercontent.com/61726631/150817970-74cbb33e-0a20-4180-963c-540d47f4cda5.jpg" width="1000" height="500"/><p>
+ <p align="center"><img src="https://user-images.githubusercontent.com/61726631/151904433-ed469fb2-f696-4f4f-b6b2-fcad6ce88268.jpg" width="1000" height="550"/><p>
 
  <h3>Back-End CI/CD는 다음과 같은 절차로 작동합니다.</br></h3>
  1. Local에서 Github로 푸쉬합니다.</br>
@@ -26,7 +26,7 @@
  3. Jenkins는 Github의 코드를 받아 빌드와 테스트를 진행하고 Dockerfile을 이용해 이미지를 빌드한 후 Dockerhub에 푸쉬합니다.</br>
  4. Jenkins는 각종 배포에 필요한 파일들을 Jenkins의 SSH2Easy Plugin을 이용해 운영EC2에 명령어와 같이 전송합니다.</br>
  5. 각종 배포에 필요한 파일들에는 DockerHub에서 이미지를 받아오고, 실행시키는 코드가 담겨있습니다.</br>
- 6. 마지막으로, 운영용 EC2에서 배포에 필요한 파일들을 실행하여 Docker로 SpringBoot와 MariaDB를 띄웁니다.</br>
+ 6. 마지막으로, 운영용 EC2에서 배포에 필요한 파일들을 실행하여 Docker로 SpringBoot, MariaDB, Redis를 띄웁니다.</br>
 
 ## :electric_plug: Development environment
 
@@ -34,7 +34,7 @@
 ----- | ----- 
 Language | JAVA
 Framework | Spring, Spring Boot, Spring Security, Spring Validation, Hibernate, Swagger
-DBMS | MariaDB
+DBMS | MariaDB, Redis
 Library | Lombok, Querydsl, STOMP, JWT, Hateoas 
 API | Google Login API, Kakao Login API, Naver Login API
 Etc | Amazon EC2, Docker, Docker hub, Jenkins, Git
