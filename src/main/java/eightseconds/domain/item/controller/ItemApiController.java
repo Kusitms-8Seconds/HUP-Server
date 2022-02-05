@@ -101,7 +101,7 @@ public class ItemApiController {
 
     @ApiOperation(value = "상품을 낙찰합니다.", notes = "해당 유저가 등록한 상품을 낙찰합니다.")
     @PostMapping("/sold")
-    public ResponseEntity<EntityModel<SoldResponse>> soldItem(@RequestBody SoldRequest soldRequest){
+    public ResponseEntity<EntityModel<SoldResponse>> soldItem(@RequestBody SoldRequest soldRequest) throws IOException {
         return ResponseEntity.ok(EntityModel.of(itemService.soldOutItem(soldRequest)));
     }
 }
