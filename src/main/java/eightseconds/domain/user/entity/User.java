@@ -139,6 +139,7 @@ public class User extends BaseTimeEntity {
                 .authorityName("ROLE_USER")
                 .build();
         return User.builder()
+                .loginId("google"+payload.getEmail())
                 .email(payload.getEmail())
                 .username((String)payload.get("name"))
                 .picture((String)payload.get("picture"))
@@ -154,6 +155,7 @@ public class User extends BaseTimeEntity {
                 .authorityName("ROLE_USER")
                 .build();
         return User.builder()
+                .loginId("kakao"+userInfo.get("email").toString())
                 .email(userInfo.get("email").toString())
                 .username(userInfo.get("nickname").toString())
                 .picture(userInfo.get("profile_image_url").toString())
@@ -169,6 +171,7 @@ public class User extends BaseTimeEntity {
                 .authorityName("ROLE_USER")
                 .build();
         return User.builder()
+                .loginId("naver"+userInfo.get("email").toString())
                 .email(userInfo.get("email").toString())
                 .username(userInfo.get("name").toString())
                 .picture(userInfo.get("profile_image").toString())

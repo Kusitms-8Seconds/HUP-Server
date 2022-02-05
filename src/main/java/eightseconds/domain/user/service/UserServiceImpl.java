@@ -105,9 +105,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     public void updateTargetToken(User user, String targetToken) {
-        System.out.println("targetToken"+targetToken);
         user.setTargetToken(targetToken);
-        System.out.println("targetTokenUser"+user.getTargetToken());
     }
 
     public User getUserByLoginId(String loginId) {
@@ -168,6 +166,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 tokenInfoResponse.getRefreshToken(), tokenInfoResponse.getRefreshTokenExpirationTime());
     }
 
+    @Transactional
     public DefaultResponse logout(LogoutRequest logoutRequest) {
         // 1. Access Token 검증
         if (!tokenProvider.validateToken(logoutRequest.getAccessToken())) {
@@ -188,9 +187,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         redisTemplate.opsForValue()
                 .set(logoutRequest.getAccessToken(), EUserServiceImpl.eLogout.getValue(), expiration, TimeUnit.MILLISECONDS);
 
+        deleteTargetToken(userRepository.findUserByLoginId(authentication.getName()).get());
+
+
         return DefaultResponse.from(EUserServiceImpl.eLogoutMessage.getValue());
     }
 
+    public void deleteTargetToken(User user) {
+        user.setTargetToken(null);
+    }
 
     /**
      * validate
