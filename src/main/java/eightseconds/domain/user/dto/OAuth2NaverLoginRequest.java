@@ -17,4 +17,7 @@ public class OAuth2NaverLoginRequest {
     @NotBlank(message = "네이버의 accessToken을 입력해 주세요.")
     @ApiModelProperty(notes = "네이버의 accessToken을 입력해 주세요.")
     private String accessToken;
+
+    @ApiModelProperty(notes = "알림을 받기 위한 회원의 타겟토큰을 입력해 주세요.")
+    private String targetToken;
 }

@@ -29,6 +29,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,6 +59,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     @Value("${spring.security.oauth2.client.provider.naver.user-info-uri}")
     private String naverUserInfoUrl;
 
+    @Transactional
     public LoginResponse validateGoogleIdToken(OAuth2GoogleLoginRequest oAuth2LoginRequest) throws GeneralSecurityException, IOException {
         HttpTransport transport = new NetHttpTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -66,15 +68,20 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
                 .setIssuer(googleIssuer)
                 .build();
         GoogleIdToken idToken = verifier.verify(oAuth2LoginRequest.getIdToken());
-        if(idToken != null) return saveUserOrUpdateByGoogleIdToken(idToken);
+        if(idToken != null) return saveUserOrUpdateByGoogleIdToken(idToken, oAuth2LoginRequest.getTargetToken());
         else throw new InvalidIdToken(EOAuth2UserServiceImpl.eGoogleInvalidIdTokenMessage.getValue());
     }
 
-    public LoginResponse saveUserOrUpdateByGoogleIdToken(GoogleIdToken idToken) {
+    public LoginResponse saveUserOrUpdateByGoogleIdToken(GoogleIdToken idToken, String targetToken) {
         Payload payload = idToken.getPayload();
         User user = saveOrUpdateGoogleUser(payload);
         TokenInfoResponse tokenInfoResponse = makeAppToken(payload);
+        updateTargetToken(user, targetToken);
         return LoginResponse.from(user.getId(), tokenInfoResponse);
+    }
+
+    public void updateTargetToken(User user, String targetToken) {
+        user.setTargetToken(targetToken);
     }
 
     private User saveOrUpdateGoogleUser(Payload payload) {
@@ -106,6 +113,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
     }
 
     @Override
+    @Transactional
     public LoginResponse validateKakaoAccessToken(OAuth2KakaoLoginRequest oAuth2KakaoLoginRequest) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority(EOAuth2UserServiceImpl.eRoleUser.getValue()));
@@ -118,6 +126,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         auth.setDetails(userDetails);
         SecurityContextHolder.getContext().setAuthentication(auth);
         TokenInfoResponse tokenInfoResponse = tokenProvider.createToken(auth);
+        updateTargetToken(user, oAuth2KakaoLoginRequest.getTargetToken());
         return LoginResponse.from(user.getId(), tokenInfoResponse);
     }
 
@@ -168,6 +177,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         return userRepository.save(user);
     }
 
+    @Transactional
     public LoginResponse validateNaverAccessToken(OAuth2NaverLoginRequest oAuth2NaverLoginRequest) {
 
         String header = EOAuth2UserServiceImpl.eNaverBearer.getValue() + oAuth2NaverLoginRequest.getAccessToken();
@@ -187,6 +197,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         auth.setDetails(userDetails);
         SecurityContextHolder.getContext().setAuthentication(auth);
         TokenInfoResponse tokenInfoResponse = tokenProvider.createToken(auth);
+        updateTargetToken(user, oAuth2NaverLoginRequest.getTargetToken());
         return LoginResponse.from(user.getId(), tokenInfoResponse);
 
     }

@@ -19,4 +19,7 @@ public class OAuth2GoogleLoginRequest {
     @NotBlank(message = "구글의 idToken을 입력해 주세요.")
     @ApiModelProperty(notes = "구글의 idToken을 입력해 주세요.")
     private String idToken;
+
+    @ApiModelProperty(notes = "알림을 받기 위한 회원의 타겟토큰을 입력해 주세요.")
+    private String targetToken;
 }
