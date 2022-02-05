@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 
 @Getter
@@ -17,4 +18,7 @@ public class OAuth2KakaoLoginRequest {
     @NotBlank(message = "카카오의 accessToken을 입력해 주세요.")
     @ApiModelProperty(notes = "카카오의 accessToken을 입력해 주세요.")
     private String accessToken;
+
+    @ApiModelProperty(notes = "알림을 받기 위한 회원의 타겟토큰을 입력해 주세요.")
+    private String targetToken;
 }

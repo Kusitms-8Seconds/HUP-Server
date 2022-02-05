@@ -95,13 +95,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return SecurityUtil.getCurrentLoginId().flatMap(userRepository::findOneWithAuthoritiesByLoginId);
     }
 
+    @Transactional
     public LoginResponse loginUser(LoginRequest loginRequest) {
         User user = getUserByLoginId(loginRequest.getLoginId());
         validateEmailAuth(user);
         TokenInfoResponse tokenInfoResponse = validateLogin(loginRequest);
+        updateTargetToken(user, loginRequest.getTargetToken());
         return LoginResponse.from(user.getId(), tokenInfoResponse);
     }
 
+    public void updateTargetToken(User user, String targetToken) {
+        System.out.println("targetToken"+targetToken);
+        user.setTargetToken(targetToken);
+        System.out.println("targetTokenUser"+user.getTargetToken());
+    }
 
     public User getUserByLoginId(String loginId) {
         Optional<User> user = userRepository.findUserByLoginId(loginId);

@@ -75,6 +75,8 @@ public class User extends BaseTimeEntity {
     @JoinColumn(name = "email_auth_id")
     private EmailAuth emailAuth;
 
+    private String targetToken;
+
 
     // 연관관계 메서드
     public void addItem(Item item) {

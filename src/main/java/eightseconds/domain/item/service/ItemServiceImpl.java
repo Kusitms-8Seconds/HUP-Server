@@ -134,6 +134,10 @@ public class ItemServiceImpl implements ItemService {
         return SoldResponse.from(item, priceSuggestion);
     }
 
+    private void sendNotification() {
+
+    }
+
     /**
      * validate
      */

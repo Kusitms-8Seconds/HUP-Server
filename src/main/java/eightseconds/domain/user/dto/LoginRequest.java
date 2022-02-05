@@ -25,4 +25,7 @@ public class LoginRequest {
     //@Size(min = 8, max = 16, message = "패스워드는 8글자 이상 16글자 이하여야 합니다.")
     @ApiModelProperty(notes = "회원의 비밀번호를 입력해 주세요.")
     private String password;
+
+    @ApiModelProperty(notes = "알림을 받기 위한 회원의 타겟토큰을 입력해 주세요.")
+    private String targetToken;
 }
