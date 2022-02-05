@@ -9,6 +9,7 @@ import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.*;
 import eightseconds.domain.item.repository.ItemRepository;
+import eightseconds.domain.notification.service.NotificationService;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.repository.PriceSuggestionRepository;
 import eightseconds.domain.pricesuggestion.service.PriceSuggestionService;
@@ -37,6 +38,7 @@ public class ItemServiceImpl implements ItemService {
 
     private final FileService fileService;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -122,7 +124,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public SoldResponse soldOutItem(SoldRequest soldRequest) {
+    public SoldResponse soldOutItem(SoldRequest soldRequest) throws IOException {
         Item item = getItemByItemId(soldRequest.getItemId());
         validateItemId(item.getId());
         validateSoldStatusByItemId(item.getId());
@@ -131,11 +133,11 @@ public class ItemServiceImpl implements ItemService {
         PriceSuggestion priceSuggestion = item.getMaximumPriceEntity();
         priceSuggestion.setAcceptState(true);
         item.setSoldPrice(priceSuggestion.getSuggestionPrice());
+
+        notificationService.sendMessageToBidder(priceSuggestion);
+        notificationService.sendMessageToSeller(item);
+
         return SoldResponse.from(item, priceSuggestion);
-    }
-
-    private void sendNotification() {
-
     }
 
     /**
