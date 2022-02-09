@@ -35,8 +35,10 @@ public class FileApiController {
     @GetMapping(value = "{name}", produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
     public ResponseEntity<byte[]> getFile(@PathVariable String name) {
-        try (InputStream imageStream = new FileInputStream(System.getProperty(EFileApiController.eBaseDir.getValue())
-                + EFileApiController.eImagesDir.getValue() + name)) {
+//        try (InputStream imageStream = new FileInputStream(System.getProperty(EFileApiController.eBaseDir.getValue())
+//                + EFileApiController.eImagesDir.getValue() + name)
+        try (InputStream imageStream = new FileInputStream(EFileApiController.eImagesDir.getValue() + name))
+        {
             return new ResponseEntity<byte[]>(IOUtils.toByteArray(imageStream), HttpStatus.OK);
         } catch (IOException e) {
             throw new FileNotFoundException(EFileApiController.eFileNotFoundExceptionMessage.getValue());
