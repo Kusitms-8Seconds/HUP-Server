@@ -1,4 +1,4 @@
-package eightseconds.infra.firebase.entity;
+package eightseconds.infra.firebase.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
