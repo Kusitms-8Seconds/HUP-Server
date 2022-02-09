@@ -45,7 +45,7 @@ public class FirebaseCloudMessageService {
                         .notification(FcmMessage.Notification.builder()
                                 .title(title)
                                 .body(body)
-                                .image(null)
+                                .image("http://52.78.175.27:8080/api/v1/files/HUPIcon.jpg")
                                 .build()
                         ).build()).validateOnly(false).build();
 
