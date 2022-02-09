@@ -182,14 +182,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void validateSoldOutTime(LocalDateTime auctionClosingDate) {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        if (!currentDateTime.isAfter(auctionClosingDate)) {
+        if (currentDateTime.isBefore(auctionClosingDate)) {
             throw new NotSoldOutTimeException(EItemServiceImpl.eNotSoldOutTimeExceptionMessage.getValue());
         }
     }
 
     private void validateCreateSoldOutTime(LocalDateTime auctionClosingDate) {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        if (!currentDateTime.isBefore(auctionClosingDate)) {
+        if (currentDateTime.isAfter(auctionClosingDate)) {
             throw new NotDesirableAuctionEndTimeException(EItemServiceImpl.eNotDesirableAuctionEndTimeExceptionMessage.getValue());
         }
     }

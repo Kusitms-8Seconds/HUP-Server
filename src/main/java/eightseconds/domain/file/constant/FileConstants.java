@@ -12,7 +12,7 @@ public class FileConstants {
     @AllArgsConstructor
     public enum EFileApiController {
         eBaseDir("user.dir"),
-        eImagesDir("images/"),
+        eImagesDir("/src/main/resources/images/"),
         eFileNotFoundExceptionMessage("해당 파일을 찾을 수 없습니다.");
 
         private final String value;
