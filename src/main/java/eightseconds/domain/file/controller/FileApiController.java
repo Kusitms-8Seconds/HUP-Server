@@ -1,5 +1,6 @@
 package eightseconds.domain.file.controller;
 
+import eightseconds.domain.file.constant.FileConstants;
 import eightseconds.domain.file.constant.FileConstants.EFileApiController;
 import eightseconds.domain.file.exception.FileNotFoundException;
 import eightseconds.domain.file.service.FileService;
@@ -37,7 +38,8 @@ public class FileApiController {
     public ResponseEntity<byte[]> getFile(@PathVariable String name) {
 //        try (InputStream imageStream = new FileInputStream(System.getProperty(EFileApiController.eBaseDir.getValue())
 //                + EFileApiController.eImagesDir.getValue() + name)
-        try (InputStream imageStream = new FileInputStream(EFileApiController.eImagesDir.getValue() + name))
+        try (InputStream imageStream = new FileInputStream(System.getProperty(FileConstants.EFileApiController.eBaseDir.getValue()) +
+                FileConstants.EFileApiController.eImagesDir.getValue() + name))
         {
             return new ResponseEntity<byte[]>(IOUtils.toByteArray(imageStream), HttpStatus.OK);
         } catch (IOException e) {

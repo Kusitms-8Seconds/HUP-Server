@@ -14,8 +14,6 @@ public class NotificationConstants {
     public enum ENotificationCategory{
         eBidder("낙찰자"),
         eSeller("판매자");
-
         private String value;
-
     }
 }
