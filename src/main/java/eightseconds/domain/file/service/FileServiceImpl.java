@@ -29,8 +29,8 @@ public class FileServiceImpl implements FileService {
             for (MultipartFile file : files) {
                 String originFilename = file.getOriginalFilename();
                 String extension = FilenameUtils.getExtension(Objects.requireNonNull(originFilename)).toLowerCase();
-                String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) + EFileServiceImpl.eSlash.getValue()
-                        + EFileServiceImpl.eImagesDir.getValue();
+                String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) +
+                        EFileServiceImpl.eImagesDir.getValue();
                 File saveFile;
                 String fileName;
                 do {

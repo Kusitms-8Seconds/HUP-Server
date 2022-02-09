@@ -12,7 +12,7 @@ public class FileConstants {
     @AllArgsConstructor
     public enum EFileApiController {
         eBaseDir("user.dir"),
-        eImagesDir("/images/"),
+        eImagesDir("images/"),
         eFileNotFoundExceptionMessage("해당 파일을 찾을 수 없습니다.");
 
         private final String value;
@@ -22,7 +22,7 @@ public class FileConstants {
     @AllArgsConstructor
     public enum EFileServiceImpl {
         eBaseDir("user.dir"),
-        eImagesDir("images/"),
+        eImagesDir("/src/main/resources/images/"),
         eSlash("/"),
         eDot("."),
         eFileNotFoundExceptionMessage("파일이 존재하지 않습니다."),
