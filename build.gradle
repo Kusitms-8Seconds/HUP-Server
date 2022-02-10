@@ -80,11 +80,11 @@ querydsl {
 }
 sourceSets {
 	main.java.srcDir querydslDir
-	main {
-		resources {
-			srcDirs "src/main/resources/images/"
-		}
-	}
+//	main {
+//		resources {
+//			srcDirs "src/main/resources/images/"
+//		}
+//	}
 }
 configurations {
 	querydsl.extendsFrom compileClasspath
