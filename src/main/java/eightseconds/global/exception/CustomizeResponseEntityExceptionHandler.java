@@ -4,7 +4,9 @@ import eightseconds.domain.file.exception.FileNotFoundException;
 import eightseconds.domain.file.exception.FileToSaveNotExistException;
 import eightseconds.domain.item.exception.*;
 import eightseconds.domain.pricesuggestion.exception.AlreadySoldOutException;
+import eightseconds.domain.pricesuggestion.exception.NotFoundPriceSuggestionException;
 import eightseconds.domain.pricesuggestion.exception.PriorPriceSuggestionException;
+import eightseconds.domain.pricesuggestion.exception.SameUserIdException;
 import eightseconds.domain.scrap.exception.AlreadyScrapException;
 import eightseconds.domain.scrap.exception.NotExistingScrapOfUserException;
 import eightseconds.domain.user.exception.*;
@@ -239,6 +241,18 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
 
     @ExceptionHandler(PriorPriceSuggestionException.class)
     public final ResponseEntity<Object> handlePriorPriceSuggestionException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NotFoundPriceSuggestionException.class)
+    public final ResponseEntity<Object> handleNotFoundPriceSuggestionException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(SameUserIdException.class)
+    public final ResponseEntity<Object> handleSameUserIdException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
     }
