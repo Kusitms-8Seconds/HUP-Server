@@ -10,6 +10,7 @@ import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.pricesuggestion.exception.AlreadySoldOutException;
 import eightseconds.domain.pricesuggestion.exception.NotFoundPriceSuggestionException;
 import eightseconds.domain.pricesuggestion.exception.PriorPriceSuggestionException;
+import eightseconds.domain.pricesuggestion.exception.SameUserIdException;
 import eightseconds.domain.pricesuggestion.repository.PriceSuggestionRepository;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
@@ -52,14 +53,15 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         PriceSuggestion resultPriceSuggestion;
         User user = userService.validateUserId(userId);
         Item item = itemService.validateItemId(itemId);
-        validationPriceSuggestionsItemId(itemId);
+        validatePriceSuggestionsItemId(itemId);
+        validateRegisteredItemByUser(item.getUser().getId(), userId);
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getByUserIdAndItemId(userId, itemId);
         int maximumPrice = getMaximumPrice(itemId).getMaximumPrice();
         int participants = getParticipants(itemId).getParticipantsCount();
         ItemConstants.EItemSoldStatus soldStatus = itemService.getItem(itemId).getSoldStatus();
 
         if(!priceSuggestion.isEmpty()){
-            validationPrice(priceSuggestion.get().getSuggestionPrice(), suggestionPrice);
+            validatePrice(priceSuggestion.get().getSuggestionPrice(), suggestionPrice);
             priceSuggestion.get().setSuggestionPrice(suggestionPrice);
             resultPriceSuggestion = priceSuggestion.get(); }
 
@@ -106,33 +108,33 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     }
 
     /**
-     * validation
+     * validate
      */
 
-    private void validationOnGoingItem(Item item) {
+    private void validateOnGoingItem(Item item) {
         if(!item.getSoldStatus().equals(ItemConstants.EItemSoldStatus.eOnGoing)){
             throw new NotOnGoingException(EPriceSuggestionServiceImpl.eNotOnGoingExceptionMessage.getValue());
         }
     }
 
-    private void validationAcceptStatusPriceSuggestion(List<PriceSuggestion> priceSuggestions) {
+    private void validateAcceptStatusPriceSuggestion(List<PriceSuggestion> priceSuggestions) {
         if (priceSuggestions.size() != EPriceSuggestionServiceImpl.eZero.getSize()) {
             for (PriceSuggestion priceSuggestion : priceSuggestions) {
                 if(priceSuggestion.isAcceptState() == true){
                     throw new AlreadySoldOutException(EPriceSuggestionServiceImpl.eAlreadySoldOutExceptionMessage.getValue()); } } }
     }
 
-    private void validationPrice(int priorSuggestionPrice, int suggestionPrice) {
+    private void validatePrice(int priorSuggestionPrice, int suggestionPrice) {
         if(priorSuggestionPrice >= suggestionPrice){
             throw new PriorPriceSuggestionException(EPriceSuggestionServiceImpl.ePriorPriceSuggestionExceptionMessage.getValue()); }
     }
 
     @Override
-    public void validationPriceSuggestionsItemId(Long itemId) {
+    public void validatePriceSuggestionsItemId(Long itemId) {
         List<PriceSuggestion> priceSuggestions= priceSuggestionRepository.findAllByItemId(itemId);
         Item item = itemService.getItemByItemId(itemId);
-        validationOnGoingItem(item);
-        validationAcceptStatusPriceSuggestion(priceSuggestions);
+        validateOnGoingItem(item);
+        validateAcceptStatusPriceSuggestion(priceSuggestions);
     }
 
     private void validatePriceSuggestionId(Long priceSuggestionId) {
@@ -140,6 +142,11 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new NotFoundPriceSuggestionException(EPriceSuggestionServiceImpl.eNotFoundPriceSuggestionExceptionMessage.getValue()));
+    }
+
+    private void validateRegisteredItemByUser(Long registeredUserId, Long userId) {
+        if (registeredUserId.equals(userId)) {
+            throw new SameUserIdException(EPriceSuggestionServiceImpl.eSameUserIdExceptionMessage.getValue());}
     }
 
 }

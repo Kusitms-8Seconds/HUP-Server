@@ -12,7 +12,7 @@ public interface PriceSuggestionService {
 
     PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByItemId(Pageable pageable, Long itemId);
     MaximumPriceResponse getMaximumPrice(Long itemId);
-    void validationPriceSuggestionsItemId(Long itemId);
+    void validatePriceSuggestionsItemId(Long itemId);
     PriceSuggestionResponse priceSuggestionItem(PriceSuggestionRequest priceSuggestionRequest);
     ParticipantsResponse getParticipants(Long itemId);
     PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByUserId(Pageable pageable, Long userId);
