@@ -76,12 +76,6 @@ public class PriceSuggestionApiController {
         return ResponseEntity.ok(EntityModel.of(priceSuggestionService.getAllPriceSuggestionsByUserId(pageable, userId)));
     }
 
-//    @ApiOperation(value = "해당 유저의 상품 경매 참여내역 삭제", notes = "해당 유저의 상품 경매 참여내역을 삭제합니다.")
-//    @DeleteMapping
-//    public ResponseEntity<EntityModel<Defa>> getAllPriceSuggestionsOfUser(@PageableDefault Pageable pageable, @PathVariable Long userId) {
-//        return ResponseEntity.ok(EntityModel.of(priceSuggestionService.getAllPriceSuggestionsByUserId(pageable, userId)));
-//    }
-
     // 입찰 Test용도
     @PostMapping("/priceSuggestionTest")
     public ResponseEntity<PriceSuggestionResponse> priceSuggestion(@Valid @RequestBody PriceSuggestionRequest priceSuggestionRequest) throws Exception {

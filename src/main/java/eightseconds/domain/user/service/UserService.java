@@ -19,6 +19,5 @@ public interface UserService {
     UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest);
     void validateIsAlreadyRegisteredUser(String email);
     DefaultResponse validateLoginId(String loginId);
-
     ReissueResponse reissueToken(ReissueRequest reissueRequest);
 }
