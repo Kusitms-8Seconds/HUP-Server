@@ -34,7 +34,7 @@ public class ScrapServiceImpl implements ScrapService{
 
         User user = userService.getUserByUserId(scrapRegisterRequest.getUserId());
         Item item = itemService.getItemByItemId(scrapRegisterRequest.getItemId());
-        validationExistingScrap(user, item.getId());
+        validateExistingScrap(user, item.getId());
         Scrap scrap = Scrap.builder()
                 .user(user)
                 .item(item)
@@ -44,7 +44,7 @@ public class ScrapServiceImpl implements ScrapService{
 
     @Override
     public void deleteScrap(Long scrapId) {
-        Scrap scrap = validationIsExistingScrap(scrapId);
+        Scrap scrap = validateIsExistingScrap(scrapId);
         scrap.setUser(null);
         scrap.setItem(null);
         scrapRepository.deleteById(scrap.getId());
@@ -53,7 +53,7 @@ public class ScrapServiceImpl implements ScrapService{
     @Override
     public PaginationDto<List<ScrapDetailsResponse>> getAllScrapsByUserId(Pageable pageable, Long userId) {
         userService.validateUserId(userId);
-        validationExistingScrapByUserId(pageable, userId);
+        validateExistingScrapByUserId(pageable, userId);
         Page<Scrap> page = scrapRepository.findAllByUserId(pageable, userId);
         List<ScrapDetailsResponse> data = page.get().map(ScrapDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
@@ -76,14 +76,14 @@ public class ScrapServiceImpl implements ScrapService{
      * validation
      */
 
-    private Scrap validationIsExistingScrap(Long deleteScrapId) {
+    private Scrap validateIsExistingScrap(Long deleteScrapId) {
         return scrapRepository.findById(deleteScrapId)
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new NotFoundItemException(ScrapConstants.EScrapServiceImpl.eNotFoundItemExceptionMessage.getValue()));
     }
 
-    private void validationExistingScrap(User user, Long itemId) {
+    private void validateExistingScrap(User user, Long itemId) {
         if (!scrapRepository.findAll().isEmpty()) {
             List<Scrap> scraps = scrapRepository.findAllByUserId(user.getId());
             for (Scrap scrap : scraps) {
@@ -91,7 +91,7 @@ public class ScrapServiceImpl implements ScrapService{
                     throw new AlreadyScrapException(ScrapConstants.EScrapServiceImpl.eAlreadyScrapExceptionMessage.getValue()); } } }
     }
 
-    private void validationExistingScrapByUserId(Pageable pageable, Long userId) {
+    private void validateExistingScrapByUserId(Pageable pageable, Long userId) {
         if (scrapRepository.findAllByUserId(pageable, userId).isEmpty()) {
             throw new NotExistingScrapOfUserException(ScrapConstants.EScrapServiceImpl.eNotExistingScrapOfUserExceptionMessage.getValue());
         }

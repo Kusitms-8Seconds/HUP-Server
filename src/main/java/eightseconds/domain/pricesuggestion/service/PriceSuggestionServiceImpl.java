@@ -129,8 +129,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
             throw new PriorPriceSuggestionException(EPriceSuggestionServiceImpl.ePriorPriceSuggestionExceptionMessage.getValue()); }
     }
 
-    @Override
-    public void validatePriceSuggestionsItemId(Long itemId) {
+    private void validatePriceSuggestionsItemId(Long itemId) {
         List<PriceSuggestion> priceSuggestions= priceSuggestionRepository.findAllByItemId(itemId);
         Item item = itemService.getItemByItemId(itemId);
         validateOnGoingItem(item);
