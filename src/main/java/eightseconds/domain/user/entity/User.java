@@ -66,7 +66,7 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user")
     private List<PriceSuggestion> priceSuggestions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<Notice> notices = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "user")
