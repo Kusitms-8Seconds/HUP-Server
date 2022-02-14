@@ -68,12 +68,12 @@ public class Item extends BaseTimeEntity {
         this.description = description;
         this.soldStatus = EItemSoldStatus.eOnGoing;
         this.auctionClosingDate = auctionClosingDate;
-
     }
 
     // 연관관계 메서드
     public void addFiles(List<MyFile> files){
         for (MyFile file : files) {
+            System.out.println("myfilesiaze"+myFiles.size());
             myFiles.add(file);
             file.setItem(this);
         }
