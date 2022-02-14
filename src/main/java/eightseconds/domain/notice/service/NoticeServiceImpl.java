@@ -78,6 +78,11 @@ public class NoticeServiceImpl implements NoticeService{
         return PaginationDto.of(page, data);
     }
 
+    @Override
+    public NoticeResponse getNotice(Long noticeId) {
+        return NoticeResponse.from(validateNoticeId(noticeId));
+    }
+
     /**
      * validate
      */
