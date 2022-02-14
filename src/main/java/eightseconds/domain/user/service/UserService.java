@@ -3,7 +3,9 @@ package eightseconds.domain.user.service;
 import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.User;
 import eightseconds.global.dto.DefaultResponse;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +22,5 @@ public interface UserService {
     void validateIsAlreadyRegisteredUser(String email);
     DefaultResponse validateLoginId(String loginId);
     ReissueResponse reissueToken(ReissueRequest reissueRequest);
+    UpdateProfileResponse updateProfileImage(MultipartFile file, String userId) throws IOException;
 }

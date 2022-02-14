@@ -1,5 +1,7 @@
 package eightseconds.domain.user.service;
 
+import eightseconds.domain.file.entity.MyFile;
+import eightseconds.domain.file.service.FileService;
 import eightseconds.domain.user.constant.UserConstants.ELoginType;
 import eightseconds.domain.user.constant.UserConstants.EUserServiceImpl;
 import eightseconds.domain.user.dto.*;
@@ -11,6 +13,7 @@ import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.jwt.TokenProvider;
 import eightseconds.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -24,11 +27,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -41,6 +44,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisTemplate redisTemplate;
+    private final FileService fileService;
 
     @Override
     public SignUpResponse saveUser(SignUpRequest signUpRequest) {
@@ -195,6 +199,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     public void deleteTargetToken(User user) {
         user.setTargetToken(null);
+    }
+
+    @Override
+    @Transactional
+    public UpdateProfileResponse updateProfileImage(MultipartFile file, String userId) throws IOException {
+        User user = validateUserId(Long.valueOf(userId));
+        List<MultipartFile> files = new ArrayList<>();
+        files.add(file);
+        List<MyFile> savedFile = fileService.save(files);
+        String fileURL = makeFileURL(savedFile.get(0).getFilename());
+        user.setPicture(fileURL);
+        return UpdateProfileResponse.from(fileURL);
+    }
+
+    private String makeFileURL(String filename) {
+        return EUserServiceImpl.eBaseFileURL.getValue()+filename;
     }
 
     /**
