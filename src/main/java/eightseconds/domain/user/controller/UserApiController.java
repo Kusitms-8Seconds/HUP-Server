@@ -12,10 +12,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -104,5 +108,12 @@ public class UserApiController {
     public ResponseEntity<EntityModel<DefaultResponse>> getIsRegisteredLoginId(@PathVariable String loginId) {
         return ResponseEntity.ok((EntityModel.of(userService.validateLoginId(loginId)))
                 .add(linkTo(methodOn(this.getClass()).getIsRegisteredLoginId(loginId)).withSelfRel()));
+    }
+
+    @ApiOperation(value = "유저 프로필 사진 수정", notes = "유저의 프로필 사진을 수정합니다.")
+    @PutMapping("/images")
+    public ResponseEntity<EntityModel<UpdateProfileResponse>> updateProfileImage(@RequestPart(value = "file") MultipartFile file,
+                                                                           @RequestPart(value = "userId") String userId) throws IOException {
+        return ResponseEntity.ok(EntityModel.of(userService.updateProfileImage(file, userId)));
     }
 }

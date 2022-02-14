@@ -111,7 +111,8 @@ public class UserConstants {
         eNotValidAccessTokenExceptionMessage("잘못된 요청입니다."),
         eLogoutMessage("로그아웃 되었습니다."),
         eTrue(true),
-        eAuthorityRoleUser("ROLE_USER");
+        eAuthorityRoleUser("ROLE_USER"),
+        eBaseFileURL("http://52.78.175.27:8080/api/v1/files/");
 
         private boolean check;
         private String value;
