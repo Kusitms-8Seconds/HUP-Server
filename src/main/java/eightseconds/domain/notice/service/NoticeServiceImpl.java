@@ -51,7 +51,7 @@ public class NoticeServiceImpl implements NoticeService{
     @Override
     @Transactional
     public UpdateNoticeResponse updateNotice(String userId, String noticeId, String title, String body, List<MultipartFile> files) throws IOException {
-        User user = userService.validateUserId(Long.valueOf(userId));
+        userService.validateUserId(Long.valueOf(userId));
         Notice notice = validateNoticeId(Long.valueOf(noticeId));
         notice.updateNotice(title, body);
         if(!files.isEmpty()){

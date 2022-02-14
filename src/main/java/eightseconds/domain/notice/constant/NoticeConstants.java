@@ -9,9 +9,10 @@ public class NoticeConstants {
     @AllArgsConstructor
     public enum ENoticeApiController{
         eLocationIdPath("/{id}"),
+        ePostMethod("post"),
         eGetMethod("get"),
         eDeleteMethod("delete"),
-        eUpdateMethod("update");
+        ePutMethod("put");
         private final String value;
     }
 

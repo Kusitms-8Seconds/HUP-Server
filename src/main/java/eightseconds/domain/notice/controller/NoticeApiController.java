@@ -43,7 +43,9 @@ public class NoticeApiController {
                 .toUri();
         return ResponseEntity.created(location).body(EntityModel.of(noticeResponse)
                 .add(linkTo(methodOn(this.getClass()).createNotice(files, userId, title, body)).withSelfRel())
-                .add(linkTo(methodOn(this.getClass()).deleteNotice(noticeResponse.getId())).withRel(ENoticeApiController.eDeleteMethod.getValue())));
+                .add(linkTo(methodOn(this.getClass()).deleteNotice(noticeResponse.getId())).withRel(ENoticeApiController.eDeleteMethod.getValue()))
+                .add(linkTo(methodOn(this.getClass()).updateNotice(files, userId, String.valueOf(noticeResponse.getId()), title, body))
+                        .withRel(ENoticeApiController.ePutMethod.getValue())));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
@@ -65,6 +67,7 @@ public class NoticeApiController {
         UpdateNoticeResponse updateNoticeResponse = noticeService.updateNotice(userId, noticeId, title, body, files);
         return ResponseEntity.ok().body(EntityModel.of(updateNoticeResponse)
                 .add(linkTo(methodOn(this.getClass()).updateNotice(files, userId, noticeId, title, body)).withSelfRel())
+                .add(linkTo(methodOn(this.getClass()).createNotice(files, userId, title, body)).withRel(ENoticeApiController.ePostMethod.getValue()))
                 .add(linkTo(methodOn(this.getClass()).deleteNotice(Long.valueOf(noticeId))).withRel(ENoticeApiController.eDeleteMethod.getValue())));
     }
 
