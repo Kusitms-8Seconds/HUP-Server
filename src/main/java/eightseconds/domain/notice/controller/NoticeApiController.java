@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -28,7 +29,7 @@ public class NoticeApiController {
 
     private final NoticeService noticeService;
 
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation(value = "공지사항 등록", notes = "공지사항을 등록합니다.")
     @PostMapping
     public ResponseEntity<EntityModel<NoticeResponse>> createNotice(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
@@ -45,7 +46,7 @@ public class NoticeApiController {
                 .add(linkTo(methodOn(this.getClass()).deleteNotice(noticeResponse.getId())).withRel(ENoticeApiController.eDeleteMethod.getValue())));
     }
 
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation(value = "공지사항 삭제", notes = "공지사항을 삭제합니다.")
     @DeleteMapping("/{noticeId}")
     public ResponseEntity<EntityModel<?>> deleteNotice(@PathVariable Long noticeId){
@@ -53,7 +54,7 @@ public class NoticeApiController {
         return ResponseEntity.noContent().build();
     }
 
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation(value = "공지사항 수정", notes = "공지사항을 수정합니다.")
     @PutMapping
     public ResponseEntity<EntityModel<?>> putNotice(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
