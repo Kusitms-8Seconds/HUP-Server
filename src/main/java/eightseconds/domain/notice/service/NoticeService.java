@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface NoticeService {
     NoticeResponse createNotice(Long userId, String title, String body, List<MultipartFile> files) throws IOException;
+    void deleteNotice(Long noticeId);
 }

@@ -2,8 +2,10 @@ package eightseconds.domain.notice.service;
 
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.file.service.FileService;
+import eightseconds.domain.notice.constant.NoticeConstants.ENoticeServiceImpl;
 import eightseconds.domain.notice.dto.NoticeResponse;
 import eightseconds.domain.notice.entity.Notice;
+import eightseconds.domain.notice.exception.NotFoundNoticeException;
 import eightseconds.domain.notice.repository.NoticeRepository;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
@@ -31,15 +33,25 @@ public class NoticeServiceImpl implements NoticeService{
         user.addNotice(notice);
         if(!files.isEmpty()){
         List<MyFile> saveFiles = fileService.save(files);
-        addFiles(notice, saveFiles);}
+        notice.addFiles(saveFiles);}
         noticeRepository.save(notice);
         return NoticeResponse.from(notice);
 
     }
 
-
+    @Override
     @Transactional
-    public void addFiles(Notice notice, List<MyFile> saveFiles) {
-        notice.addFiles(saveFiles);
+    public void deleteNotice(Long noticeId) {
+        Notice notice = validateNoticeId(noticeId);
+        noticeRepository.delete(notice);
     }
+
+    private Notice validateNoticeId(Long noticeId) {
+        return noticeRepository.findById(noticeId)
+                .stream()
+                .findAny()
+                .orElseThrow(() -> new NotFoundNoticeException(ENoticeServiceImpl.eNotFoundNoticeExceptionMessage.getValue()));
+
+    }
+
 }
