@@ -45,7 +45,6 @@ public class ItemServiceImpl implements ItemService {
     public RegisterItemResponse saveItem(Long userId, @Valid RegisterItemRequest registerItemRequest) throws IOException {
         validateCreateSoldOutTime(registerItemRequest.getAuctionClosingDate());
         Item item = registerItemRequest.toEntity();
-        System.out.println("itemSize"+item.getMyFiles().size());
         User user = userService.getUserByUserId(userId);
         item.setUser(user);
         if(registerItemRequest.getFiles() != null){

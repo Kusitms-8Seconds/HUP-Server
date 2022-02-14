@@ -57,14 +57,14 @@ public class NoticeApiController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation(value = "공지사항 수정", notes = "공지사항을 수정합니다.")
     @PutMapping
-    public ResponseEntity<EntityModel<?>> putNotice(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
+    public ResponseEntity<EntityModel<?>> updateNotice(@Nullable @RequestPart(value = "files", required = false) List<MultipartFile> files,
                                                        @RequestPart(value = "userId") String userId,
                                                        @RequestPart(value = "noticeId") String noticeId,
                                                        @RequestPart(value = "title", required = false) String title,
                                                        @RequestPart(value = "body", required = false) String body) throws IOException {
         UpdateNoticeResponse updateNoticeResponse = noticeService.updateNotice(userId, noticeId, title, body, files);
         return ResponseEntity.ok().body(EntityModel.of(updateNoticeResponse)
-                .add(linkTo(methodOn(this.getClass()).putNotice(files, userId, noticeId, title, body)).withSelfRel())
+                .add(linkTo(methodOn(this.getClass()).updateNotice(files, userId, noticeId, title, body)).withSelfRel())
                 .add(linkTo(methodOn(this.getClass()).deleteNotice(Long.valueOf(noticeId))).withRel(ENoticeApiController.eDeleteMethod.getValue())));
     }
 

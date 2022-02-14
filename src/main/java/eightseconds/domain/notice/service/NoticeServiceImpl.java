@@ -2,7 +2,6 @@ package eightseconds.domain.notice.service;
 
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.file.service.FileService;
-import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.notice.constant.NoticeConstants.ENoticeServiceImpl;
 import eightseconds.domain.notice.dto.NoticeResponse;
 import eightseconds.domain.notice.dto.UpdateNoticeResponse;
@@ -45,6 +44,7 @@ public class NoticeServiceImpl implements NoticeService{
     @Transactional
     public void deleteNotice(Long noticeId) {
         Notice notice = validateNoticeId(noticeId);
+        notice.deleteUserAndNotice(notice);
         noticeRepository.delete(notice);
     }
 
