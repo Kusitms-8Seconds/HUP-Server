@@ -34,7 +34,7 @@ public class RegisterItemResponse {
 
     public static RegisterItemResponse from(Item item) {
         List<String> fileNames = new ArrayList<>();
-        if (item.getMyFiles().isEmpty() != true) {
+        if (!item.getMyFiles().isEmpty()) {
             List<MyFile> myFiles = item.getMyFiles();
             fileNames = new ArrayList<>();
             for (MyFile myFile : myFiles) {

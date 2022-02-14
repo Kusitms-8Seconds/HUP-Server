@@ -1,6 +1,8 @@
 package eightseconds.domain.file.entity;
 
 import eightseconds.domain.item.entity.Item;
+import eightseconds.domain.notice.entity.Notice;
+import eightseconds.domain.user.entity.User;
 import eightseconds.global.entity.BaseEntity;
 import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;
@@ -26,6 +28,10 @@ public class MyFile extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notice_id")
+    private Notice notice;
 
     @Builder
     public MyFile(String filename, String fileOriginName, String fileUrl) {
