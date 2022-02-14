@@ -28,7 +28,7 @@ public class Notice extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "notice")
+    @OneToMany(mappedBy = "notice", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<MyFile> myFiles = new ArrayList<>();
 
     @Builder
@@ -69,5 +69,10 @@ public class Notice extends BaseTimeEntity {
     public void updateNotice(String title, String body) {
         this.setTitle(title);
         this.setBody(body);
+    }
+
+    public void deleteUserAndNotice(Notice notice) {
+        notice.getUser().getNotices().remove(notice);
+        this.user = null;
     }
 }
