@@ -44,13 +44,14 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public RegisterItemResponse saveItem(Long userId, @Valid RegisterItemRequest registerItemRequest) throws IOException {
         validateCreateSoldOutTime(registerItemRequest.getAuctionClosingDate());
-        Item savedItem = itemRepository.save(registerItemRequest.toEntity());
+        Item item = registerItemRequest.toEntity();
         User user = userService.getUserByUserId(userId);
-        savedItem.setUser(user);
+        item.setUser(user);
         if(registerItemRequest.getFiles() != null){
-        List<MyFile> saveFiles = fileService.save(registerItemRequest.getFiles());
-        addFiles(savedItem, saveFiles);}
-        return RegisterItemResponse.from(savedItem);
+            List<MyFile> saveFiles = fileService.save(registerItemRequest.getFiles());
+            addFiles(item, saveFiles);}
+        itemRepository.save(item);
+        return RegisterItemResponse.from(item);
     }
 
     @Override

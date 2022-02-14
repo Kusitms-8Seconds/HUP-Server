@@ -2,6 +2,7 @@ package eightseconds.domain.user.entity;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import eightseconds.domain.item.entity.Item;
+import eightseconds.domain.notice.entity.Notice;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.scrap.entity.Scrap;
 import eightseconds.domain.user.constant.UserConstants.ELoginType;
@@ -65,6 +66,9 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user")
     private List<PriceSuggestion> priceSuggestions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Notice> notices = new ArrayList<>();
+
 //    @OneToMany(mappedBy = "user")
 //    private List<ChatRoom> chatRooms = new ArrayList<>();
 //
@@ -78,10 +82,18 @@ public class User extends BaseTimeEntity {
     private String targetToken;
 
 
-    // 연관관계 메서드
+    /**
+     * 연관관계 메서드
+     */
+
     public void addItem(Item item) {
         this.items.add(item);
         //item.setUser(this);
+    }
+
+    public void addNotice(Notice notice) {
+        this.notices.add(notice);
+        notice.setUser(this);
     }
 
     public void getAuthority(Long id){
