@@ -3,6 +3,7 @@ package eightseconds.global.exception;
 import eightseconds.domain.file.exception.FileNotFoundException;
 import eightseconds.domain.file.exception.FileToSaveNotExistException;
 import eightseconds.domain.item.exception.*;
+import eightseconds.domain.notice.exception.NotFoundNoticeException;
 import eightseconds.domain.pricesuggestion.exception.AlreadySoldOutException;
 import eightseconds.domain.pricesuggestion.exception.NotFoundPriceSuggestionException;
 import eightseconds.domain.pricesuggestion.exception.PriorPriceSuggestionException;
@@ -257,4 +258,13 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
     }
 
+    /**
+     * notice Exception
+     */
+
+    @ExceptionHandler(NotFoundNoticeException.class)
+    public final ResponseEntity<Object> handleNotFoundNoticeException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
 }
