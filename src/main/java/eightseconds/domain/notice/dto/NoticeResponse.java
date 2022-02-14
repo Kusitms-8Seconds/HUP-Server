@@ -12,7 +12,7 @@ import java.util.List;
 
 @Getter
 @Builder
-@ApiModel(description = "공지사항을 등록하기 위한 응답 객체")
+@ApiModel(description = "공지사항을 등록, 조회하기 위한 응답 객체")
 public class NoticeResponse {
 
     @NotNull private Long id;

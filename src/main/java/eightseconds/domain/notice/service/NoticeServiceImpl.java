@@ -2,7 +2,11 @@ package eightseconds.domain.notice.service;
 
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.file.service.FileService;
+import eightseconds.domain.item.constant.ItemConstants;
+import eightseconds.domain.item.dto.ItemDetailsResponse;
+import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.notice.constant.NoticeConstants.ENoticeServiceImpl;
+import eightseconds.domain.notice.dto.NoticeListResponse;
 import eightseconds.domain.notice.dto.NoticeResponse;
 import eightseconds.domain.notice.dto.UpdateNoticeResponse;
 import eightseconds.domain.notice.entity.Notice;
@@ -10,13 +14,18 @@ import eightseconds.domain.notice.exception.NotFoundNoticeException;
 import eightseconds.domain.notice.repository.NoticeRepository;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
+import eightseconds.global.dto.PaginationDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +71,12 @@ public class NoticeServiceImpl implements NoticeService{
         return UpdateNoticeResponse.from(notice);
     }
 
+    @Override
+    public PaginationDto<List<NoticeListResponse>> getAllNotices(@PageableDefault Pageable pageable) {
+        Page<Notice> page = noticeRepository.findAll(pageable);
+        List<NoticeListResponse> data = page.get().map(NoticeListResponse::from).collect(Collectors.toList());
+        return PaginationDto.of(page, data);
+    }
 
     /**
      * validate
