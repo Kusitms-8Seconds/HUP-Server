@@ -18,7 +18,7 @@
 
 ## ⚙️ Back-End CI/CD
   
- <p align="center"><img src="https://user-images.githubusercontent.com/61726631/153700806-c7fb48e9-40aa-4222-ab8c-b73f24b01c65.jpg"/><p>
+ <p align="center"><img src="https://user-images.githubusercontent.com/61726631/153735429-1d5ffbc5-998f-418b-946a-0c268bf782a3.jpg"/><p>
 
  <h3>Back-End CI/CD는 다음과 같은 절차로 작동합니다.</br></h3>
  1. Local에서 Github로 푸쉬합니다.</br>
