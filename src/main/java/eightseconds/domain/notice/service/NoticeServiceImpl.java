@@ -2,8 +2,10 @@ package eightseconds.domain.notice.service;
 
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.file.service.FileService;
+import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.notice.constant.NoticeConstants.ENoticeServiceImpl;
 import eightseconds.domain.notice.dto.NoticeResponse;
+import eightseconds.domain.notice.dto.UpdateNoticeResponse;
 import eightseconds.domain.notice.entity.Notice;
 import eightseconds.domain.notice.exception.NotFoundNoticeException;
 import eightseconds.domain.notice.repository.NoticeRepository;
@@ -27,17 +29,17 @@ public class NoticeServiceImpl implements NoticeService{
 
     @Override
     @Transactional
-    public NoticeResponse createNotice(Long userId, String title, String body, List<MultipartFile> files) throws IOException {
-        User user = userService.validateUserId(userId);
-        Notice notice = Notice.createNotice(user, title, body, files);
-        user.addNotice(notice);
+    public NoticeResponse createNotice(String userId, String title, String body, List<MultipartFile> files) throws IOException {
+        User user = userService.validateUserId(Long.valueOf(userId));
+        Notice notice = Notice.toEntity(title, body);
+        notice.setUser(user);
         if(!files.isEmpty()){
         List<MyFile> saveFiles = fileService.save(files);
         notice.addFiles(saveFiles);}
         noticeRepository.save(notice);
         return NoticeResponse.from(notice);
-
     }
+
 
     @Override
     @Transactional
@@ -45,6 +47,25 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = validateNoticeId(noticeId);
         noticeRepository.delete(notice);
     }
+
+    @Override
+    @Transactional
+    public UpdateNoticeResponse updateNotice(String userId, String noticeId, String title, String body, List<MultipartFile> files) throws IOException {
+        User user = userService.validateUserId(Long.valueOf(userId));
+        Notice notice = validateNoticeId(Long.valueOf(noticeId));
+        notice.updateNotice(title, body);
+        if(!files.isEmpty()){
+            notice.getMyFiles().clear();
+            List<MyFile> saveFiles = fileService.save(files);
+            notice.addFiles(saveFiles);}
+        noticeRepository.save(notice);
+        return UpdateNoticeResponse.from(notice);
+    }
+
+
+    /**
+     * validate
+     */
 
     private Notice validateNoticeId(Long noticeId) {
         return noticeRepository.findById(noticeId)

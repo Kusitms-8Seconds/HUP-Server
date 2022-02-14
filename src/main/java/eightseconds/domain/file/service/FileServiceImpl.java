@@ -23,6 +23,7 @@ public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
 
+    @Transactional
     public List<MyFile> save(List<MultipartFile> files) throws IOException {
         validateFiles(files);
         List<MyFile> savedFiles = new ArrayList<>();

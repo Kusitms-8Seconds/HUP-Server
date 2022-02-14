@@ -66,7 +66,7 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user")
     private List<PriceSuggestion> priceSuggestions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "user")
     private List<Notice> notices = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "user")
@@ -91,10 +91,11 @@ public class User extends BaseTimeEntity {
         //item.setUser(this);
     }
 
-    public void addNotice(Notice notice) {
+    public void updateNotice(Notice notice) {
         this.notices.add(notice);
         notice.setUser(this);
     }
+
 
     public void getAuthority(Long id){
         for (Iterator<Authority> itr = authorities.iterator(); itr.hasNext();) {
