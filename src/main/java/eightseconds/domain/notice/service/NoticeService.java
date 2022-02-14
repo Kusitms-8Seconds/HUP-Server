@@ -15,5 +15,6 @@ public interface NoticeService {
     void deleteNotice(Long noticeId);
     UpdateNoticeResponse updateNotice(String userId, String noticeId, String title, String body, List<MultipartFile> files) throws IOException;
     PaginationDto<List<NoticeListResponse>> getAllNotices(Pageable pageable);
+    NoticeResponse getNotice(Long noticeId);
 
 }
