@@ -26,6 +26,8 @@ services:
       - hup-network
     restart: always
     container_name: hup-redis
+    environment:
+      TZ: Asia/Seoul
 
   application:
     image: rlawjddn5980/hup-server:latest
@@ -33,7 +35,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mariadb://db:4500/auction?useUnicode=true&characterEncoding=utf8
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-        - TZ:Asia/Seoul
+      TZ: Asia/Seoul
     ports:
       - 8080:8080
     container_name: hup-server
