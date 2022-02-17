@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .phoneNumber(signUpRequest.getPhoneNumber())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
+                .picture(EUserServiceImpl.eBasePicture.getValue())
                 .loginType(ELoginType.eApp)
                 .build();
 

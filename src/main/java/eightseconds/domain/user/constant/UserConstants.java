@@ -112,7 +112,8 @@ public class UserConstants {
         eLogoutMessage("로그아웃 되었습니다."),
         eTrue(true),
         eAuthorityRoleUser("ROLE_USER"),
-        eBaseFileURL("http://52.78.175.27:8080/api/v1/files/");
+        eBaseFileURL("http://52.78.175.27:8080/api/v1/files/"),
+        eBasePicture("https://firebasestorage.googleapis.com/v0/b/auctionapp-f3805.appspot.com/o/profile.png?alt=media&token=655ed158-b464-4e5e-aa56-df3d7f12bdc8");
 
         private boolean check;
         private String value;
