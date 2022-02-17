@@ -15,6 +15,7 @@ public class NotificationListResponse {
 
     private Long id;
     private String username;
+    private Long userId;
     private String message;
     private String eNotificationCategory;
 
@@ -24,6 +25,7 @@ public class NotificationListResponse {
         return NotificationListResponse.builder()
                 .id(notification.getId())
                 .username(user.getUsername())
+                .userId(user.getId())
                 .message(notification.getMessage())
                 .eNotificationCategory(notification.getENotificationCategory().getValue())
                 .build();
