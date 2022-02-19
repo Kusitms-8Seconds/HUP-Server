@@ -54,12 +54,12 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         User user = userService.validateUserId(userId);
         Item item = itemService.validateItemId(itemId);
         validatePriceSuggestionsItemId(itemId);
+        validatePriceSuggestionPrice(itemId, suggestionPrice);
         validateRegisteredItemByUser(item.getUser().getId(), userId);
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getByUserIdAndItemId(userId, itemId);
         int maximumPrice = getMaximumPrice(itemId).getMaximumPrice();
         int participants = getParticipants(itemId).getParticipantsCount();
         ItemConstants.EItemSoldStatus soldStatus = itemService.getItem(itemId).getSoldStatus();
-
         if(!priceSuggestion.isEmpty()){
             validatePrice(priceSuggestion.get().getSuggestionPrice(), suggestionPrice);
             priceSuggestion.get().setSuggestionPrice(suggestionPrice);
@@ -72,13 +72,14 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         return PriceSuggestionResponse.from(item, user, resultPriceSuggestion, maximumPrice, participants, soldStatus);
     }
 
+
     @Override
     public MaximumPriceResponse getMaximumPrice(Long itemId) {
         itemService.validateItemId(itemId);
         itemService.validateSoldStatusByItemId(itemId);
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getMaximumPriceByItemId(itemId);
-        if(priceSuggestion.isEmpty()){ return MaximumPriceResponse.from(0); }
-        else{ return MaximumPriceResponse.from(priceSuggestionRepository.getMaximumPriceByItemId(itemId).get().getSuggestionPrice());}
+        if(priceSuggestion.isEmpty()){return MaximumPriceResponse.from(0); }
+        else{return MaximumPriceResponse.from(priceSuggestionRepository.getMaximumPriceByItemId(itemId).get().getSuggestionPrice());}
     }
 
     @Override
@@ -110,6 +111,14 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     /**
      * validate
      */
+
+    private void validatePriceSuggestionPrice(Long itemId, int suggestionPrice) {
+        Optional<PriceSuggestion> maximumPriceByItemId = priceSuggestionRepository.getMaximumPriceByItemId(itemId);
+        if(!maximumPriceByItemId.isEmpty()){
+            if(maximumPriceByItemId.get().getSuggestionPrice() >= suggestionPrice){
+                throw new PriorPriceSuggestionException(EPriceSuggestionServiceImpl.ePriorPriceSuggestionExceptionMessage.getValue()); }
+        }
+    }
 
     private void validateOnGoingItem(Item item) {
         if(!item.getSoldStatus().equals(ItemConstants.EItemSoldStatus.eOnGoing)){
