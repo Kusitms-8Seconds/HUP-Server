@@ -79,8 +79,7 @@ public class NoticeApiController {
     public ResponseEntity<EntityModel<PaginationDto<List<NoticeListResponse>>>> getAllNotices(@PageableDefault Pageable pageable) {
         PaginationDto<List<NoticeListResponse>> list = noticeService.getAllNotices(pageable);
         return ResponseEntity.ok().body(EntityModel.of(list)
-                .add(linkTo(methodOn(this.getClass()).getAllNotices(pageable)).withSelfRel())
-                .add(linkTo(methodOn(this.getClass()).getNotice(list.getData().get(0).getId())).withRel(ENoticeApiController.eGetMethod.getValue())));
+                .add(linkTo(methodOn(this.getClass()).getAllNotices(pageable)).withSelfRel()));
 
     }
 
