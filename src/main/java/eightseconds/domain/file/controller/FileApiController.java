@@ -28,7 +28,7 @@ public class FileApiController {
     @ApiOperation(value = "이미지 파일 생성", notes = "이미지 파일 등록을 합니다.")
     @PostMapping
     public ResponseEntity<?> createFile(@RequestPart List<MultipartFile> files) throws Exception {
-        fileService.save(files);
+        fileService.saveMultipleFiles(files);
         return ResponseEntity.ok(null);
     }
 

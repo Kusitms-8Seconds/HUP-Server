@@ -73,7 +73,6 @@ public class Item extends BaseTimeEntity {
     // 연관관계 메서드
     public void addFiles(List<MyFile> files){
         for (MyFile file : files) {
-            System.out.println("myfilesiaze"+myFiles.size());
             myFiles.add(file);
             file.setItem(this);
         }
