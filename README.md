@@ -22,9 +22,9 @@
  <h3>Back-End CI/CD는 다음과 같은 절차로 작동합니다.</br></h3>
  1. Local에서 Github로 푸쉬합니다.</br>
  2. Github의 WebHook을 이용해 배포용 EC2안의 Jenkins에 전달합니다.</br>
- 3. Jenkins는 Github의 코드를 받아 빌드와 테스트를 진행하고 Dockerfile을 이용해 이미지를 빌드한 후 Dockerhub에 푸쉬합니다.</br>
+ 3. Jenkins는 Github의 코드를 받아 빌드와 테스트를 진행하고 Slack에 빌드 관련 메세지를 전달합니다. 또한, Dockerfile을 이용해 이미지를 빌드한 후 Dockerhub에 푸쉬합니다.</br>
  4. Jenkins는 각종 배포에 필요한 파일들을 Jenkins의 SSH2Easy Plugin을 이용해 운영EC2에 명령어와 같이 전송합니다.</br>
- 5. 각종 배포에 필요한 파일들에는 DockerHub에서 이미지를 받아오고, 실행시키는 코드가 담겨있습니다.</br>
+ 5. 운영용 EC2가 받은 각종 배포에 필요한 파일들에는 DockerHub에서 이미지를 받아오고, 실행시키는 코드가 담겨있습니다.</br>
  6. 마지막으로, 운영용 EC2에서 배포에 필요한 파일들을 실행하여 Docker로 SpringBoot, MariaDB, Redis를 띄웁니다.</br>
 
 ## :electric_plug: Development environment
