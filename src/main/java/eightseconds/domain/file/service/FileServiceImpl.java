@@ -24,10 +24,10 @@ public class FileServiceImpl implements FileService {
     private final FileRepository fileRepository;
 
     @Transactional
-    public List<MyFile> save(List<MultipartFile> files) throws IOException {
-        validateFiles(files);
+    public List<MyFile> saveMultipleFiles(List<MultipartFile> files) throws IOException {
         List<MyFile> savedFiles = new ArrayList<>();
             for (MultipartFile file : files) {
+                validateFile(file);
                 String originFilename = file.getOriginalFilename();
                 String extension = FilenameUtils.getExtension(Objects.requireNonNull(originFilename)).toLowerCase();
                 String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) +
@@ -50,6 +50,29 @@ public class FileServiceImpl implements FileService {
             return savedFiles;
     }
 
+    @Transactional
+    public MyFile saveSingleFile(MultipartFile file) throws IOException {
+            validateFile(file);
+            String originFilename = file.getOriginalFilename();
+            String extension = FilenameUtils.getExtension(Objects.requireNonNull(originFilename)).toLowerCase();
+            String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) +
+                    EFileServiceImpl.eImagesDir.getValue();
+            File saveFile;
+            String fileName;
+            do {
+                fileName = UUID.randomUUID() + EFileServiceImpl.eDot.getValue() + extension;
+                saveFile = new File(path + fileName);
+            } while (saveFile.exists());
+            saveFile.mkdirs();
+            file.transferTo(saveFile);
+            MyFile savedFile = fileRepository.save(MyFile.builder()
+                    .filename(fileName)
+                    .fileOriginName(originFilename)
+                    .fileUrl(path)
+                    .build());
+        return savedFile;
+    }
+
     @Override
     @Transactional
     public void deleteAllByItemId(Long id) {
@@ -60,8 +83,8 @@ public class FileServiceImpl implements FileService {
      * validate
      */
 
-    private void validateFiles(List<MultipartFile> files) {
-        if (files.isEmpty()) throw new FileToSaveNotExistException(EFileServiceImpl.eFileToSaveNotExistExceptionMessage.getValue());
+    private void validateFile(MultipartFile file) {
+        if (file.isEmpty()) throw new FileToSaveNotExistException(EFileServiceImpl.eFileToSaveNotExistExceptionMessage.getValue());
     }
 
 }

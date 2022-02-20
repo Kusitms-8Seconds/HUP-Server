@@ -2,9 +2,6 @@ package eightseconds.domain.notice.service;
 
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.file.service.FileService;
-import eightseconds.domain.item.constant.ItemConstants;
-import eightseconds.domain.item.dto.ItemDetailsResponse;
-import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.notice.constant.NoticeConstants.ENoticeServiceImpl;
 import eightseconds.domain.notice.dto.NoticeListResponse;
 import eightseconds.domain.notice.dto.NoticeResponse;
@@ -24,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,9 +39,11 @@ public class NoticeServiceImpl implements NoticeService{
         User user = userService.validateUserId(Long.valueOf(userId));
         Notice notice = Notice.toEntity(title, body);
         notice.setUser(user);
-        if(!files.isEmpty()){
-        List<MyFile> saveFiles = fileService.save(files);
-        notice.addFiles(saveFiles);}
+        List<MyFile> saveFiles = new ArrayList<>();
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                saveFiles.add(fileService.saveSingleFile(file));}}
+        notice.addFiles(saveFiles);
         noticeRepository.save(notice);
         return NoticeResponse.from(notice);
     }
@@ -65,7 +65,7 @@ public class NoticeServiceImpl implements NoticeService{
         notice.updateNotice(title, body);
         if(!files.isEmpty()){
             notice.getMyFiles().clear();
-            List<MyFile> saveFiles = fileService.save(files);
+            List<MyFile> saveFiles = fileService.saveMultipleFiles(files);
             notice.addFiles(saveFiles);}
         noticeRepository.save(notice);
         return UpdateNoticeResponse.from(notice);

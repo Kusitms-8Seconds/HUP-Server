@@ -13,7 +13,6 @@ import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.jwt.TokenProvider;
 import eightseconds.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -208,7 +207,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = validateUserId(Long.valueOf(userId));
         List<MultipartFile> files = new ArrayList<>();
         files.add(file);
-        List<MyFile> savedFile = fileService.save(files);
+        List<MyFile> savedFile = fileService.saveMultipleFiles(files);
         String fileURL = makeFileURL(savedFile.get(0).getFilename());
         user.setPicture(fileURL);
         return UpdateProfileResponse.from(fileURL);

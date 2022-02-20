@@ -11,10 +11,6 @@ import eightseconds.domain.item.exception.*;
 import eightseconds.domain.item.repository.ItemRepository;
 import eightseconds.domain.notification.service.NotificationService;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
-import eightseconds.domain.pricesuggestion.repository.PriceSuggestionRepository;
-import eightseconds.domain.pricesuggestion.service.PriceSuggestionService;
-import eightseconds.domain.scrap.entity.Scrap;
-import eightseconds.domain.scrap.service.ScrapService;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.PaginationDto;
@@ -23,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -47,9 +44,13 @@ public class ItemServiceImpl implements ItemService {
         Item item = registerItemRequest.toEntity();
         User user = userService.getUserByUserId(userId);
         item.setUser(user);
-        if(registerItemRequest.getFiles() != null){
-            List<MyFile> saveFiles = fileService.save(registerItemRequest.getFiles());
-            addFiles(item, saveFiles);}
+        List<MyFile> saveFiles = new ArrayList<>();
+        for (MultipartFile file : registerItemRequest.getFiles()) {
+            if (!file.isEmpty()) {
+                saveFiles.add(fileService.saveSingleFile(file));
+            }
+        }
+        addFiles(item, saveFiles);
         itemRepository.save(item);
         return RegisterItemResponse.from(item);
     }
