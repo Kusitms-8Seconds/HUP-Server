@@ -63,10 +63,12 @@ public class NoticeServiceImpl implements NoticeService{
         userService.validateUserId(Long.valueOf(userId));
         Notice notice = validateNoticeId(Long.valueOf(noticeId));
         notice.updateNotice(title, body);
-        if(!files.isEmpty()){
-            notice.getMyFiles().clear();
-            List<MyFile> saveFiles = fileService.saveMultipleFiles(files);
-            notice.addFiles(saveFiles);}
+        List<MyFile> saveFiles = new ArrayList<>();
+        notice.getMyFiles().clear();
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                saveFiles.add(fileService.saveSingleFile(file));}}
+        notice.addFiles(saveFiles);
         noticeRepository.save(notice);
         return UpdateNoticeResponse.from(notice);
     }
