@@ -27,6 +27,10 @@
  5. 운영용 EC2가 받은 각종 배포에 필요한 파일들에는 DockerHub에서 이미지를 받아오고, 실행시키는 코드가 담겨있습니다.</br>
  6. 마지막으로, 운영용 EC2에서 배포에 필요한 파일들을 실행하여 Docker로 SpringBoot, MariaDB, Redis를 띄웁니다.</br>
 
+## :books: HUP Swagger API Docs
+
+<a href="http://52.78.175.27:8080/swagger-ui/index.html#/">HUP API Swagger Docs</a><br>
+
 ## :electric_plug: Development environment
 
 분류 | 항목 
