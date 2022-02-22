@@ -3,6 +3,7 @@ package eightseconds.domain.notification.controller;
 import eightseconds.domain.notification.dto.NotificationListResponse;
 import eightseconds.domain.notification.service.NotificationService;
 import eightseconds.global.dto.PaginationDto;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/notifications")
 @RequiredArgsConstructor
+@Api(tags = "Notification API")
 public class NotificationApiController {
 
     private final NotificationService notificationService;

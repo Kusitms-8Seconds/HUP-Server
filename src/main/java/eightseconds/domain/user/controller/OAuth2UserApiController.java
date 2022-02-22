@@ -8,6 +8,7 @@ import eightseconds.domain.user.dto.OAuth2KakaoLoginRequest;
 import eightseconds.domain.user.dto.OAuth2NaverLoginRequest;
 import eightseconds.domain.user.service.OAuth2UserService;
 import eightseconds.global.jwt.JwtFilter;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
@@ -28,6 +29,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/users")
+@Api(tags = "OAuth2User API")
 public class OAuth2UserApiController {
 
     private final OAuth2UserService oAuth2UserService;

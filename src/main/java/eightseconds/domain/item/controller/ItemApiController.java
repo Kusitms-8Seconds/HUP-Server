@@ -5,6 +5,7 @@ import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.service.ItemService;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.dto.PaginationDto;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/items")
+@Api(tags = "Item API")
 public class ItemApiController {
 
     private final ItemService itemService;
