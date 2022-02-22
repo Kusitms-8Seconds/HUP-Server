@@ -6,6 +6,7 @@ import eightseconds.domain.scrap.dto.*;
 import eightseconds.domain.scrap.service.ScrapService;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.dto.PaginationDto;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/scraps")
+@Api(tags = "Scrap API")
 public class ScrapApiController {
 
     private final ScrapService scrapService;

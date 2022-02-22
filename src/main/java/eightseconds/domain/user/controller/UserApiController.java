@@ -5,6 +5,7 @@ import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.service.UserServiceImpl;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.jwt.JwtFilter;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
@@ -27,6 +28,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/users")
+@Api(tags = "User API")
 public class UserApiController {
 
     private final UserServiceImpl userService;

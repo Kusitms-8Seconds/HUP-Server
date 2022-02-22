@@ -4,6 +4,7 @@ import eightseconds.domain.file.constant.FileConstants;
 import eightseconds.domain.file.constant.FileConstants.EFileApiController;
 import eightseconds.domain.file.exception.FileNotFoundException;
 import eightseconds.domain.file.service.FileService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/files")
+@Api(tags = "File API")
 public class FileApiController {
 
     private final FileService fileService;

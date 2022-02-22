@@ -4,6 +4,8 @@ import eightseconds.domain.pricesuggestion.constant.PriceSuggestionConstants.EPr
 import eightseconds.domain.pricesuggestion.dto.*;
 import eightseconds.domain.pricesuggestion.service.PriceSuggestionService;
 import eightseconds.global.dto.PaginationDto;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/priceSuggestions")
+@Api(tags = "PriceSuggestion API")
 public class PriceSuggestionApiController {
 
     private final PriceSuggestionService priceSuggestionService;
@@ -77,6 +80,7 @@ public class PriceSuggestionApiController {
     }
 
     // 입찰 Test용도
+    @ApiOperation(value = "입찰하기 테스트", notes = "상품입찰 테스트를 진행합니다.")
     @PostMapping("/priceSuggestionTest")
     public ResponseEntity<PriceSuggestionResponse> priceSuggestion(@Valid @RequestBody PriceSuggestionRequest priceSuggestionRequest) throws Exception {
         return ResponseEntity.ok(priceSuggestionService.priceSuggestionItem(priceSuggestionRequest));

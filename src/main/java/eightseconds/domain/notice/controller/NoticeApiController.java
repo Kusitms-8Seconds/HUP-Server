@@ -6,6 +6,7 @@ import eightseconds.domain.notice.dto.NoticeResponse;
 import eightseconds.domain.notice.dto.UpdateNoticeResponse;
 import eightseconds.domain.notice.service.NoticeService;
 import eightseconds.global.dto.PaginationDto;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/notices")
+@Api(tags = "Notice API")
 public class NoticeApiController {
 
     private final NoticeService noticeService;

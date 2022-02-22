@@ -1,15 +1,10 @@
 package eightseconds.infra.email.controller;
 
-import eightseconds.domain.user.constant.UserConstants;
-import eightseconds.domain.user.controller.UserApiController;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.infra.email.dto.CheckAuthCodeRequest;
 import eightseconds.infra.email.dto.EmailAuthCodeRequest;
 import eightseconds.infra.email.service.EmailService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +23,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/email")
-public class EmailController {
+@Api(tags = "Email API")
+public class EmailApiController {
 
     private final EmailService emailService;
 
