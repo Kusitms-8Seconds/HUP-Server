@@ -47,9 +47,11 @@ public class ItemServiceImpl implements ItemService {
         List<MyFile> saveFiles = new ArrayList<>();
         for (MultipartFile file : registerItemRequest.getFiles()) {
             if (!file.isEmpty()) {
-                saveFiles.add(fileService.saveSingleFile(file));
-            }
-        }
+                saveFiles.add(fileService.saveSingleFile(file));}}
+
+        if (!saveFiles.isEmpty()) {
+            item.addFiles(saveFiles);}
+
         addFiles(item, saveFiles);
         itemRepository.save(item);
         return RegisterItemResponse.from(item);
