@@ -42,8 +42,12 @@ public class NoticeServiceImpl implements NoticeService{
         List<MyFile> saveFiles = new ArrayList<>();
         for (MultipartFile file : files) {
             if (!file.isEmpty()) {
-                saveFiles.add(fileService.saveSingleFile(file));}}
-        notice.addFiles(saveFiles);
+                saveFiles.add(fileService.saveSingleFile(file));
+                notice.addFiles(saveFiles);}}
+
+        if (!saveFiles.isEmpty()) {
+            notice.addFiles(saveFiles);}
+
         noticeRepository.save(notice);
         return NoticeResponse.from(notice);
     }
