@@ -50,7 +50,6 @@ public class RegisterItemRequest {
     @ApiModelProperty(notes = "상품의 경매종료일자를 입력해 주세요.")
     private LocalDateTime auctionClosingDate;
 
-    @NotBlank(message = "등록하고자 하는 상품의 이미지를 입력해주세요.")
     @ApiModelProperty(notes = "상품의 이미지를 입력해 주세요.")
     private List<MultipartFile> files;
 

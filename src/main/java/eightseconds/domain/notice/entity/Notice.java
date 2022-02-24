@@ -49,16 +49,10 @@ public class Notice extends BaseTimeEntity {
      */
 
     public void addFiles(List<MyFile> files){
-        System.out.println("여기들어오는지1");
         for (MyFile file : files) {
-            System.out.println("1");
-            System.out.println("myfilesiaze"+myFiles.size());
             myFiles.add(file);
-            System.out.println("2");
             file.setNotice(this);
-            System.out.println("3");
         }
-        System.out.println("여기들어오는지2");
     }
 
     public void setUser(User user) {

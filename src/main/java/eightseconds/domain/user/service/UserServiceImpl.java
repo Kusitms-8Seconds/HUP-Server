@@ -205,10 +205,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public UpdateProfileResponse updateProfileImage(MultipartFile file, String userId) throws IOException {
         User user = validateUserId(Long.valueOf(userId));
-        List<MultipartFile> files = new ArrayList<>();
-        files.add(file);
-        List<MyFile> savedFile = fileService.saveMultipleFiles(files);
-        String fileURL = makeFileURL(savedFile.get(0).getFilename());
+//        List<MultipartFile> files = new ArrayList<>();
+//        files.add(file);
+//        List<MyFile> savedFile = fileService.saveMultipleFiles(files);
+        MyFile myFile = fileService.saveSingleFile(file);
+        String fileURL = makeFileURL(myFile.getFilename());
         user.setPicture(fileURL);
         return UpdateProfileResponse.from(fileURL);
     }

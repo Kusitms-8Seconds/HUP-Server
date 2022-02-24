@@ -41,6 +41,7 @@ public class NoticeApiController {
                                                                     @RequestPart(value = "userId") String userId,
                                                                     @RequestPart(value = "title", required = false) String title,
                                                                     @RequestPart(value = "body", required = false) String body) throws IOException {
+
         NoticeResponse noticeResponse = noticeService.createNotice(userId, title, body, files);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path(ENoticeApiController.eLocationIdPath.getValue())
