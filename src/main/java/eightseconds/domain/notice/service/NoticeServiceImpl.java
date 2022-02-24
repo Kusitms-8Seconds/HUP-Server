@@ -40,13 +40,11 @@ public class NoticeServiceImpl implements NoticeService{
         Notice notice = Notice.toEntity(title, body);
         notice.setUser(user);
         List<MyFile> saveFiles = new ArrayList<>();
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                saveFiles.add(fileService.saveSingleFile(file));
-                notice.addFiles(saveFiles);}}
-
-        if (!saveFiles.isEmpty()) {
-            notice.addFiles(saveFiles);}
+        if (files != null) {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    saveFiles.add(fileService.saveSingleFile(file));}}
+                notice.addFiles(saveFiles);}
 
         noticeRepository.save(notice);
         return NoticeResponse.from(notice);
@@ -69,10 +67,12 @@ public class NoticeServiceImpl implements NoticeService{
         notice.updateNotice(title, body);
         List<MyFile> saveFiles = new ArrayList<>();
         notice.getMyFiles().clear();
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                saveFiles.add(fileService.saveSingleFile(file));}}
-        notice.addFiles(saveFiles);
+        if (files != null) {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    saveFiles.add(fileService.saveSingleFile(file));}}
+            notice.addFiles(saveFiles);}
+
         noticeRepository.save(notice);
         return UpdateNoticeResponse.from(notice);
     }

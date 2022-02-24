@@ -45,11 +45,11 @@ public class ItemServiceImpl implements ItemService {
         User user = userService.getUserByUserId(userId);
         item.setUser(user);
         List<MyFile> saveFiles = new ArrayList<>();
-        for (MultipartFile file : registerItemRequest.getFiles()) {
-            if (!file.isEmpty()) {
-                saveFiles.add(fileService.saveSingleFile(file));}}
-
-        if (!saveFiles.isEmpty()) {
+        List<MultipartFile> files = registerItemRequest.getFiles();
+        if (files != null) {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    saveFiles.add(fileService.saveSingleFile(file));}}
             item.addFiles(saveFiles);}
 
         addFiles(item, saveFiles);
