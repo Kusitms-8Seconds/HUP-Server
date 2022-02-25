@@ -114,7 +114,7 @@ public class UserApiController {
 
     @ApiOperation(value = "유저 프로필 사진 수정", notes = "유저의 프로필 사진을 수정합니다.")
     @PutMapping("/images")
-    public ResponseEntity<EntityModel<UpdateProfileResponse>> updateProfileImage(@RequestPart(value = "file") MultipartFile file,
+    public ResponseEntity<EntityModel<UpdateProfileResponse>> updateProfileImage(@Nullable @RequestPart(value = "file", required = false) MultipartFile file,
                                                                            @RequestPart(value = "userId") String userId) throws IOException {
         return ResponseEntity.ok(EntityModel.of(userService.updateProfileImage(file, userId)));
     }
