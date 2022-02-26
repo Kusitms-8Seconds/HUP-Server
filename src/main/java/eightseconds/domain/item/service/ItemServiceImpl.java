@@ -52,15 +52,8 @@ public class ItemServiceImpl implements ItemService {
                     saveFiles.add(fileService.saveSingleFile(file));}}
             item.addFiles(saveFiles);}
 
-        addFiles(item, saveFiles);
         itemRepository.save(item);
         return RegisterItemResponse.from(item);
-    }
-
-    @Override
-    @Transactional
-    public void addFiles(Item item, List<MyFile> saveFiles) {
-        item.addFiles(saveFiles);
     }
 
     @Override
