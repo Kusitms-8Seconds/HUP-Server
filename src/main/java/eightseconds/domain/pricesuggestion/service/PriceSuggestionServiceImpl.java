@@ -7,10 +7,7 @@ import eightseconds.domain.item.service.ItemService;
 import eightseconds.domain.pricesuggestion.constant.PriceSuggestionConstants.EPriceSuggestionServiceImpl;
 import eightseconds.domain.pricesuggestion.dto.*;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
-import eightseconds.domain.pricesuggestion.exception.AlreadySoldOutException;
-import eightseconds.domain.pricesuggestion.exception.NotFoundPriceSuggestionException;
-import eightseconds.domain.pricesuggestion.exception.PriorPriceSuggestionException;
-import eightseconds.domain.pricesuggestion.exception.SameUserIdException;
+import eightseconds.domain.pricesuggestion.exception.*;
 import eightseconds.domain.pricesuggestion.repository.PriceSuggestionRepository;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
@@ -54,7 +51,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         User user = userService.validateUserId(userId);
         Item item = itemService.validateItemId(itemId);
         validatePriceSuggestionsItemId(itemId);
-        //validateInitPrice(itemId, suggestionPrice);
+        validateInitPrice(itemId, suggestionPrice);
         validatePriceSuggestionPrice(itemId, suggestionPrice);
         validateRegisteredItemByUser(item.getUser().getId(), userId);
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getByUserIdAndItemId(userId, itemId);
@@ -79,10 +76,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         Item item = itemService.validateItemId(itemId);
         itemService.validateSoldStatusByItemId(itemId);
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getMaximumPriceByItemId(itemId);
-        if(priceSuggestion.isEmpty()) {
-            System.out.println("이로직타는지?");
-            return MaximumPriceResponse.from(item.getInitPrice());
-        }
+        if(priceSuggestion.isEmpty()) return MaximumPriceResponse.from(item.getInitPrice());
         else return MaximumPriceResponse.from(priceSuggestion.get().getSuggestionPrice());
     }
 
@@ -161,10 +155,10 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
             throw new SameUserIdException(EPriceSuggestionServiceImpl.eSameUserIdExceptionMessage.getValue());}
     }
 
-//    private void validateInitPrice(Long itemId, int suggestionPrice) {
-//        //itemService.get
-//        if(suggestionPrice < )
-//
-//    }
+    private void validateInitPrice(Long itemId, int suggestionPrice) {
+        int initPrice = itemService.getItemByItemId(itemId).getInitPrice();
+        if (suggestionPrice < initPrice) {
+            throw new InitPriceException(EPriceSuggestionServiceImpl.eInitPriceExceptionMessage.getValue());}
+    }
 
 }

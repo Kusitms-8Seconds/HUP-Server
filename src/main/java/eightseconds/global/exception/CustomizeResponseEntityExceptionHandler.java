@@ -4,10 +4,7 @@ import eightseconds.domain.file.exception.FileNotFoundException;
 import eightseconds.domain.file.exception.FileToSaveNotExistException;
 import eightseconds.domain.item.exception.*;
 import eightseconds.domain.notice.exception.NotFoundNoticeException;
-import eightseconds.domain.pricesuggestion.exception.AlreadySoldOutException;
-import eightseconds.domain.pricesuggestion.exception.NotFoundPriceSuggestionException;
-import eightseconds.domain.pricesuggestion.exception.PriorPriceSuggestionException;
-import eightseconds.domain.pricesuggestion.exception.SameUserIdException;
+import eightseconds.domain.pricesuggestion.exception.*;
 import eightseconds.domain.scrap.exception.AlreadyScrapException;
 import eightseconds.domain.scrap.exception.NotExistingScrapOfUserException;
 import eightseconds.domain.user.exception.*;
@@ -254,6 +251,12 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
 
     @ExceptionHandler(SameUserIdException.class)
     public final ResponseEntity<Object> handleSameUserIdException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InitPriceException.class)
+    public final ResponseEntity<Object> handleInitPriceException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
     }

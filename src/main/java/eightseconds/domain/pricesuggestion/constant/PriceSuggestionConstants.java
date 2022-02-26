@@ -25,7 +25,8 @@ public class PriceSuggestionConstants {
         eAlreadySoldOutExceptionMessage("이미 팔린 상품입니다."),
         ePriorPriceSuggestionExceptionMessage("이전의 입찰가격이 지금의 입찰보다 높거나 같습니다."),
         eNotFoundPriceSuggestionExceptionMessage("해당 id로 가격입찰내역을 찾을 수 없습니다."),
-        eSameUserIdExceptionMessage("자신이 등록한 상품을 입찰할 수 없습니다.");
+        eSameUserIdExceptionMessage("자신이 등록한 상품을 입찰할 수 없습니다."),
+        eInitPriceExceptionMessage("상품 초기가격보다 입찰가격이 작을 수 없습니다.");
         private int size;
         private String value;
 
