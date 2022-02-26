@@ -73,10 +73,10 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
 
     @Override
     public MaximumPriceResponse getMaximumPrice(Long itemId) {
-        Item item = itemService.validateItemId(itemId);
+        itemService.validateItemId(itemId);
         itemService.validateSoldStatusByItemId(itemId);
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getMaximumPriceByItemId(itemId);
-        if(priceSuggestion.isEmpty()) return MaximumPriceResponse.from(item.getInitPrice());
+        if(priceSuggestion.isEmpty()) return MaximumPriceResponse.from(0);
         else return MaximumPriceResponse.from(priceSuggestion.get().getSuggestionPrice());
     }
 
