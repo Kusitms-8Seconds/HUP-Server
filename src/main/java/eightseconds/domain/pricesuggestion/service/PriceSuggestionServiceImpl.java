@@ -54,6 +54,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         User user = userService.validateUserId(userId);
         Item item = itemService.validateItemId(itemId);
         validatePriceSuggestionsItemId(itemId);
+        //validateInitPrice(itemId, suggestionPrice);
         validatePriceSuggestionPrice(itemId, suggestionPrice);
         validateRegisteredItemByUser(item.getUser().getId(), userId);
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getByUserIdAndItemId(userId, itemId);
@@ -75,11 +76,14 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
 
     @Override
     public MaximumPriceResponse getMaximumPrice(Long itemId) {
-        itemService.validateItemId(itemId);
+        Item item = itemService.validateItemId(itemId);
         itemService.validateSoldStatusByItemId(itemId);
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getMaximumPriceByItemId(itemId);
-        if(priceSuggestion.isEmpty()){return MaximumPriceResponse.from(0); }
-        else{return MaximumPriceResponse.from(priceSuggestionRepository.getMaximumPriceByItemId(itemId).get().getSuggestionPrice());}
+        if(priceSuggestion.isEmpty()) {
+            System.out.println("이로직타는지?");
+            return MaximumPriceResponse.from(item.getInitPrice());
+        }
+        else return MaximumPriceResponse.from(priceSuggestion.get().getSuggestionPrice());
     }
 
     @Override
@@ -156,5 +160,11 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         if (registeredUserId.equals(userId)) {
             throw new SameUserIdException(EPriceSuggestionServiceImpl.eSameUserIdExceptionMessage.getValue());}
     }
+
+//    private void validateInitPrice(Long itemId, int suggestionPrice) {
+//        //itemService.get
+//        if(suggestionPrice < )
+//
+//    }
 
 }

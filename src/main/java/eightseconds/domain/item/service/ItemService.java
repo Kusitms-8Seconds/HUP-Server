@@ -15,7 +15,6 @@ import java.util.List;
 public interface ItemService{
 
     RegisterItemResponse saveItem(Long userId, @Valid RegisterItemRequest registerItemRequest) throws IOException;
-    void addFiles(Item item, List<MyFile> saveFiles);
     void deleteByItemId(Long id);
     Item validateItemId(Long id);
     ItemDetailsResponse getItem(Long id);
