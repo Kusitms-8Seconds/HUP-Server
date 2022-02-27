@@ -1,6 +1,8 @@
 package eightseconds.domain.user.entity;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import eightseconds.domain.chatmessage.entity.ChatMessage;
+import eightseconds.domain.chatroom.entity.UserChatRoom;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.notice.entity.Notice;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
@@ -69,11 +71,11 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user")
     private List<Notice> notices = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "user")
-//    private List<ChatRoom> chatRooms = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user")
-//    private List<ChatMessage> chatMessages = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<UserChatRoom> chatRooms = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<ChatMessage> chatMessages = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "email_auth_id")
