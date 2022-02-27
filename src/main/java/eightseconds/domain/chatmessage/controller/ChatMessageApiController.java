@@ -2,7 +2,6 @@ package eightseconds.domain.chatmessage.controller;
 
 import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
 import eightseconds.domain.chatmessage.service.ChatMessageService;
-import eightseconds.domain.chatroom.dto.ChatRoomResponse;
 import eightseconds.global.dto.PaginationDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
