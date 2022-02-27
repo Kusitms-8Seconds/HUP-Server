@@ -1,8 +1,6 @@
-package eightseconds.domain.chatmessage.entity;
+package eightseconds.domain.chatroom.entity;
 
-import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.user.entity.User;
-import eightseconds.global.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,11 +13,11 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessage extends BaseTimeEntity {
+public class UserChatRoom {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chat_message_id")
+    @GeneratedValue
+    @Column(name = "user_chat_room_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,7 +27,4 @@ public class ChatMessage extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
-
-    private String message;
-    private boolean read_or_not;
 }
