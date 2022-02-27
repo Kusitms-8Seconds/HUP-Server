@@ -18,7 +18,7 @@ public class PriceSuggestionSTOMPController {
     private final PriceSuggestionService priceSuggestionService;
 
     @MessageMapping("/priceSuggestions")
-    @SendTo("/priceSuggestions")
+    @SendTo("/sub/priceSuggestions")
     @Transactional
     public PriceSuggestionResponse priceSuggestion(PriceSuggestionRequest priceSuggestionRequest) throws Exception {
         return priceSuggestionService.priceSuggestionItem(priceSuggestionRequest);

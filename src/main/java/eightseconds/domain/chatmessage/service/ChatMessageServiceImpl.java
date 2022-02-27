@@ -3,7 +3,6 @@ package eightseconds.domain.chatmessage.service;
 import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
 import eightseconds.domain.chatmessage.entity.ChatMessage;
 import eightseconds.domain.chatmessage.respoistory.ChatMessageRepository;
-import eightseconds.domain.chatroom.dto.ChatRoomResponse;
 import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.chatroom.service.ChatRoomService;
 import eightseconds.global.dto.PaginationDto;
