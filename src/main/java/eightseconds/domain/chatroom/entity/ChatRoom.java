@@ -2,11 +2,10 @@ package eightseconds.domain.chatroom.entity;
 
 import eightseconds.domain.chatmessage.entity.ChatMessage;
 import eightseconds.domain.item.entity.Item;
+import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.global.entity.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.type.CharacterType;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ChatRoom extends BaseTimeEntity {
 
     @Id
@@ -33,4 +33,9 @@ public class ChatRoom extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "chatRoom")
     private List<ChatMessage> chatMessages = new ArrayList<>();
+
+    public static ChatRoom toEntity() {
+        return ChatRoom.builder()
+                .build();
+    }
 }

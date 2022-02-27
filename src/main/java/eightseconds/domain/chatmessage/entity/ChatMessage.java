@@ -1,12 +1,10 @@
 package eightseconds.domain.chatmessage.entity;
 
+import eightseconds.domain.chatmessage.dto.ChatMessageRequest;
 import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.user.entity.User;
 import eightseconds.global.entity.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -15,6 +13,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ChatMessage extends BaseTimeEntity {
 
     @Id
@@ -32,4 +31,28 @@ public class ChatMessage extends BaseTimeEntity {
 
     private String message;
     private boolean read_or_not;
+
+    /**
+     * 연관관계 메서드
+     */
+
+    public void setUser(User user) {
+        this.user = user;
+        user.getChatMessages().add(this);
+    }
+
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+        chatRoom.getChatMessages().add(this);
+    }
+
+    /**
+     * 생성 메서드
+     */
+
+    public static ChatMessage toEntity(ChatMessageRequest chatMessageRequest) {
+        return ChatMessage.builder()
+                .message(chatMessageRequest.getMessage())
+                .build();
+    }
 }

@@ -21,11 +21,15 @@ public class ChatMessageRequest {
     @ApiModelProperty(notes = "채팅방 id를 입력해 주세요.")
     private Long chatRoomId;
 
+    @NotBlank(message = "메세지를 보내는 유저 id를 입력해주세요.")
+    @ApiModelProperty(notes = "유저 id를 입력해 주세요.")
+    private Long userId;
+
     @NotBlank(message = "메세지를 보내는 유저이름을 입력해주세요.")
     @ApiModelProperty(notes = "유저이름을 입력해 주세요.")
     private String userName;
 
     @NotBlank(message = "보내고자 하는 메세지를 입력해주세요.")
-    @ApiModelProperty(notes = "메세지를 입력해주세요.ㄴ")
+    @ApiModelProperty(notes = "메세지를 입력해주세요.")
     private String message;
 }

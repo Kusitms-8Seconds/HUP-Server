@@ -1,10 +1,7 @@
 package eightseconds.domain.chatroom.entity;
 
 import eightseconds.domain.user.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserChatRoom {
 
     @Id
@@ -27,4 +25,27 @@ public class UserChatRoom {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
+
+    /**
+     * 연관관계 메서드
+     */
+
+    public void setUser(User user) {
+        this.user = user;
+        user.getUserChatRooms().add(this);
+    }
+
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+        chatRoom.getUserChatRooms().add(this);
+    }
+
+    /**
+     * 생성 메서드
+     */
+
+    public static UserChatRoom toEntity() {
+        return UserChatRoom.builder()
+                .build();
+    }
 }
