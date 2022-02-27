@@ -1,7 +1,10 @@
 package eightseconds.domain.chatroom.service;
 
+import eightseconds.domain.chatroom.constant.ChatRoomConstants.EChatRoomServiceImpl;
 import eightseconds.domain.chatroom.dto.ChatRoomResponse;
+import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.chatroom.entity.UserChatRoom;
+import eightseconds.domain.chatroom.exception.NotFoundChatRoomException;
 import eightseconds.domain.chatroom.respoistory.ChatRoomRepository;
 import eightseconds.domain.chatroom.respoistory.UserChatRoomRepository;
 import eightseconds.domain.user.entity.User;
@@ -30,4 +33,16 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         List<ChatRoomResponse> data = page.get().map(ChatRoomResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
+
+    @Override
+    public ChatRoom getChatRoomByChatId(Long chatId) {
+        return validateChatId(chatId);
+    }
+
+    private ChatRoom validateChatId(Long chatId) {
+        return chatRoomRepository.findById(chatId).orElseThrow(() ->
+                new NotFoundChatRoomException(EChatRoomServiceImpl.eNotFoundChatRoomExceptionMessage.getValue()));
+    }
+
+
 }

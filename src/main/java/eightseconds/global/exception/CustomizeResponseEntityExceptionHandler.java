@@ -1,5 +1,6 @@
 package eightseconds.global.exception;
 
+import eightseconds.domain.chatroom.exception.NotFoundChatRoomException;
 import eightseconds.domain.file.exception.FileNotFoundException;
 import eightseconds.domain.file.exception.FileToSaveNotExistException;
 import eightseconds.domain.item.exception.*;
@@ -267,6 +268,16 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
 
     @ExceptionHandler(NotFoundNoticeException.class)
     public final ResponseEntity<Object> handleNotFoundNoticeException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * chatRoom Exception
+     */
+
+    @ExceptionHandler(NotFoundChatRoomException.class)
+    public final ResponseEntity<Object> handleNotFoundChatRoomException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
