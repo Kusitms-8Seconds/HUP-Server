@@ -72,7 +72,7 @@ public class User extends BaseTimeEntity {
     private List<Notice> notices = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<UserChatRoom> chatRooms = new ArrayList<>();
+    private List<UserChatRoom> userChatRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<ChatMessage> chatMessages = new ArrayList<>();

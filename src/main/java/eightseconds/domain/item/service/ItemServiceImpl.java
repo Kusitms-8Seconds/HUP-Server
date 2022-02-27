@@ -1,5 +1,6 @@
 package eightseconds.domain.item.service;
 
+import eightseconds.domain.chatroom.service.ChatRoomService;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.file.service.FileService;
 import eightseconds.domain.item.constant.ItemConstants.EItemServiceImpl;
@@ -36,6 +37,7 @@ public class ItemServiceImpl implements ItemService {
     private final FileService fileService;
     private final UserService userService;
     private final NotificationService notificationService;
+    private final ChatRoomService chatRoomService;
 
     @Override
     @Transactional
@@ -133,6 +135,8 @@ public class ItemServiceImpl implements ItemService {
 
         notificationService.sendMessageToBidder(priceSuggestion);
         notificationService.sendMessageToSeller(item);
+
+        chatRoomService.createChatRoom(priceSuggestion, item);
 
         return SoldResponse.from(item, priceSuggestion);
     }

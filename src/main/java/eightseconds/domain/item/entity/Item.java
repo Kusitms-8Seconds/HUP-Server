@@ -1,5 +1,6 @@
 package eightseconds.domain.item.entity;
 
+import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants.EItem;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
@@ -54,8 +55,8 @@ public class Item extends BaseTimeEntity {
     @OneToMany(mappedBy = "item", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<MyFile> myFiles = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "item")
-//    private List<ChatRoom> chatRooms = new ArrayList<>();
+    @OneToMany(mappedBy = "item")
+    private List<ChatRoom> chatRooms = new ArrayList<>();
 
     @Builder
     public Item(String itemName, EItemCategory category, int initPrice,
@@ -82,6 +83,11 @@ public class Item extends BaseTimeEntity {
         user.getItems().add(this);
     }
 
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRooms.add(chatRoom);
+        chatRoom.setItem(this);
+    }
+
     // 비즈니스 로직
     public PriceSuggestion getMaximumPriceEntity() {
         int maximumPrice = EItem.eZero.getNumber();
@@ -95,4 +101,5 @@ public class Item extends BaseTimeEntity {
         if (maximumPrice == EItem.eZero.getNumber()) throw new NotBidItemException(EItem.eNotBidItemExceptionMessage.getValue());
         return priceSuggestionByMaximumPrice;
     }
+
 }
