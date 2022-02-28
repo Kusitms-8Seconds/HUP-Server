@@ -4,10 +4,12 @@ import eightseconds.domain.chatmessage.constant.ChatMessageConstants.EChatMessag
 import eightseconds.domain.chatmessage.dto.ChatMessageRequest;
 import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
 import eightseconds.domain.chatmessage.service.ChatMessageService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Controller
@@ -26,8 +28,8 @@ public class ChatMessageSTOMPController {
     }
 
     @MessageMapping(value = "/chatRoom/send")
-    public void sendMessageToChatRoom(ChatMessageRequest message){
-        ChatMessageResponse chatMessageResponse = chatMessageService.createMessage(message);
-        simpMessagingTemplate.convertAndSend("/sub/chatRoom/" + message.getChatRoomId(), chatMessageResponse);
+    public void sendMessageToChatRoom(ChatMessageRequest chatMessageRequest){
+        ChatMessageResponse chatMessageResponse = chatMessageService.createMessage(chatMessageRequest);
+        simpMessagingTemplate.convertAndSend("/sub/chatRoom/" + chatMessageRequest.getChatRoomId(), chatMessageResponse);
     }
 }
