@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/chatMessages")
-@Api(tags = "ChatRoom API")
+@Api(tags = "ChatMessage API")
 public class ChatMessageApiController {
 
     private final ChatMessageService chatMessageService;
