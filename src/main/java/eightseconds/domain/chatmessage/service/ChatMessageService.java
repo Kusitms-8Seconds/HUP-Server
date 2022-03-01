@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface ChatMessageService {
     PaginationDto<List<ChatMessageResponse>> getAllChatMessages(Pageable pageable, Long chatRoomId);
-    ChatMessageResponse createMessage(ChatMessageRequest chatMessageRequest);
+    ChatMessageResponse createSendMessage(ChatMessageRequest chatMessageRequest);
+    ChatMessageResponse createEnterMessage(ChatMessageRequest chatMessageRequest);
 
 }

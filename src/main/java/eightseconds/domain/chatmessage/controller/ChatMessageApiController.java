@@ -1,5 +1,6 @@
 package eightseconds.domain.chatmessage.controller;
 
+import eightseconds.domain.chatmessage.dto.ChatMessageRequest;
 import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
 import eightseconds.domain.chatmessage.service.ChatMessageService;
 import eightseconds.global.dto.PaginationDto;
@@ -10,10 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +27,17 @@ public class ChatMessageApiController {
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<PaginationDto<List<ChatMessageResponse>>>> getAllChatMessages(@PageableDefault Pageable pageable, @PathVariable Long id) {
         return ResponseEntity.ok(EntityModel.of(chatMessageService.getAllChatMessages(pageable, id)));
+    }
+
+    @ApiOperation(value = "입장 메세지 만들기 테스트", notes = "메세지 만들기 테스트")
+    @PostMapping("/enterTest")
+    public ResponseEntity<ChatMessageResponse> createEnterMessage(@RequestBody ChatMessageRequest chatMessageRequest) {
+        return ResponseEntity.ok(chatMessageService.createEnterMessage(chatMessageRequest));
+    }
+
+    @ApiOperation(value = "보내는 메세지 만들기 테스트", notes = "메세지 만들기 테스트")
+    @PostMapping("/sendTest")
+    public ResponseEntity<ChatMessageResponse> createSendMessage(@RequestBody ChatMessageRequest chatMessageRequest) {
+        return ResponseEntity.ok(chatMessageService.createSendMessage(chatMessageRequest));
     }
 }
