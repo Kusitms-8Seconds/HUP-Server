@@ -4,12 +4,10 @@ import eightseconds.domain.chatmessage.constant.ChatMessageConstants.EChatMessag
 import eightseconds.domain.chatmessage.dto.ChatMessageRequest;
 import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
 import eightseconds.domain.chatmessage.service.ChatMessageService;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Controller

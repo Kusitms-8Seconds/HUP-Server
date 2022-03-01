@@ -38,7 +38,7 @@ public class ChatRoomResponse {
             }
         }
         List<ChatMessage> chatMessages = userChatRoom.getChatRoom().getChatMessages();
-        LocalDateTime tempLatestTime = LocalDateTime.MIN;
+        LocalDateTime tempLatestTime = LocalDateTime.of(2000, 1, 1, 1, 1, 1);
         String tempLatestMessage = null;
         for (ChatMessage chatMessage : chatMessages) {
             if (chatMessage.getCreatedDate().isAfter(tempLatestTime)) {
