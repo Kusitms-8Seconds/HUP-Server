@@ -18,7 +18,7 @@ import java.util.List;
 public class ChatRoom extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "chat_room_id")
     private Long id;
 

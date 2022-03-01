@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,9 +43,9 @@ public class ChatRoomResponse {
         String tempLatestMessage = null;
         for (ChatMessage chatMessage : chatMessages) {
             if (chatMessage.getCreatedDate().isAfter(tempLatestTime)) {
-                tempLatestTime = chatMessage.getCreatedDate();
+                tempLatestTime = chatMessage.getCreatedDate().withNano(0);
                 tempLatestMessage = chatMessage.getMessage();}}
-
+        System.out.println("AfterLocalDateTime"+tempLatestTime);
         return ChatRoomResponse.builder()
                 .id(userChatRoom.getChatRoom().getId())
                 .userId(userChatRoom.getUser().getId())

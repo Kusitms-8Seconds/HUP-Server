@@ -26,7 +26,7 @@ public class ChatMessageResponse {
                 .userId(chatMessage.getUser().getId())
                 .userName(chatMessage.getUser().getUsername())
                 .message(chatMessage.getMessage())
-                .createdDate(chatMessage.getCreatedDate())
+                .createdDate(chatMessage.getCreatedDate().withNano(0))
                 .build();
     }
 }
