@@ -16,9 +16,5 @@ public class ChatRoomConstants {
 
         private String value;
 
-        @JsonCreator
-        public static ItemConstants.EItemCategory from(String s) {
-            return ItemConstants.EItemCategory.valueOf(s);
-        }
     }
 }
