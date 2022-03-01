@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -16,6 +18,7 @@ public class ChatMessageResponse {
     private Long userId;
     private String userName;
     private String message;
+    private LocalDateTime createdDate;
 
     public static ChatMessageResponse from(ChatMessage chatMessage) {
         return ChatMessageResponse.builder()
@@ -23,6 +26,7 @@ public class ChatMessageResponse {
                 .userId(chatMessage.getUser().getId())
                 .userName(chatMessage.getUser().getUsername())
                 .message(chatMessage.getMessage())
+                .createdDate(chatMessage.getCreatedDate())
                 .build();
     }
 }

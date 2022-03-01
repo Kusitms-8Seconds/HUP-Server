@@ -1,10 +1,17 @@
 package eightseconds.domain.chatroom.dto;
 
+import eightseconds.domain.chatmessage.entity.ChatMessage;
 import eightseconds.domain.chatroom.entity.UserChatRoom;
+import eightseconds.domain.file.entity.MyFile;
+import eightseconds.domain.item.entity.Item;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
@@ -16,14 +23,36 @@ public class ChatRoomResponse {
     private Long userId;
     private String userName;
     private Long itemId;
-    private String itemName;
+    private List<String> fileNames;
+    private String latestMessage;
+    private LocalDateTime latestTime;
 
     public static ChatRoomResponse from(UserChatRoom userChatRoom) {
+        List<String> fileNames = new ArrayList<>();
+        Item item = userChatRoom.getChatRoom().getItem();
+        if (userChatRoom.getChatRoom().getItem().getMyFiles().isEmpty() != true) {
+            List<MyFile> myFiles = item.getMyFiles();
+            fileNames = new ArrayList<>();
+            for (MyFile myFile : myFiles) {
+                fileNames.add(myFile.getFilename());
+            }
+        }
+        List<ChatMessage> chatMessages = userChatRoom.getChatRoom().getChatMessages();
+        LocalDateTime tempLatestTime = LocalDateTime.MIN;
+        String tempLatestMessage = null;
+        for (ChatMessage chatMessage : chatMessages) {
+            if (chatMessage.getCreatedDate().isAfter(tempLatestTime)) {
+                tempLatestTime = chatMessage.getCreatedDate();
+                tempLatestMessage = chatMessage.getMessage();}}
+
         return ChatRoomResponse.builder()
                 .id(userChatRoom.getChatRoom().getId())
                 .userId(userChatRoom.getUser().getId())
                 .userName(userChatRoom.getUser().getUsername())
-                .itemName(userChatRoom.getChatRoom().getItem().getItemName())
+                .itemId(item.getId())
+                .fileNames(fileNames)
+                .latestMessage(tempLatestMessage)
+                .latestTime(tempLatestTime)
                 .build();
     }
 }
