@@ -45,14 +45,18 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     @Override
     @Transactional
     public void createChatRoom(PriceSuggestion priceSuggestion, Item item) {
-        ChatRoom chatRoom = ChatRoom.toEntity();
+        ChatRoom chatRoom = new ChatRoom();
         item.setChatRoom(chatRoom);
-        UserChatRoom userChatRoomByBidder = UserChatRoom.toEntity();
-        UserChatRoom userChatRoomBySeller = UserChatRoom.toEntity();
+        chatRoomRepository.save(chatRoom);
+        UserChatRoom userChatRoomByBidder = new UserChatRoom();
+        UserChatRoom userChatRoomBySeller = new UserChatRoom();
         userChatRoomByBidder.setUser(priceSuggestion.getUser());
         userChatRoomBySeller.setUser(item.getUser());
         userChatRoomByBidder.setChatRoom(chatRoom);
         userChatRoomBySeller.setChatRoom(chatRoom);
+        userChatRoomRepository.save(userChatRoomByBidder);
+        userChatRoomRepository.save(userChatRoomBySeller);
+
     }
 
 
