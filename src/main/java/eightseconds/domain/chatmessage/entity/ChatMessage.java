@@ -30,7 +30,6 @@ public class ChatMessage extends BaseTimeEntity {
     private ChatRoom chatRoom;
 
     private String message;
-    private boolean read_or_not;
 
     /**
      * 연관관계 메서드

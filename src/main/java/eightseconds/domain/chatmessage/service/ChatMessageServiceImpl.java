@@ -38,11 +38,13 @@ public class ChatMessageServiceImpl implements ChatMessageService{
     @Override
     @Transactional
     public ChatMessageResponse createMessage(ChatMessageRequest chatMessageRequest) {
-        ChatMessage chatMessage = ChatMessage.toEntity(chatMessageRequest);
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setMessage(chatMessageRequest.getMessage());
         User user = userService.getUserByUserId(chatMessageRequest.getUserId());
         ChatRoom chatRoom = chatRoomService.getChatRoomByChatId(chatMessageRequest.getChatRoomId());
         chatMessage.setUser(user);
         chatMessage.setChatRoom(chatRoom);
+        chatMessageRepository.save(chatMessage);
         return ChatMessageResponse.from(chatMessage);
     }
 }

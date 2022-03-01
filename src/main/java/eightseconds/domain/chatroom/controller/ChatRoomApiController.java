@@ -2,13 +2,9 @@ package eightseconds.domain.chatroom.controller;
 
 import eightseconds.domain.chatroom.dto.ChatRoomResponse;
 import eightseconds.domain.chatroom.service.ChatRoomService;
-import eightseconds.global.dto.PaginationDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
