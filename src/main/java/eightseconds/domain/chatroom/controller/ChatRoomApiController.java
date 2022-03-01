@@ -27,8 +27,8 @@ public class ChatRoomApiController {
 
     @ApiOperation(value = "유저의 모든 채팅방 조회", notes = "유저의 모든 채팅방을 조회합니다.")
     @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<PaginationDto<List<ChatRoomResponse>>>> getAllChatRooms(@PageableDefault Pageable pageable, @PathVariable Long id) {
-        return ResponseEntity.ok(EntityModel.of(chatRoomService.getAllChatRooms(pageable, id)));
+    public ResponseEntity<List<ChatRoomResponse>> getAllChatRooms(@PathVariable Long id) {
+        return ResponseEntity.ok(chatRoomService.getAllChatRooms(id));
     }
 
 }

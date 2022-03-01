@@ -11,15 +11,12 @@ import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
-import eightseconds.global.dto.PaginationDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -30,11 +27,18 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     private final UserService userService;
 
     @Override
-    public PaginationDto<List<ChatRoomResponse>> getAllChatRooms(Pageable pageable, Long userId) {
+    public List<ChatRoomResponse> getAllChatRooms(Long userId) {
         User user = userService.getUserByUserId(userId);
-        Page<UserChatRoom> page = userChatRoomRepository.findAllByUser(pageable, user);
-        List<ChatRoomResponse> data = page.get().map(ChatRoomResponse::from).collect(Collectors.toList());
-        return PaginationDto.of(page, data);
+        List<UserChatRoom> listUserChatRoom = userChatRoomRepository.findAllByUser(user);
+        List<ChatRoomResponse> chatRoomResponses = new ArrayList<>();
+        for (UserChatRoom userChatRoom : listUserChatRoom) {
+            Long id = userChatRoom.getChatRoom().getId();
+            List<UserChatRoom> userIdAllByChatRoomId = userChatRoomRepository.findAllByChatRoomId(id);
+            for (UserChatRoom tempUserChatRoom : userIdAllByChatRoomId) {
+                if (userId == tempUserChatRoom.getUser().getId()) continue;
+                else chatRoomResponses.add(ChatRoomResponse.from(tempUserChatRoom));
+            }}
+                return chatRoomResponses;
     }
 
     @Override
@@ -56,7 +60,6 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         userChatRoomBySeller.setChatRoom(chatRoom);
         userChatRoomRepository.save(userChatRoomByBidder);
         userChatRoomRepository.save(userChatRoomBySeller);
-
     }
 
 
