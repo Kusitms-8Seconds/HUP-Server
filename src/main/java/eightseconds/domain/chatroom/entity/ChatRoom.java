@@ -2,10 +2,8 @@ package eightseconds.domain.chatroom.entity;
 
 import eightseconds.domain.chatmessage.entity.ChatMessage;
 import eightseconds.domain.item.entity.Item;
-import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;
-import org.hibernate.type.CharacterType;
 
 import javax.persistence.*;
 import java.util.ArrayList;

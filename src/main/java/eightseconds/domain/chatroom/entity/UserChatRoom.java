@@ -40,12 +40,4 @@ public class UserChatRoom {
         chatRoom.getUserChatRooms().add(this);
     }
 
-    /**
-     * 생성 메서드
-     */
-
-    public static UserChatRoom toEntity() {
-        return UserChatRoom.builder()
-                .build();
-    }
 }
