@@ -11,14 +11,10 @@ public class ChatMessageConstants {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public enum EChatMessageSTOMPController {
+    public enum EChatMessageServiceImpl {
         eChatRoomEnterMessage("님이 채팅방에 참여하였습니다.");
 
         private String value;
 
-        @JsonCreator
-        public static ItemConstants.EItemCategory from(String s) {
-            return ItemConstants.EItemCategory.valueOf(s);
-        }
     }
 }

@@ -1,6 +1,5 @@
 package eightseconds.domain.chatmessage.controller;
 
-import eightseconds.domain.chatmessage.constant.ChatMessageConstants.EChatMessageSTOMPController;
 import eightseconds.domain.chatmessage.dto.ChatMessageRequest;
 import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
 import eightseconds.domain.chatmessage.service.ChatMessageService;
@@ -20,14 +19,13 @@ public class ChatMessageSTOMPController {
 
     @MessageMapping(value = "/chatRoom/enter")
     public void enterChatRoom(ChatMessageRequest chatMessageRequest){
-        chatMessageRequest.setMessage(chatMessageRequest.getUserName() + EChatMessageSTOMPController.eChatRoomEnterMessage.getValue());
-        ChatMessageResponse chatMessageResponse = chatMessageService.createMessage(chatMessageRequest);
+        ChatMessageResponse chatMessageResponse = chatMessageService.createEnterMessage(chatMessageRequest);
         simpMessagingTemplate.convertAndSend("/sub/chatRoom/" + chatMessageRequest.getChatRoomId(), chatMessageResponse);
     }
 
     @MessageMapping(value = "/chatRoom/send")
     public void sendMessageToChatRoom(ChatMessageRequest chatMessageRequest){
-        ChatMessageResponse chatMessageResponse = chatMessageService.createMessage(chatMessageRequest);
+        ChatMessageResponse chatMessageResponse = chatMessageService.createSendMessage(chatMessageRequest);
         simpMessagingTemplate.convertAndSend("/sub/chatRoom/" + chatMessageRequest.getChatRoomId(), chatMessageResponse);
     }
 }

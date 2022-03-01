@@ -1,12 +1,12 @@
 package eightseconds.domain.chatmessage.service;
 
+import eightseconds.domain.chatmessage.constant.ChatMessageConstants.EChatMessageServiceImpl;
 import eightseconds.domain.chatmessage.dto.ChatMessageRequest;
 import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
 import eightseconds.domain.chatmessage.entity.ChatMessage;
 import eightseconds.domain.chatmessage.respoistory.ChatMessageRepository;
 import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.chatroom.service.ChatRoomService;
-import eightseconds.domain.user.dto.UserInfoResponse;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.PaginationDto;
@@ -37,10 +37,23 @@ public class ChatMessageServiceImpl implements ChatMessageService{
 
     @Override
     @Transactional
-    public ChatMessageResponse createMessage(ChatMessageRequest chatMessageRequest) {
+    public ChatMessageResponse createSendMessage(ChatMessageRequest chatMessageRequest) {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setMessage(chatMessageRequest.getMessage());
         User user = userService.getUserByUserId(chatMessageRequest.getUserId());
+        ChatRoom chatRoom = chatRoomService.getChatRoomByChatId(chatMessageRequest.getChatRoomId());
+        chatMessage.setUser(user);
+        chatMessage.setChatRoom(chatRoom);
+        chatMessageRepository.save(chatMessage);
+        return ChatMessageResponse.from(chatMessage);
+    }
+
+    @Override
+    @Transactional
+    public ChatMessageResponse createEnterMessage(ChatMessageRequest chatMessageRequest) {
+        ChatMessage chatMessage = new ChatMessage();
+        User user = userService.getUserByUserId(chatMessageRequest.getUserId());
+        chatMessage.setMessage(user.getUsername()+EChatMessageServiceImpl.eChatRoomEnterMessage.getValue());
         ChatRoom chatRoom = chatRoomService.getChatRoomByChatId(chatMessageRequest.getChatRoomId());
         chatMessage.setUser(user);
         chatMessage.setChatRoom(chatRoom);
