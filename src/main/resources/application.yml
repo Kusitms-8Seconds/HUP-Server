@@ -51,12 +51,10 @@ spring:
     username: root
     password: root
     driver-class-name: org.mariadb.jdbc.Driver
-    initialize: true
-    initialization-mode: always
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
