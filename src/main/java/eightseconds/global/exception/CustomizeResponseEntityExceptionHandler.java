@@ -1,6 +1,8 @@
 package eightseconds.global.exception;
 
+import eightseconds.domain.chatroom.exception.AlreadyEnterException;
 import eightseconds.domain.chatroom.exception.NotFoundChatRoomException;
+import eightseconds.domain.chatroom.exception.NotFoundUserChatRoomException;
 import eightseconds.domain.file.exception.FileNotFoundException;
 import eightseconds.domain.file.exception.FileToSaveNotExistException;
 import eightseconds.domain.item.exception.*;
@@ -281,5 +283,17 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<Object> handleNotFoundChatRoomException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NotFoundUserChatRoomException.class)
+    public final ResponseEntity<Object> handleNotFoundUserChatRoomException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AlreadyEnterException.class)
+    public final ResponseEntity<Object> handleAlreadyEnterException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
     }
 }

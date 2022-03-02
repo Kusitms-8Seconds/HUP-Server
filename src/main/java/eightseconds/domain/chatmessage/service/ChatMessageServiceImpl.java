@@ -6,6 +6,7 @@ import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
 import eightseconds.domain.chatmessage.entity.ChatMessage;
 import eightseconds.domain.chatmessage.respoistory.ChatMessageRepository;
 import eightseconds.domain.chatroom.entity.ChatRoom;
+import eightseconds.domain.chatroom.entity.UserChatRoom;
 import eightseconds.domain.chatroom.service.ChatRoomService;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.rmi.AlreadyBoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,13 +53,19 @@ public class ChatMessageServiceImpl implements ChatMessageService{
     @Override
     @Transactional
     public ChatMessageResponse createEnterMessage(ChatMessageRequest chatMessageRequest) {
+        Long userId = chatMessageRequest.getUserId();
+        Long chatRoomId = chatMessageRequest.getChatRoomId();
+        User user = userService.getUserByUserId(userId);
+        ChatRoom chatRoom = chatRoomService.getChatRoomByChatId(chatRoomId);
+        UserChatRoom userChatRoom = chatRoomService.validateIsEnter(userId, chatRoomId);
+        chatRoomService.validateAlreadyEnter(userId, chatRoomId);
+        userChatRoom.setEnter(true);
         ChatMessage chatMessage = new ChatMessage();
-        User user = userService.getUserByUserId(chatMessageRequest.getUserId());
         chatMessage.setMessage(user.getUsername()+EChatMessageServiceImpl.eChatRoomEnterMessage.getValue());
-        ChatRoom chatRoom = chatRoomService.getChatRoomByChatId(chatMessageRequest.getChatRoomId());
         chatMessage.setUser(user);
         chatMessage.setChatRoom(chatRoom);
         chatMessageRepository.save(chatMessage);
         return ChatMessageResponse.from(chatMessage);
     }
+
 }

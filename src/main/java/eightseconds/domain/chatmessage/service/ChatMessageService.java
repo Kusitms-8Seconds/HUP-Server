@@ -5,6 +5,7 @@ import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
 import eightseconds.global.dto.PaginationDto;
 import org.springframework.data.domain.Pageable;
 
+import java.rmi.AlreadyBoundException;
 import java.util.List;
 
 public interface ChatMessageService {
