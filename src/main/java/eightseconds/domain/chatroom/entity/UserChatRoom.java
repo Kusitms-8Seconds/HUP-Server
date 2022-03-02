@@ -26,6 +26,8 @@ public class UserChatRoom {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
+    private boolean isEnter;
+
     /**
      * 연관관계 메서드
      */

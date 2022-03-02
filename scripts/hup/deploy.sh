@@ -7,4 +7,4 @@ sudo docker rmi rlawjddn5980/hup-server
 sudo docker pull rlawjddn5980/hup-server
 
 # 도커 run
-sudo docker-compose up
+sudo docker-compose up -d
