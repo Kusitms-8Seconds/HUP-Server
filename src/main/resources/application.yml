@@ -51,6 +51,8 @@ spring:
     username: root
     password: root
     driver-class-name: org.mariadb.jdbc.Driver
+    initialize: true
+    initialization-mode: always
 
   jpa:
     hibernate:
