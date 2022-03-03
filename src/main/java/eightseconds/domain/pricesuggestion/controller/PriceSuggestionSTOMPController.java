@@ -23,6 +23,7 @@ public class PriceSuggestionSTOMPController {
     @Transactional
     public void priceSuggestion(PriceSuggestionRequest priceSuggestionRequest) throws Exception {
         PriceSuggestionResponse priceSuggestionResponse = priceSuggestionService.priceSuggestionItem(priceSuggestionRequest);
-        simpMessagingTemplate.convertAndSend("/sub/priceSuggestions/" + priceSuggestionResponse.getItemId(), priceSuggestionResponse);
+        simpMessagingTemplate.convertAndSend("/sub/priceSuggestions/" +
+                priceSuggestionResponse.getItemId(), priceSuggestionResponse);
     }
 }

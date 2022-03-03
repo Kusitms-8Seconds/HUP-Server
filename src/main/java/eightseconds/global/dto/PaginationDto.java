@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 
 @Getter
 @Builder
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class PaginationDto<T> {
 
     private int totalPage;
