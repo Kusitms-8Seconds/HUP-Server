@@ -6,6 +6,7 @@ import eightseconds.domain.pricesuggestion.service.PriceSuggestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,11 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class PriceSuggestionSTOMPController {
 
     private final PriceSuggestionService priceSuggestionService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/priceSuggestions")
-    @SendTo("/sub/priceSuggestions")
     @Transactional
-    public PriceSuggestionResponse priceSuggestion(PriceSuggestionRequest priceSuggestionRequest) throws Exception {
-        return priceSuggestionService.priceSuggestionItem(priceSuggestionRequest);
+    public void priceSuggestion(PriceSuggestionRequest priceSuggestionRequest) throws Exception {
+        PriceSuggestionResponse priceSuggestionResponse = priceSuggestionService.priceSuggestionItem(priceSuggestionRequest);
+        simpMessagingTemplate.convertAndSend("/sub/priceSuggestions/" + priceSuggestionResponse.getItemId(), priceSuggestionResponse);
     }
 }
