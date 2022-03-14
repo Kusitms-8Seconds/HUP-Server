@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class NotificationServiceImpl implements NotificationService{
         Notification notification = Notification.toEntityFromPriceSuggestion(priceSuggestion);
         notificationRepository.save(notification);
         firebaseCloudMessageService.sendMessageTo(notification.getTargetToken(),
-                notification.getENotificationCategory().getValue(), notification.getMessage());
+                notification.getENotificationCategory().getValue(), notification.getMessage(), LocalDateTime.now());
     }
 
     @Override
@@ -38,7 +39,7 @@ public class NotificationServiceImpl implements NotificationService{
         Notification notification = Notification.toEntityFromItem(item);
         notificationRepository.save(notification);
         firebaseCloudMessageService.sendMessageTo(notification.getTargetToken(),
-                notification.getENotificationCategory().getValue(), notification.getMessage());
+                notification.getENotificationCategory().getValue(), notification.getMessage(), LocalDateTime.now());
     }
 
     @Override

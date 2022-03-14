@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 grantedAuthorities);
     }
 
-    @Transactional()
+    @Transactional
     public Optional<User> getUserWithAuthorities(String loginId) { // loginId을 기준으로 정보를 가져옴
         return userRepository.findOneWithAuthoritiesByLoginId(loginId);
     }

@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Builder
 @AllArgsConstructor
 @Getter
@@ -25,6 +28,7 @@ public class FcmMessage {
     public static class Notification {
         private String title;
         private String body;
+        private LocalDateTime nowLocalDateTime;
         private String image;
     }
 }
