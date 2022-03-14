@@ -42,7 +42,7 @@ public class FirebaseCloudMessageService {
                         .notification(FcmMessage.Notification.builder()
                                 .title(title)
                                 .body(body)
-                                .createdDateTime(nowLocalDateTime)
+                                .nowLocalDateTime(nowLocalDateTime)
                                 .image("https://firebasestorage.googleapis.com/v0/b/auctionapp-f3805.appspot.com/o/HUPIcon.jpg?alt=media&token=32b7c5b5-59b4-400c-adb8-5994c153d4e3")
                                 .build()
                         ).build()).validateOnly(false).build();
