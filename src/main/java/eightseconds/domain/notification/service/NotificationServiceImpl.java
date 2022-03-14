@@ -31,7 +31,7 @@ public class NotificationServiceImpl implements NotificationService{
         Notification notification = Notification.toEntityFromPriceSuggestion(priceSuggestion);
         notificationRepository.save(notification);
         firebaseCloudMessageService.sendMessageTo(notification.getTargetToken(),
-                notification.getENotificationCategory().getValue(), notification.getMessage(), LocalDateTime.now());
+                notification.getENotificationCategory().getValue(), notification.getMessage(), notification.getCreatedDate());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class NotificationServiceImpl implements NotificationService{
         Notification notification = Notification.toEntityFromItem(item);
         notificationRepository.save(notification);
         firebaseCloudMessageService.sendMessageTo(notification.getTargetToken(),
-                notification.getENotificationCategory().getValue(), notification.getMessage(), LocalDateTime.now());
+                notification.getENotificationCategory().getValue(), notification.getMessage(), notification.getCreatedDate());
     }
 
     @Override
