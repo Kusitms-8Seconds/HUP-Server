@@ -14,8 +14,16 @@
 ## :mag_right: ItemPoster
 
  <p align="center"><img src="https://user-images.githubusercontent.com/61726631/149875042-4a0d2719-c8c3-48b9-905d-693234d99310.png"/><p>
+  
+## ⚙️ ERD
+  
+ <p align="center"><img src="https://user-images.githubusercontent.com/61726631/156703272-4727da13-cd08-4f80-a5f5-bcd6ab49c528.png"/><p>  
+  
+## 🛠 Back-End Architecture
+  
+ <p align="center"><img src="https://user-images.githubusercontent.com/61726631/156703353-11492745-0ff9-4d2b-9608-b518fda902bb.jpg"/><p>  
 
-## ⚙️ Back-End CI/CD
+## :rocket: Back-End CI/CD
   
  <p align="center"><img src="https://user-images.githubusercontent.com/61726631/154832711-fc4a02d6-6b44-4448-a451-b000eaf81bf5.jpg"/><p>
 
