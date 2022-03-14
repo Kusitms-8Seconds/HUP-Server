@@ -17,7 +17,7 @@ public interface PriceSuggestionRepository extends JpaRepository<PriceSuggestion
 
 
     @Query("SELECT p FROM PriceSuggestion p WHERE p.suggestionPrice = " +
-            "(SELECT max(p.suggestionPrice) FROM PriceSuggestion p where p.item.id = :itemId)")
+            "(SELECT max(p.suggestionPrice) FROM PriceSuggestion p where p.item.id = :itemId) and p.item.id = :itemId")
     Optional<PriceSuggestion> getMaximumPriceByItemId(@Param("itemId") Long itemId);
 
 
