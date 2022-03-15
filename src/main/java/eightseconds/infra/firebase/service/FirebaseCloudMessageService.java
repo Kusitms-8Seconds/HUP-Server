@@ -21,8 +21,8 @@ public class FirebaseCloudMessageService {
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/auctionapp-f3805/messages:send";
     private final ObjectMapper objectMapper;
 
-    public void sendMessageTo(String targetToken, String title, String body, LocalDateTime createdDate) throws IOException {
-        String message = makeMessage(targetToken, title, body, createdDate);
+    public void sendMessageTo(String targetToken, String title, String body) throws IOException {
+        String message = makeMessage(targetToken, title, body);
 
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
@@ -35,14 +35,13 @@ public class FirebaseCloudMessageService {
         Response response = client.newCall(request).execute();
     }
 
-    private String makeMessage(String targetToken, String title, String body, LocalDateTime createdDate) throws JsonProcessingException {
+    private String makeMessage(String targetToken, String title, String body) throws JsonProcessingException {
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
                         .notification(FcmMessage.Notification.builder()
                                 .title(title)
                                 .body(body)
-                                .createdDate(createdDate)
                                 .image("https://firebasestorage.googleapis.com/v0/b/auctionapp-f3805.appspot.com/o/HUPIcon.jpg?alt=media&token=32b7c5b5-59b4-400c-adb8-5994c153d4e3")
                                 .build()
                         ).build()).validateOnly(false).build();
