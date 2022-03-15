@@ -28,7 +28,6 @@ public class FcmMessage {
     public static class Notification {
         private String title;
         private String body;
-        private LocalDateTime createdDate;
         private String image;
     }
 }
