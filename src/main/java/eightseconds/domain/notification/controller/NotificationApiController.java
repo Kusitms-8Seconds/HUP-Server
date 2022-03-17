@@ -30,11 +30,4 @@ public class NotificationApiController {
     public ResponseEntity<EntityModel<PaginationDto<List<NotificationListResponse>>>> getAllNotifications(@PageableDefault Pageable pageable, @PathVariable Long userId) {
         return ResponseEntity.ok(EntityModel.of(notificationService.getAllNotifications(pageable, userId)));
     }
-
-    @ApiOperation(value = "해당 알림의 상세한 정보 조회", notes = "해당 알림의 상세한 정보를 조회합니다.")
-    @GetMapping("/{notificationId}")
-    public ResponseEntity<EntityModel<PaginationDto<List<NotificationListResponse>>>> getNotification(@PageableDefault Pageable pageable, @PathVariable Long userId) {
-        return ResponseEntity.ok(EntityModel.of(notificationService.getAllNotifications(pageable, userId)));
-    }
-
 }

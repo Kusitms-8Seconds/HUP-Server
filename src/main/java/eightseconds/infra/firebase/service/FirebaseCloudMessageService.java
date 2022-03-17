@@ -7,18 +7,23 @@ import com.google.common.net.HttpHeaders;
 import eightseconds.infra.firebase.vo.FcmMessage;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class FirebaseCloudMessageService {
 
-    private final String API_URL = "https://fcm.googleapis.com/v1/projects/auctionapp-f3805/messages:send";
+    @Value("${firebase.api.url}")
+    private final String API_URL;
+    @Value("${firebase.image.api.url}")
+    private final String IMAGE_API_URL;
+    @Value("${firebase.google.credentials.api.url}")
+    private final String GOOGLE_CREDENTIALS_API_URL;
     private final ObjectMapper objectMapper;
 
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
@@ -42,7 +47,7 @@ public class FirebaseCloudMessageService {
                         .notification(FcmMessage.Notification.builder()
                                 .title(title)
                                 .body(body)
-                                .image("https://firebasestorage.googleapis.com/v0/b/auctionapp-f3805.appspot.com/o/HUPIcon.jpg?alt=media&token=32b7c5b5-59b4-400c-adb8-5994c153d4e3")
+                                .image(IMAGE_API_URL)
                                 .build()
                         ).build()).validateOnly(false).build();
         return objectMapper.writeValueAsString(fcmMessage);
@@ -52,7 +57,7 @@ public class FirebaseCloudMessageService {
         String firebaseConfigPath = "firebase/firebase_service_key.json";
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
-                .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
+                .createScoped(List.of(GOOGLE_CREDENTIALS_API_URL));
         googleCredentials.refreshIfExpired();
         return googleCredentials.getAccessToken().getTokenValue();
     }

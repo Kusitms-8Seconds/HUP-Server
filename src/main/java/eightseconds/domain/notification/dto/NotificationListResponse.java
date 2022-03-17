@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -18,16 +20,17 @@ public class NotificationListResponse {
     private Long userId;
     private String message;
     private String eNotificationCategory;
+    private LocalDateTime createdDate;
 
     public static NotificationListResponse from(Notification notification) {
         User user = notification.getUser();
-
         return NotificationListResponse.builder()
                 .id(notification.getId())
                 .username(user.getUsername())
                 .userId(user.getId())
                 .message(notification.getMessage())
                 .eNotificationCategory(notification.getENotificationCategory().getValue())
+                .createdDate(notification.getCreatedDate())
                 .build();
     }
 }
