@@ -67,6 +67,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'com.google.firebase:firebase-admin:6.8.1'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
 }
 
 test {
