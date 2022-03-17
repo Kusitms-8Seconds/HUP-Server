@@ -95,6 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/priceSuggestions/participants/**").permitAll()
                 .antMatchers("/api/v1/scraps/hearts/**").permitAll()
                 .antMatchers("/api/v1/items/statuses/**").permitAll()
+                .antMatchers("/api/v1/items/categories/**").permitAll()
                 .antMatchers("/api/fcm").permitAll()
                 .anyRequest().authenticated()
                 .and()
