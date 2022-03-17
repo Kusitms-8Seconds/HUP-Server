@@ -8,6 +8,7 @@ import eightseconds.infra.firebase.vo.FcmMessage;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +17,15 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@PropertySource("classpath:application-firebase.properties")
 public class FirebaseCloudMessageService {
 
     @Value("${firebase.api.url}")
-    private final String API_URL;
+    private String API_URL;
     @Value("${firebase.image.api.url}")
-    private final String IMAGE_API_URL;
+    private String IMAGE_API_URL;
     @Value("${firebase.google.credentials.api.url}")
-    private final String GOOGLE_CREDENTIALS_API_URL;
+    private String GOOGLE_CREDENTIALS_API_URL;
     private final ObjectMapper objectMapper;
 
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
