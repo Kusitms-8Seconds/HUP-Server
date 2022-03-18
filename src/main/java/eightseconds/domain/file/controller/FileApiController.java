@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,8 @@ import java.util.List;
 public class FileApiController {
 
     private final FileService fileService;
+    @Value("${resources.location}")
+    private String path;
 
     @ApiOperation(value = "이미지 파일 생성", notes = "이미지 파일 등록을 합니다.")
     @PostMapping
@@ -41,7 +44,7 @@ public class FileApiController {
 //        try (InputStream imageStream = new FileInputStream(System.getProperty(FileConstants.EFileApiController.eBaseDir.getValue()) +
 //                FileConstants.EFileApiController.eImagesDir.getValue() + name))
 
-        try (InputStream imageStream = new FileInputStream(System.getProperty("user.home") + "hup/images/" + name))
+        try (InputStream imageStream = new FileInputStream(path + name))
         {
             return new ResponseEntity<byte[]>(IOUtils.toByteArray(imageStream), HttpStatus.OK);
         } catch (IOException e) {
