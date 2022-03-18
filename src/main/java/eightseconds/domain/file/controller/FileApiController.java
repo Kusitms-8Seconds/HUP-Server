@@ -27,8 +27,6 @@ import java.util.List;
 public class FileApiController {
 
     private final FileService fileService;
-    @Value("${resources.location}")
-    private String path;
 
     @ApiOperation(value = "이미지 파일 생성", notes = "이미지 파일 등록을 합니다.")
     @PostMapping
