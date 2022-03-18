@@ -24,8 +24,6 @@ import java.util.UUID;
 public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
-    @Value("${resources.location}")
-    private String path;
 
     @Transactional
     public List<MyFile> saveMultipleFiles(List<MultipartFile> files) throws IOException {
@@ -34,9 +32,8 @@ public class FileServiceImpl implements FileService {
                 validateFile(file);
                 String originFilename = file.getOriginalFilename();
                 String extension = FilenameUtils.getExtension(Objects.requireNonNull(originFilename)).toLowerCase();
-//                String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) +
-//                        EFileServiceImpl.eImagesDir.getValue();
-                //String path = System.getProperty("user.home")+"/hup/images/";
+                String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) +
+                        EFileServiceImpl.eImagesDir.getValue();
                 File saveFile;
                 String fileName;
                 do {
@@ -60,9 +57,8 @@ public class FileServiceImpl implements FileService {
             validateFile(file);
             String originFilename = file.getOriginalFilename();
             String extension = FilenameUtils.getExtension(Objects.requireNonNull(originFilename)).toLowerCase();
-//            String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) +
-//                    EFileServiceImpl.eImagesDir.getValue();
-            //String path = System.getProperty("user.home")+"/hup/images/";
+            String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) +
+                    EFileServiceImpl.eImagesDir.getValue();
             File saveFile;
             String fileName;
             do {

@@ -48,9 +48,6 @@
 #  encryptor:
 #    bean: jasyptStringEncryptor
 #
-#resources:
-#  location: /C:/Users/KIMJUNGWOO/Desktop/JUNGWOO/tempimages/
-#  uri_path: /api/v1/files
 
 # 운영용
 spring:
@@ -99,9 +96,6 @@ jasypt:
   encryptor:
     bean: jasyptStringEncryptor
 
-resources:
-  location: /home/ec2-user/hup/images/
-#  uri_path: /api/v1/files
 
 
 
