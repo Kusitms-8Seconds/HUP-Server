@@ -38,8 +38,10 @@ public class FileApiController {
     @GetMapping(value = "{name}", produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
     public ResponseEntity<byte[]> getFile(@PathVariable String name) {
-        try (InputStream imageStream = new FileInputStream(System.getProperty(FileConstants.EFileApiController.eBaseDir.getValue()) +
-                FileConstants.EFileApiController.eImagesDir.getValue() + name))
+//        try (InputStream imageStream = new FileInputStream(System.getProperty(FileConstants.EFileApiController.eBaseDir.getValue()) +
+//                FileConstants.EFileApiController.eImagesDir.getValue() + name))
+
+        try (InputStream imageStream = new FileInputStream("/home/ec2-user/hup/images/" + name))
         {
             return new ResponseEntity<byte[]>(IOUtils.toByteArray(imageStream), HttpStatus.OK);
         } catch (IOException e) {
