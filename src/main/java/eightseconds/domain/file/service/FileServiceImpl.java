@@ -32,7 +32,7 @@ public class FileServiceImpl implements FileService {
                 String extension = FilenameUtils.getExtension(Objects.requireNonNull(originFilename)).toLowerCase();
 //                String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) +
 //                        EFileServiceImpl.eImagesDir.getValue();
-                String path = "/home/ec2-user/hup/images/";
+                String path = System.getProperty("user.home") + "hup/images/";
                 File saveFile;
                 String fileName;
                 do {
@@ -58,7 +58,7 @@ public class FileServiceImpl implements FileService {
             String extension = FilenameUtils.getExtension(Objects.requireNonNull(originFilename)).toLowerCase();
 //            String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) +
 //                    EFileServiceImpl.eImagesDir.getValue();
-            String path = "/home/ec2-user/hup/images/";
+            String path = System.getProperty("user.home") + "hup/images/";
             File saveFile;
             String fileName;
             do {
