@@ -6,6 +6,8 @@ import eightseconds.domain.file.repository.FileRepository;
 import eightseconds.domain.file.constant.FileConstants.EFileServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +24,8 @@ import java.util.UUID;
 public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
+    @Value("${resources.location}")
+    private String path;
 
     @Transactional
     public List<MyFile> saveMultipleFiles(List<MultipartFile> files) throws IOException {
@@ -32,7 +36,7 @@ public class FileServiceImpl implements FileService {
                 String extension = FilenameUtils.getExtension(Objects.requireNonNull(originFilename)).toLowerCase();
 //                String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) +
 //                        EFileServiceImpl.eImagesDir.getValue();
-                String path = System.getProperty("user.home") + "hup/images/";
+                //String path = System.getProperty("user.home")+"/hup/images/";
                 File saveFile;
                 String fileName;
                 do {
@@ -58,7 +62,7 @@ public class FileServiceImpl implements FileService {
             String extension = FilenameUtils.getExtension(Objects.requireNonNull(originFilename)).toLowerCase();
 //            String path = System.getProperty(EFileServiceImpl.eBaseDir.getValue()) +
 //                    EFileServiceImpl.eImagesDir.getValue();
-            String path = System.getProperty("user.home") + "hup/images/";
+            //String path = System.getProperty("user.home")+"/hup/images/";
             File saveFile;
             String fileName;
             do {
