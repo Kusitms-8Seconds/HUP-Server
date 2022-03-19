@@ -74,7 +74,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         Long userId = isEnterChatRoomRequest.getUserId();
         Long chatRoomId = isEnterChatRoomRequest.getChatRoomId();
         UserChatRoom userChatRoom = validateUserIdAndChatRoomId(userId, chatRoomId);
-        if(userChatRoom.isEnter()) return CheckEntryResponse.from(true);
+        if(userChatRoom.isEntryCheck()) return CheckEntryResponse.from(true);
         else return CheckEntryResponse.from(false);
     }
 
@@ -113,7 +113,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     }
 
     public void validateAlreadyEnter(Long userId, Long chatRoomId) {
-        if(userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).get().isEnter()){
+        if(userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).get().isEntryCheck()){
             throw new AlreadyEnterException(EChatRoomServiceImpl.eAlreadyEnterExceptionMessage.getValue());
         }
     }
