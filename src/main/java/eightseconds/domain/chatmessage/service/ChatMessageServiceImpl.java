@@ -59,7 +59,7 @@ public class ChatMessageServiceImpl implements ChatMessageService{
         ChatRoom chatRoom = chatRoomService.getChatRoomByChatId(chatRoomId);
         UserChatRoom userChatRoom = chatRoomService.validateIsEnter(userId, chatRoomId);
         chatRoomService.validateAlreadyEnter(userId, chatRoomId);
-        userChatRoom.setEnter(true);
+        userChatRoom.setEntryCheck(true);
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setMessage(user.getUsername()+EChatMessageServiceImpl.eChatRoomEnterMessage.getValue());
         chatMessage.setUser(user);
