@@ -55,8 +55,6 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         validatePriceSuggestionPrice(itemId, suggestionPrice);
         validateRegisteredItemByUser(item.getUser().getId(), userId);
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getByUserIdAndItemId(userId, itemId);
-        int maximumPrice = getMaximumPrice(itemId).getMaximumPrice();
-        int participants = getParticipants(itemId).getParticipantsCount();
         ItemConstants.EItemSoldStatus soldStatus = itemService.getItem(itemId).getSoldStatus();
         if(!priceSuggestion.isEmpty()){
             validatePrice(priceSuggestion.get().getSuggestionPrice(), suggestionPrice);
@@ -66,6 +64,9 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         else{ PriceSuggestion entity = PriceSuggestion.toEntity(user, item, suggestionPrice);
             priceSuggestionRepository.save(entity);
             resultPriceSuggestion = entity; }
+
+        int maximumPrice = getMaximumPrice(itemId).getMaximumPrice();
+        int participants = getParticipants(itemId).getParticipantsCount();
 
         return PriceSuggestionResponse.from(item, user, resultPriceSuggestion, maximumPrice, participants, soldStatus);
     }
