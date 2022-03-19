@@ -1,9 +1,8 @@
 package eightseconds.domain.chatroom.controller;
 
-import eightseconds.domain.chatroom.dto.ChatRoomResponse;
-import eightseconds.domain.chatroom.dto.IsEnterChatRoomRequest;
-import eightseconds.domain.chatroom.dto.IsEnterChatRoomResponse;
+import eightseconds.domain.chatroom.dto.*;
 import eightseconds.domain.chatroom.service.ChatRoomService;
+import eightseconds.global.dto.DefaultResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +26,14 @@ public class ChatRoomApiController {
     }
 
     @ApiOperation(value = "해당 유저의 채팅방 입장여부 조회", notes = "해당 유저의 채팅방 입장여부를 조회합니다.")
-    @PostMapping("/isEnter")
-    public ResponseEntity<IsEnterChatRoomResponse> isEnter(@RequestBody IsEnterChatRoomRequest isEnterChatRoomRequest) {
-        return ResponseEntity.ok(chatRoomService.isEnter(isEnterChatRoomRequest));
+    @PostMapping("/entry")
+    public ResponseEntity<CheckEntryResponse> checkEntry(@RequestBody CheckEntryRequest checkEntryRequest) {
+        return ResponseEntity.ok(chatRoomService.checkEntry(checkEntryRequest));
     }
 
+    @ApiOperation(value = "채팅방 나가기", notes = "해당 유저의 채팅방을 삭제합니다.")
+    @DeleteMapping("/out")
+    public ResponseEntity<DefaultResponse> deleteChatRoom(@RequestBody DeleteChatRoomRequest deleteChatRoomRequest) {
+        return ResponseEntity.ok(chatRoomService.deleteChatRoom(deleteChatRoomRequest));
+    }
 }

@@ -17,5 +17,4 @@ public class DefaultResponse {
     public static DefaultResponse from(String message) {
         return new DefaultResponse(message);
     }
-
 }
