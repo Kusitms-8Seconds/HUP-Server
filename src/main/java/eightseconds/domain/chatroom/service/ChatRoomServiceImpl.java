@@ -1,10 +1,10 @@
 package eightseconds.domain.chatroom.service;
 
-import eightseconds.domain.chatmessage.dto.ChatMessageRequest;
 import eightseconds.domain.chatroom.constant.ChatRoomConstants.EChatRoomServiceImpl;
 import eightseconds.domain.chatroom.dto.ChatRoomResponse;
-import eightseconds.domain.chatroom.dto.IsEnterChatRoomRequest;
-import eightseconds.domain.chatroom.dto.IsEnterChatRoomResponse;
+import eightseconds.domain.chatroom.dto.CheckEntryRequest;
+import eightseconds.domain.chatroom.dto.CheckEntryResponse;
+import eightseconds.domain.chatroom.dto.DeleteChatRoomRequest;
 import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.chatroom.entity.UserChatRoom;
 import eightseconds.domain.chatroom.exception.AlreadyEnterException;
@@ -16,11 +16,11 @@ import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
+import eightseconds.global.dto.DefaultResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.rmi.AlreadyBoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +36,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     public List<ChatRoomResponse> getAllChatRooms(Long userId) {
         User user = userService.getUserByUserId(userId);
         List<UserChatRoom> listUserChatRoom = userChatRoomRepository.findAllByUser(user);
+        validateUserChatRoomCountIsZero(listUserChatRoom);
         List<ChatRoomResponse> chatRoomResponses = new ArrayList<>();
         for (UserChatRoom userChatRoom : listUserChatRoom) {
             Long id = userChatRoom.getChatRoom().getId();
@@ -69,18 +70,33 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     }
 
     @Override
-    public IsEnterChatRoomResponse isEnter(IsEnterChatRoomRequest isEnterChatRoomRequest) {
+    public CheckEntryResponse checkEntry(CheckEntryRequest isEnterChatRoomRequest) {
         Long userId = isEnterChatRoomRequest.getUserId();
         Long chatRoomId = isEnterChatRoomRequest.getChatRoomId();
-        UserChatRoom userChatRoom = validateIsEnter(userId, chatRoomId);
-        if(userChatRoom.isEnter()) return IsEnterChatRoomResponse.from(true);
-        else return IsEnterChatRoomResponse.from(false);
+        UserChatRoom userChatRoom = validateUserIdAndChatRoomId(userId, chatRoomId);
+        if(userChatRoom.isEnter()) return CheckEntryResponse.from(true);
+        else return CheckEntryResponse.from(false);
+    }
+
+    @Override
+    @Transactional
+    public DefaultResponse deleteChatRoom(DeleteChatRoomRequest deleteChatRoomRequest) {
+        User user = userService.getUserByUserId(deleteChatRoomRequest.getUserId());
+        ChatRoom chatRoom = getChatRoomByChatId(deleteChatRoomRequest.getChatRoomId());
+        UserChatRoom userChatRoomByUserIdAndChatRoomId = getUserChatRoomByUserIdAndChatRoomId(user.getId(), chatRoom.getId());
+        userChatRoomRepository.delete(userChatRoomByUserIdAndChatRoomId);
+        return DefaultResponse.from(EChatRoomServiceImpl.eOutUserChatRoomMessage.getValue());
+    }
+
+    public UserChatRoom getUserChatRoomByUserIdAndChatRoomId(Long userId, Long chatRoomId) {
+        return validateUserIdAndChatRoomId(userId, chatRoomId);
     }
 
 
     /**
      * validate
      */
+
     private ChatRoom validateChatId(Long chatId) {
         return chatRoomRepository.findById(chatId).orElseThrow(() ->
                 new NotFoundChatRoomException(EChatRoomServiceImpl.eNotFoundChatRoomExceptionMessage.getValue()));
@@ -91,10 +107,20 @@ public class ChatRoomServiceImpl implements ChatRoomService{
                 new NotFoundUserChatRoomException(EChatRoomServiceImpl.eNotFoundUserChatRoomExceptionMessage.getValue()));
     }
 
+    public UserChatRoom validateUserIdAndChatRoomId(Long userId, Long chatRoomId) {
+        return userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).orElseThrow(() ->
+                new NotFoundUserChatRoomException(EChatRoomServiceImpl.eNotFoundUserChatRoomExceptionMessage.getValue()));
+    }
+
     public void validateAlreadyEnter(Long userId, Long chatRoomId) {
         if(userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).get().isEnter()){
             throw new AlreadyEnterException(EChatRoomServiceImpl.eAlreadyEnterExceptionMessage.getValue());
         }
+    }
+
+    private void validateUserChatRoomCountIsZero(List<UserChatRoom> listUserChatRoom) {
+        if (listUserChatRoom.size() == 0) {
+            throw new NotFoundUserChatRoomException(EChatRoomServiceImpl.eNotFoundUserChatRoomExceptionMessage.getValue());}
     }
 
 }
