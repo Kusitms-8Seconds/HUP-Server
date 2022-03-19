@@ -102,26 +102,8 @@ public class User extends BaseTimeEntity {
     public void getAuthority(Long id){
         for (Iterator<Authority> itr = authorities.iterator(); itr.hasNext();) {
             Authority authority = itr.next();
-            //if(id = authority.get)
         }
     }
-
-//    // 연관관계 메서드
-//    public void addAuthorities(){
-//        this.authorities
-//    }
-
-//    @Builder
-//    public User(String loginId, String email, String username,
-//                String password, String phoneNumber, Set<Authority> authorities) {
-//        this.loginId = loginId;
-//        this.email = email;
-//        this.username = username;
-//        this.password = password;
-//        this.phoneNumber = phoneNumber;
-//        this.description = description;
-//    }
-
 
 
     // Google Builder
