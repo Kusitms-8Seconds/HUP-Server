@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 @Controller
-@RestController
 @RequiredArgsConstructor
 public class PriceSuggestionSTOMPController {
 
