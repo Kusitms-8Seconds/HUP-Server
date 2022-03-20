@@ -30,10 +30,4 @@ public class ChatRoomApiController {
     public ResponseEntity<CheckEntryResponse> checkEntry(@RequestBody CheckEntryRequest checkEntryRequest) {
         return ResponseEntity.ok(chatRoomService.checkEntry(checkEntryRequest));
     }
-
-    @ApiOperation(value = "채팅방 나가기", notes = "해당 유저의 채팅방을 삭제합니다.")
-    @DeleteMapping("/out")
-    public ResponseEntity<DefaultResponse> deleteChatRoom(@RequestBody DeleteChatRoomRequest deleteChatRoomRequest) {
-        return ResponseEntity.ok(chatRoomService.deleteChatRoom(deleteChatRoomRequest));
-    }
 }

@@ -85,7 +85,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         ChatRoom chatRoom = getChatRoomByChatId(deleteChatRoomRequest.getChatRoomId());
         UserChatRoom userChatRoomByUserIdAndChatRoomId = getUserChatRoomByUserIdAndChatRoomId(user.getId(), chatRoom.getId());
         userChatRoomRepository.delete(userChatRoomByUserIdAndChatRoomId);
-        return DefaultResponse.from(EChatRoomServiceImpl.eOutUserChatRoomMessage.getValue());
+        return DefaultResponse.from(user.getUsername() + EChatRoomServiceImpl.eOutUserChatRoomMessage.getValue());
     }
 
     public UserChatRoom getUserChatRoomByUserIdAndChatRoomId(Long userId, Long chatRoomId) {
