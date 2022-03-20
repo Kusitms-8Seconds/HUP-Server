@@ -30,7 +30,7 @@ public class NotificationListResponse {
                 .userId(user.getId())
                 .message(notification.getMessage())
                 .eNotificationCategory(notification.getENotificationCategory().getValue())
-                .createdDate(notification.getCreatedDate())
+                .createdDate(notification.getCreatedDate().withNano(0))
                 .build();
     }
 }
