@@ -1,14 +1,13 @@
 package eightseconds.domain.chatroom.service;
 
+import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
 import eightseconds.domain.chatroom.dto.ChatRoomResponse;
 import eightseconds.domain.chatroom.dto.CheckEntryRequest;
 import eightseconds.domain.chatroom.dto.CheckEntryResponse;
-import eightseconds.domain.chatroom.dto.DeleteChatRoomRequest;
 import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.chatroom.entity.UserChatRoom;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
-import eightseconds.global.dto.DefaultResponse;
 
 import java.util.List;
 
@@ -20,6 +19,7 @@ public interface ChatRoomService {
     CheckEntryResponse checkEntry(CheckEntryRequest isEnterChatRoomRequest);
     UserChatRoom validateIsEnter(Long userId, Long chatRoomId);
     void validateAlreadyEnter(Long userId, Long chatRoomId);
-    DefaultResponse deleteChatRoom(DeleteChatRoomRequest deleteChatRoomRequest);
+    void deleteChatRoom(UserChatRoom deleteChatRoomRequest);
+    UserChatRoom getUserChatRoomByUserIdAndChatRoomId(Long id, Long id1);
 
 }

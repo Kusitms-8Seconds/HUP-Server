@@ -56,19 +56,16 @@ spring:
     username: ENC(/lVE+C9aOThU0R+5svbX4w==)
     password: ENC(JzeeGqZ3GE8GTOFeoiTTmg==)
     driver-class-name: org.mariadb.jdbc.Driver
-    initialize: true
-    initialization-mode: always
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         #default_batch_fetch_size: 100
     #open-in-view: false
-    defer-datasource-initialization: true
 
   data:
     web:

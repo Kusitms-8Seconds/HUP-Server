@@ -1,5 +1,8 @@
 package eightseconds.domain.chatroom.service;
 
+import eightseconds.domain.chatmessage.dto.ChatMessageRequest;
+import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
+import eightseconds.domain.chatmessage.service.ChatMessageService;
 import eightseconds.domain.chatroom.constant.ChatRoomConstants.EChatRoomServiceImpl;
 import eightseconds.domain.chatroom.dto.ChatRoomResponse;
 import eightseconds.domain.chatroom.dto.CheckEntryRequest;
@@ -48,6 +51,10 @@ public class ChatRoomServiceImpl implements ChatRoomService{
                 return chatRoomResponses;
     }
 
+    public UserChatRoom getUserChatRoomByUserIdAndChatRoomId(Long userId, Long chatRoomId) {
+        return validateUserIdAndChatRoomId(userId, chatRoomId);
+    }
+
     @Override
     public ChatRoom getChatRoomByChatId(Long chatId) {
         return validateChatId(chatId);
@@ -79,19 +86,9 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     }
 
     @Override
-    @Transactional
-    public DefaultResponse deleteChatRoom(DeleteChatRoomRequest deleteChatRoomRequest) {
-        User user = userService.getUserByUserId(deleteChatRoomRequest.getUserId());
-        ChatRoom chatRoom = getChatRoomByChatId(deleteChatRoomRequest.getChatRoomId());
-        UserChatRoom userChatRoomByUserIdAndChatRoomId = getUserChatRoomByUserIdAndChatRoomId(user.getId(), chatRoom.getId());
-        userChatRoomRepository.delete(userChatRoomByUserIdAndChatRoomId);
-        return DefaultResponse.from(user.getUsername() + EChatRoomServiceImpl.eOutUserChatRoomMessage.getValue());
+    public void deleteChatRoom(UserChatRoom userChatRoom) {
+        userChatRoomRepository.delete(userChatRoom);
     }
-
-    public UserChatRoom getUserChatRoomByUserIdAndChatRoomId(Long userId, Long chatRoomId) {
-        return validateUserIdAndChatRoomId(userId, chatRoomId);
-    }
-
 
     /**
      * validate

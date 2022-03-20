@@ -12,11 +12,11 @@ import lombok.Getter;
 @ApiModel(description = "해당 유저의 채팅방 입장 여부 조회 응답 객체")
 public class CheckEntryResponse {
 
-    private boolean isEnter;
+    private boolean checkEntry;
 
-    public static CheckEntryResponse from(boolean isEnter) {
+    public static CheckEntryResponse from(boolean checkEntry) {
         return CheckEntryResponse.builder()
-                .isEnter(isEnter)
+                .checkEntry(checkEntry)
                 .build();
     }
 }
