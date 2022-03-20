@@ -1,5 +1,7 @@
 package eightseconds.domain.chatroom.controller;
 
+import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
+import eightseconds.domain.chatmessage.service.ChatMessageService;
 import eightseconds.domain.chatroom.dto.*;
 import eightseconds.domain.chatroom.service.ChatRoomService;
 import eightseconds.global.dto.DefaultResponse;
@@ -18,6 +20,7 @@ import java.util.List;
 public class ChatRoomApiController {
 
     private final ChatRoomService chatRoomService;
+    private final ChatMessageService chatMessageService;
 
     @ApiOperation(value = "유저의 모든 채팅방 조회", notes = "유저의 모든 채팅방을 조회합니다.")
     @GetMapping("/{id}")
@@ -29,5 +32,11 @@ public class ChatRoomApiController {
     @PostMapping("/entry")
     public ResponseEntity<CheckEntryResponse> checkEntry(@RequestBody CheckEntryRequest checkEntryRequest) {
         return ResponseEntity.ok(chatRoomService.checkEntry(checkEntryRequest));
+    }
+
+    @ApiOperation(value = "채팅방 나가기", notes = "해당 유저의 채팅방을 삭제합니다.")
+    @DeleteMapping("/out")
+    public ResponseEntity<ChatMessageResponse> deleteChatRoom(@RequestBody DeleteChatRoomRequest deleteChatRoomRequest) {
+        return ResponseEntity.ok(chatMessageService.deleteChatRoom(deleteChatRoomRequest));
     }
 }

@@ -5,6 +5,8 @@ import eightseconds.domain.chatmessage.dto.ChatMessageRequest;
 import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
 import eightseconds.domain.chatmessage.entity.ChatMessage;
 import eightseconds.domain.chatmessage.respoistory.ChatMessageRepository;
+import eightseconds.domain.chatroom.constant.ChatRoomConstants;
+import eightseconds.domain.chatroom.dto.DeleteChatRoomRequest;
 import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.chatroom.entity.UserChatRoom;
 import eightseconds.domain.chatroom.service.ChatRoomService;
@@ -17,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.rmi.AlreadyBoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,5 +68,16 @@ public class ChatMessageServiceImpl implements ChatMessageService{
         chatMessageRepository.save(chatMessage);
         return ChatMessageResponse.from(chatMessage);
     }
+
+    @Override
+    @Transactional
+    public ChatMessageResponse deleteChatRoom(DeleteChatRoomRequest deleteChatRoomRequest) {
+        User user = userService.getUserByUserId(deleteChatRoomRequest.getUserId());
+        ChatRoom chatRoom = chatRoomService.getChatRoomByChatId(deleteChatRoomRequest.getChatRoomId());
+        UserChatRoom userChatRoom = chatRoomService.getUserChatRoomByUserIdAndChatRoomId(user.getId(), chatRoom.getId());
+        chatRoomService.deleteChatRoom(userChatRoom);
+        return createSendMessage(ChatMessageRequest.of(chatRoom.getId(), user.getId(), user.getUsername() + ChatRoomConstants.EChatRoomServiceImpl.eOutUserChatRoomMessage.getValue()));
+    }
+
 
 }

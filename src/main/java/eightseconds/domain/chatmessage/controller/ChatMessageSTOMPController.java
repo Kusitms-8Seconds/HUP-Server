@@ -3,6 +3,7 @@ package eightseconds.domain.chatmessage.controller;
 import eightseconds.domain.chatmessage.dto.ChatMessageRequest;
 import eightseconds.domain.chatmessage.dto.ChatMessageResponse;
 import eightseconds.domain.chatmessage.service.ChatMessageService;
+import eightseconds.domain.chatroom.dto.DeleteChatRoomRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -26,5 +27,11 @@ public class ChatMessageSTOMPController {
     public void sendMessageToChatRoom(ChatMessageRequest chatMessageRequest){
         ChatMessageResponse chatMessageResponse = chatMessageService.createSendMessage(chatMessageRequest);
         simpMessagingTemplate.convertAndSend("/sub/chatRoom/" + chatMessageRequest.getChatRoomId(), chatMessageResponse);
+    }
+
+    @MessageMapping(value = "/chatRoom/out")
+    public void outChatRoom(DeleteChatRoomRequest deleteChatRoomRequest){
+        ChatMessageResponse chatMessageResponse = chatMessageService.deleteChatRoom(deleteChatRoomRequest);
+        simpMessagingTemplate.convertAndSend("/sub/chatRoom/" + deleteChatRoomRequest.getChatRoomId(), chatMessageResponse);
     }
 }

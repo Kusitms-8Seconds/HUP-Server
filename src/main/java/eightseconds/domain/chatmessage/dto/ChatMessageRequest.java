@@ -26,4 +26,14 @@ public class ChatMessageRequest {
     @NotNull(message = "보내고자 하는 메세지를 입력해주세요.")
     @ApiModelProperty(notes = "메세지를 입력해주세요.")
     private String message;
+
+    public static ChatMessageRequest of(Long chatRoomId, Long userId, String message) {
+        return ChatMessageRequest.builder()
+                .chatRoomId(chatRoomId)
+                .userId(userId)
+                .message(message)
+                .build();
+    }
+
+
 }
