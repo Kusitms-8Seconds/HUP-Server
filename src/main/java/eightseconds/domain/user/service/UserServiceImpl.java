@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
@@ -140,7 +141,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return validateUserId(userId);
     }
 
-    public ReissueResponse reissueToken(ReissueRequest reissue) {
+    public ReissueResponse reissueToken(ReissueRequest reissue) throws Exception {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(reissue.getRefreshToken())) {
             throw new NotValidRefreshTokenException(EUserServiceImpl.eNotValidRefreshTokenExceptionMessage.getValue());}
@@ -149,7 +150,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Authentication authentication = tokenProvider.getAuthentication(reissue.getAccessToken());
 
         // 3. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
-        String refreshToken = (String)redisTemplate.opsForValue().get(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName());
+        String refreshToken = (String) redisTemplate.opsForValue().get(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName());
         // (추가) 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
         if(ObjectUtils.isEmpty(refreshToken)) {
             throw new WrongRefreshTokenRequestException(EUserServiceImpl.eWrongRefreshTokenRequestExceptionMessage.getValue());
@@ -171,7 +172,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Transactional
-    public DefaultResponse logout(LogoutRequest logoutRequest) {
+    public DefaultResponse logout(LogoutRequest logoutRequest) throws Exception {
         // 1. Access Token 검증
         if (!tokenProvider.validateToken(logoutRequest.getAccessToken())) {
             throw new NotValidAccessTokenException(EUserServiceImpl.eNotValidAccessTokenExceptionMessage.getValue());
