@@ -28,7 +28,11 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
                 if (StringUtils.hasText(jwt) && jwt.startsWith("[Bearer")) {
                     jwt = jwt.substring(8, jwt.length()-1);
                 }
-            tokenProvider.validateToken(jwt);
+            try {
+                tokenProvider.validateToken(jwt);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return message;
         }
         return message;

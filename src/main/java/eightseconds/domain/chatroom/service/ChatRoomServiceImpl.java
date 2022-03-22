@@ -42,10 +42,8 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         validateUserChatRoomCountIsZero(listUserChatRoom);
         List<ChatRoomResponse> chatRoomResponses = new ArrayList<>();
         for (UserChatRoom userChatRoom : listUserChatRoom) {
-            System.out.println("userChatRoomSize" + listUserChatRoom.size());
-            chatRoomResponses.add(ChatRoomResponse.from(userChatRoom));
-        }
-                return chatRoomResponses;
+            chatRoomResponses.add(ChatRoomResponse.from(userChatRoom));}
+        return chatRoomResponses;
     }
 
     public UserChatRoom getUserChatRoomByUserIdAndChatRoomId(Long userId, Long chatRoomId) {

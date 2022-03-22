@@ -63,7 +63,7 @@ public class UserApiController {
 
     @ApiOperation(value = "로그아웃", notes = "사용자 로그아웃을 합니다.")
     @PostMapping("/logout")
-    public ResponseEntity<EntityModel<DefaultResponse>> logoutUser(@Valid @RequestBody LogoutRequest logoutRequest) {
+    public ResponseEntity<EntityModel<DefaultResponse>> logoutUser(@Valid @RequestBody LogoutRequest logoutRequest) throws Exception {
         DefaultResponse defaultResponse = userService.logout(logoutRequest);
         return ResponseEntity.ok(EntityModel.of(defaultResponse)
                 .add(linkTo(methodOn(this.getClass()).logoutUser(logoutRequest)).withSelfRel()));
@@ -71,7 +71,7 @@ public class UserApiController {
 
     @ApiOperation(value = "토큰 재발급", notes = "토큰 재발급을 합니다.")
     @PostMapping("/reissue")
-    public ResponseEntity<EntityModel<ReissueResponse>> reissueToken(@Valid @RequestBody ReissueRequest reissueRequest) {
+    public ResponseEntity<EntityModel<ReissueResponse>> reissueToken(@Valid @RequestBody ReissueRequest reissueRequest) throws Exception {
         ReissueResponse reissueResponse = userService.reissueToken(reissueRequest);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + reissueResponse.getAccessToken());

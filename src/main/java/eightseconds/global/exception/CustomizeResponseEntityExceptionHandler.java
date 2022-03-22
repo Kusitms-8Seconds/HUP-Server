@@ -14,6 +14,7 @@ import eightseconds.domain.user.exception.*;
 import eightseconds.global.dto.ExceptionResponse;
 import eightseconds.infra.email.exception.ExpiredAuthCodeTimeException;
 import eightseconds.infra.email.exception.InvalidAuthCodeException;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RestControllerAdvice(annotations = RestController.class)
+@RestControllerAdvice
 public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     /**
@@ -134,7 +135,6 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
-
 
     /**
      * Email Exception
