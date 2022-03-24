@@ -11,4 +11,5 @@ public interface FileService {
     List<MyFile> saveMultipleFiles(List<MultipartFile> files) throws IOException;
     MyFile saveSingleFile(MultipartFile files) throws IOException;
     void deleteAllByItemId(Long id);
+    byte[] getFile(String name);
 }

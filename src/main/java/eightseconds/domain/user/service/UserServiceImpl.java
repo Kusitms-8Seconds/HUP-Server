@@ -209,16 +209,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         String fileURL;
         if (file != null || !file.isEmpty()) {
             MyFile myFile = fileService.saveSingleFile(file);
-            fileURL = makeFileURL(myFile.getFilename());
-        } else {
-            fileURL = EUserServiceImpl.eBasePicture.getValue();
-        }
+            fileURL = EUserServiceImpl.eBaseFileURL.getValue() + myFile.getFilename();
+        } else fileURL = EUserServiceImpl.eBasePicture.getValue();
+
         user.setPicture(fileURL);
         return UpdateProfileResponse.from(fileURL);
-    }
-
-    private String makeFileURL(String filename) {
-        return EUserServiceImpl.eBaseFileURL.getValue()+filename;
     }
 
     /**
