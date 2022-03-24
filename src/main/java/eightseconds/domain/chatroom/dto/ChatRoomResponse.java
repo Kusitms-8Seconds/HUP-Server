@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class ChatRoomResponse {
     private String latestMessage;
     private LocalDateTime latestTime;
 
-    public static ChatRoomResponse from(UserChatRoom userChatRoom) {
+    public static ChatRoomResponse from(UserChatRoom userChatRoom, UserChatRoom otherUserChatRoom) {
         List<String> fileNames = new ArrayList<>();
         Item item = userChatRoom.getChatRoom().getItem();
         if (userChatRoom.getChatRoom().getItem().getMyFiles().isEmpty() != true) {
@@ -45,11 +44,10 @@ public class ChatRoomResponse {
             if (chatMessage.getCreatedDate().isAfter(tempLatestTime)) {
                 tempLatestTime = chatMessage.getCreatedDate().withNano(0);
                 tempLatestMessage = chatMessage.getMessage();}}
-        System.out.println("AfterLocalDateTime"+tempLatestTime);
         return ChatRoomResponse.builder()
                 .id(userChatRoom.getChatRoom().getId())
-                .userId(userChatRoom.getUser().getId())
-                .userName(userChatRoom.getUser().getUsername())
+                .userId(otherUserChatRoom.getUser().getId())
+                .userName(otherUserChatRoom.getUser().getUsername())
                 .itemId(item.getId())
                 .fileNames(fileNames)
                 .latestMessage(tempLatestMessage)
