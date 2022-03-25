@@ -55,7 +55,7 @@ public class Item extends BaseTimeEntity {
     @OneToMany(mappedBy = "item", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<MyFile> myFiles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
     @Builder

@@ -26,10 +26,10 @@ public class ChatRoom extends BaseTimeEntity {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @OneToMany(mappedBy = "chatRoom")
+    @OneToMany(mappedBy = "chatRoom", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<UserChatRoom> userChatRooms = new ArrayList<>();
 
-    @OneToMany(mappedBy = "chatRoom")
+    @OneToMany(mappedBy = "chatRoom", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
     public static ChatRoom toEntity() {

@@ -1,7 +1,6 @@
 package eightseconds;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import eightseconds.global.dto.PaginationDto;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
