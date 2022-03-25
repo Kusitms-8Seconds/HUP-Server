@@ -4,6 +4,8 @@ import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.entity.Item;
+import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
+import eightseconds.domain.scrap.entity.Scrap;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +36,10 @@ public class ItemDetailsResponse {
     @NotNull @Enumerated(EnumType.STRING) private EItemSoldStatus soldStatus;
     private List<String> fileNames;
     private LocalDateTime auctionClosingDate;
+    private int scrapCount;
+    private int maximumPrice;
+    private int participants;
+    private Long chatRoomId;
 
     public static ItemDetailsResponse from(Item item) {
         List<String> fileNames = new ArrayList<>();
@@ -43,6 +49,17 @@ public class ItemDetailsResponse {
             for (MyFile myFile : myFiles) {
                 fileNames.add(myFile.getFilename());
             }
+        }
+        int maxPrice = 0;
+        for (PriceSuggestion priceSuggestion : item.getPriceSuggestions()) {
+            int suggestionPrice = priceSuggestion.getSuggestionPrice();
+            if (maxPrice < suggestionPrice) {
+                maxPrice = suggestionPrice;
+            }
+        }
+        Long chatRoomId = null;
+        if (item.getChatRooms().size() != 0) {
+            chatRoomId = item.getChatRooms().get(0).getId();
         }
         return ItemDetailsResponse.builder()
                 .id(item.getId())
@@ -57,6 +74,10 @@ public class ItemDetailsResponse {
                 .soldStatus(item.getSoldStatus())
                 .fileNames(fileNames)
                 .auctionClosingDate(item.getAuctionClosingDate())
+                .scrapCount(item.getScraps().size())
+                .maximumPrice(maxPrice)
+                .participants(item.getPriceSuggestions().size())
+                .chatRoomId(chatRoomId)
                 .build();
     }
 }
