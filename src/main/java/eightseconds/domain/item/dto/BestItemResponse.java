@@ -3,6 +3,7 @@ package eightseconds.domain.item.dto;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.item.entity.Item;
+import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,7 @@ public class BestItemResponse {
     private List<String> fileNames;
     private LocalDateTime auctionClosingDate;
     private int heart;
+    private int maximumPrice;
 
     public static BestItemResponse from(Item item, int heart) {
         List<String> fileNames = new ArrayList<>();
@@ -38,6 +40,13 @@ public class BestItemResponse {
             fileNames = new ArrayList<>();
             for (MyFile myFile : myFiles) {
                 fileNames.add(myFile.getFilename());
+            }
+        }
+        int maxPrice = 0;
+        for (PriceSuggestion priceSuggestion : item.getPriceSuggestions()) {
+            int suggestionPrice = priceSuggestion.getSuggestionPrice();
+            if (maxPrice < suggestionPrice) {
+                maxPrice = suggestionPrice;
             }
         }
         return BestItemResponse.builder()
@@ -53,6 +62,7 @@ public class BestItemResponse {
                 .auctionClosingDate(item.getAuctionClosingDate())
                 .fileNames(fileNames)
                 .heart(heart)
+                .maximumPrice(maxPrice)
                 .build();
     }
 }
