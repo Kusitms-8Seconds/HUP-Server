@@ -2,6 +2,7 @@ package eightseconds.domain.scrap.dto;
 
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants;
+import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.scrap.entity.Scrap;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class ScrapDetailsResponse {
     private String description;
     private List<String> fileNames;
     private LocalDateTime auctionClosingDate;
+    private int maximumPrice;
 
     public static ScrapDetailsResponse from(Scrap scrap) {
         List<String> fileNames = new ArrayList<>();
@@ -41,6 +43,13 @@ public class ScrapDetailsResponse {
             fileNames = new ArrayList<>();
             for (MyFile myFile : myFiles) {
                 fileNames.add(myFile.getFilename());
+            }
+        }
+        int maxPrice = 0;
+        for (PriceSuggestion priceSuggestion : scrap.getItem().getPriceSuggestions()) {
+            int suggestionPrice = priceSuggestion.getSuggestionPrice();
+            if (maxPrice < suggestionPrice) {
+                maxPrice = suggestionPrice;
             }
         }
         return ScrapDetailsResponse.builder()
@@ -56,6 +65,7 @@ public class ScrapDetailsResponse {
                 .description(scrap.getItem().getDescription())
                 .fileNames(fileNames)
                 .auctionClosingDate(scrap.getItem().getAuctionClosingDate())
+                .maximumPrice(maxPrice)
                 .build();
     }
 }
