@@ -1,5 +1,6 @@
 package eightseconds.domain.item.dto;
 
+import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
@@ -40,6 +41,8 @@ public class ItemDetailsResponse {
     private int maximumPrice;
     private int participants;
     private Long chatRoomId;
+    private Long bidderUserId;
+    private String bidderUserName;
 
     public static ItemDetailsResponse from(Item item) {
         List<String> fileNames = new ArrayList<>();
@@ -61,6 +64,16 @@ public class ItemDetailsResponse {
         if (item.getChatRooms().size() != 0) {
             chatRoomId = item.getChatRooms().get(0).getId();
         }
+        Long bidderUserId = null;
+        String bidderUserName = null;
+        if (item.getSoldStatus().equals(EItemSoldStatus.eSoldOut)) {
+            for (PriceSuggestion priceSuggestion : item.getPriceSuggestions()) {
+                if (priceSuggestion.getSuggestionPrice() == maxPrice) {
+                    bidderUserId = priceSuggestion.getUser().getId();
+                    bidderUserName = priceSuggestion.getUser().getUsername();
+                }
+            }
+        }
         return ItemDetailsResponse.builder()
                 .id(item.getId())
                 .userId(item.getUser().getId())
@@ -78,6 +91,8 @@ public class ItemDetailsResponse {
                 .maximumPrice(maxPrice)
                 .participants(item.getPriceSuggestions().size())
                 .chatRoomId(chatRoomId)
+                .bidderUserId(bidderUserId)
+                .bidderUserName(bidderUserName)
                 .build();
     }
 }
