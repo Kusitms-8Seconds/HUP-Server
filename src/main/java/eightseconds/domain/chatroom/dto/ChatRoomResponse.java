@@ -20,8 +20,8 @@ import java.util.List;
 public class ChatRoomResponse {
 
     private Long id;
-    private Long userId;
-    private String userName;
+    private Long otherUserId;
+    private String otherUserName;
     private Long itemId;
     private List<String> fileNames;
     private String latestMessage;
@@ -46,8 +46,34 @@ public class ChatRoomResponse {
                 tempLatestMessage = chatMessage.getMessage();}}
         return ChatRoomResponse.builder()
                 .id(userChatRoom.getChatRoom().getId())
-                .userId(otherUserChatRoom.getUser().getId())
-                .userName(otherUserChatRoom.getUser().getUsername())
+                .otherUserId(otherUserChatRoom.getUser().getId())
+                .otherUserName(otherUserChatRoom.getUser().getUsername())
+                .itemId(item.getId())
+                .fileNames(fileNames)
+                .latestMessage(tempLatestMessage)
+                .latestTime(tempLatestTime)
+                .build();
+    }
+
+    public static ChatRoomResponse from(UserChatRoom userChatRoom) {
+        List<String> fileNames = new ArrayList<>();
+        Item item = userChatRoom.getChatRoom().getItem();
+        if (userChatRoom.getChatRoom().getItem().getMyFiles().isEmpty() != true) {
+            List<MyFile> myFiles = item.getMyFiles();
+            fileNames = new ArrayList<>();
+            for (MyFile myFile : myFiles) {
+                fileNames.add(myFile.getFilename());
+            }
+        }
+        List<ChatMessage> chatMessages = userChatRoom.getChatRoom().getChatMessages();
+        LocalDateTime tempLatestTime = LocalDateTime.of(2000, 1, 1, 1, 1, 1);
+        String tempLatestMessage = null;
+        for (ChatMessage chatMessage : chatMessages) {
+            if (chatMessage.getCreatedDate().isAfter(tempLatestTime)) {
+                tempLatestTime = chatMessage.getCreatedDate().withNano(0);
+                tempLatestMessage = chatMessage.getMessage();}}
+        return ChatRoomResponse.builder()
+                .id(userChatRoom.getChatRoom().getId())
                 .itemId(item.getId())
                 .fileNames(fileNames)
                 .latestMessage(tempLatestMessage)
