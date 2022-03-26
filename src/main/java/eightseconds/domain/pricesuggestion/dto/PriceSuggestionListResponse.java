@@ -28,8 +28,8 @@ public class PriceSuggestionListResponse {
     private List<String> fileNames;
     private LocalDateTime auctionClosingDate;
     private Long chatRoomId;
-    private Long bidderUserId;
-    private String bidderUserName;
+    private Long sellerUserId;
+    private String sellerUserName;
 
     public static PriceSuggestionListResponse from(PriceSuggestion priceSuggestion) {
         List<String> fileNames = new ArrayList<>();
@@ -41,18 +41,18 @@ public class PriceSuggestionListResponse {
             }
         }
         Long chatRoomId = null;
-        Long bidderUserId = null;
-        String bidderUserName = null;
+        Long sellerUserId = null;
+        String sellerUserName = null;
         if (priceSuggestion.getItem().getSoldStatus().equals(ItemConstants.EItemSoldStatus.eSoldOut) &&
         priceSuggestion.getSuggestionPrice() == priceSuggestion.getItem().getSoldPrice()) {
                     chatRoomId = priceSuggestion.getItem().getChatRooms().get(0).getId();
-                    bidderUserId = priceSuggestion.getUser().getId();
-                    bidderUserName = priceSuggestion.getUser().getUsername();
+                    sellerUserId = priceSuggestion.getItem().getUser().getId();
+                    sellerUserName = priceSuggestion.getItem().getUser().getUsername();
         }
         return PriceSuggestionListResponse.builder()
                 .priceSuggestionId(priceSuggestion.getId())
                 .userId(priceSuggestion.getUser().getId())
-                .userName(priceSuggestion.getItem().getUser().getUsername())
+                .userName(priceSuggestion.getUser().getUsername())
                 .itemId(priceSuggestion.getItem().getId())
                 .itemName(priceSuggestion.getItem().getItemName())
                 .suggestionPrice(priceSuggestion.getSuggestionPrice())
@@ -60,8 +60,8 @@ public class PriceSuggestionListResponse {
                 .fileNames(fileNames)
                 .auctionClosingDate(priceSuggestion.getItem().getAuctionClosingDate())
                 .chatRoomId(chatRoomId)
-                .bidderUserId(bidderUserId)
-                .bidderUserName(bidderUserName)
+                .sellerUserId(sellerUserId)
+                .sellerUserName(sellerUserName)
                 .build();
     }
 }
