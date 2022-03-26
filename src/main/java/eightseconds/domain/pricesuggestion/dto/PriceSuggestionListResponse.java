@@ -1,6 +1,7 @@
 package eightseconds.domain.pricesuggestion.dto;
 
 import eightseconds.domain.file.entity.MyFile;
+import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,9 @@ public class PriceSuggestionListResponse {
     private boolean acceptState;
     private List<String> fileNames;
     private LocalDateTime auctionClosingDate;
+    private Long chatRoomId;
+    private Long bidderUserId;
+    private String bidderUserName;
 
     public static PriceSuggestionListResponse from(PriceSuggestion priceSuggestion) {
         List<String> fileNames = new ArrayList<>();
@@ -35,6 +39,15 @@ public class PriceSuggestionListResponse {
             for (MyFile myFile : myFiles) {
                 fileNames.add(myFile.getFilename());
             }
+        }
+        Long chatRoomId = null;
+        Long bidderUserId = null;
+        String bidderUserName = null;
+        if (priceSuggestion.getItem().getSoldStatus().equals(ItemConstants.EItemSoldStatus.eSoldOut) &&
+        priceSuggestion.getSuggestionPrice() == priceSuggestion.getItem().getSoldPrice()) {
+                    chatRoomId = priceSuggestion.getItem().getChatRooms().get(0).getId();
+                    bidderUserId = priceSuggestion.getUser().getId();
+                    bidderUserName = priceSuggestion.getUser().getUsername();
         }
         return PriceSuggestionListResponse.builder()
                 .priceSuggestionId(priceSuggestion.getId())
@@ -46,6 +59,9 @@ public class PriceSuggestionListResponse {
                 .acceptState(priceSuggestion.isAcceptState())
                 .fileNames(fileNames)
                 .auctionClosingDate(priceSuggestion.getItem().getAuctionClosingDate())
+                .chatRoomId(chatRoomId)
+                .bidderUserId(bidderUserId)
+                .bidderUserName(bidderUserName)
                 .build();
     }
 }
