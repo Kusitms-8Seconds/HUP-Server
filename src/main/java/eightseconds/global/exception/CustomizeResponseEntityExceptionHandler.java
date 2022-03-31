@@ -265,6 +265,12 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(AuctionClosingTimeException.class)
+    public final ResponseEntity<Object> handleAuctionClosingTimeException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
     /**
      * notice Exception
      */
