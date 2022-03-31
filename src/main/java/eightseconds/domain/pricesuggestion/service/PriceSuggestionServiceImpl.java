@@ -4,6 +4,7 @@ import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.NotOnGoingException;
 import eightseconds.domain.item.service.ItemService;
+import eightseconds.domain.pricesuggestion.constant.PriceSuggestionConstants;
 import eightseconds.domain.pricesuggestion.constant.PriceSuggestionConstants.EPriceSuggestionServiceImpl;
 import eightseconds.domain.pricesuggestion.dto.*;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
@@ -12,12 +13,16 @@ import eightseconds.domain.pricesuggestion.repository.PriceSuggestionRepository;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.PaginationDto;
+import eightseconds.infra.email.constant.EmailConstants;
+import eightseconds.infra.email.exception.ExpiredAuthCodeTimeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,6 +59,8 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         validateInitPrice(itemId, suggestionPrice);
         validatePriceSuggestionPrice(itemId, suggestionPrice);
         validateRegisteredItemByUser(item.getUser().getId(), userId);
+        validateAuctionClosingTime(item);
+
         Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getByUserIdAndItemId(userId, itemId);
         ItemConstants.EItemSoldStatus soldStatus = itemService.getItem(itemId).getSoldStatus();
         if(!priceSuggestion.isEmpty()){
@@ -160,6 +167,13 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         int initPrice = itemService.getItemByItemId(itemId).getInitPrice();
         if (suggestionPrice < initPrice) {
             throw new InitPriceException(EPriceSuggestionServiceImpl.eInitPriceExceptionMessage.getValue());}
+    }
+
+    private void validateAuctionClosingTime(Item item) {
+        LocalDateTime closingDate = item.getAuctionClosingDate();
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        if (closingDate.isBefore(currentDateTime)) throw new AuctionClosingTimeException(
+                EPriceSuggestionServiceImpl.eAuctionClosingTimeExceptionMessage.getValue());
     }
 
 }
