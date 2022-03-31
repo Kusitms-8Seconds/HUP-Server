@@ -10,8 +10,6 @@ import javax.persistence.EntityManager;
 
 @SpringBootApplication
 public class HupApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(HupApplication.class, args);}
-
 }
