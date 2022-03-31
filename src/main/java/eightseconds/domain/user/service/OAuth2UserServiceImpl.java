@@ -42,7 +42,6 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-@PropertySource("classpath:application-oauth2.properties")
 public class OAuth2UserServiceImpl implements OAuth2UserService{
 
     private final UserRepository userRepository;

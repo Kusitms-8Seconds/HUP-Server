@@ -1,5 +1,6 @@
-package eightseconds.global.config.auth;
+package eightseconds.global.config.security;
 
+import eightseconds.global.service.CustomOAuth2UserService;
 import eightseconds.global.jwt.JwtAccessDeniedHandler;
 import eightseconds.global.jwt.JwtAuthenticationEntryPoint;
 import eightseconds.global.jwt.JwtSecurityConfig;
@@ -26,7 +27,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2SuccessHandler successHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -103,7 +103,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .apply(new JwtSecurityConfig(tokenProvider))
                 .and()
                 .oauth2Login().loginPage("/token/expired")
-                .successHandler(successHandler)
                 .userInfoEndpoint().userService(customOAuth2UserService);
     }
 }
