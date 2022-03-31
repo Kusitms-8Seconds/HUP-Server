@@ -1,11 +1,8 @@
-package eightseconds.infra.firebase.vo;
+package eightseconds.infra.firebase.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor

@@ -1,4 +1,4 @@
-package eightseconds.global.config.auth;
+package eightseconds.global.config.email;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 @Configuration
-@PropertySource("classpath:application-email.properties")
 public class EmailConfig {
 
     @Value("${mail.smtp.port}")

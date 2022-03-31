@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.net.HttpHeaders;
-import eightseconds.infra.firebase.vo.FcmMessage;
+import eightseconds.infra.firebase.dto.FcmMessage;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +17,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@PropertySource("classpath:application-firebase.properties")
 public class FirebaseCloudMessageService {
 
     @Value("${firebase.api.url}")

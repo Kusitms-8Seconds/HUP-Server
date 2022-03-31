@@ -11,7 +11,6 @@ import eightseconds.domain.user.exception.*;
 import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.jwt.TokenProvider;
-import eightseconds.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
@@ -88,16 +86,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getLoginId(),
                 user.getPassword(),
                 grantedAuthorities);
-    }
-
-    @Transactional
-    public Optional<User> getUserWithAuthorities(String loginId) { // loginId을 기준으로 정보를 가져옴
-        return userRepository.findOneWithAuthoritiesByLoginId(loginId);
-    }
-
-    @Transactional()
-    public Optional<User> getMyUserWithAuthorities() { // SecurityContext에 저장된 loginId의 정보만 가져온다.
-        return SecurityUtil.getCurrentLoginId().flatMap(userRepository::findOneWithAuthoritiesByLoginId);
     }
 
     @Transactional
@@ -230,6 +218,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public TokenInfoResponse validateLogin(LoginRequest loginRequest) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequest.getLoginId(), loginRequest.getPassword());
+        // authenticate 메서드가 실행될때 loadUserByUsername가 실행된다.
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         TokenInfoResponse tokenInfoResponse = tokenProvider.createToken(authentication);

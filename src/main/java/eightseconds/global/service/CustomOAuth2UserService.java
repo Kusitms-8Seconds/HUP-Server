@@ -1,4 +1,4 @@
-package eightseconds.global.config.auth;
+package eightseconds.global.service;
 
 import eightseconds.global.dto.OAuth2Attribute;
 import lombok.RequiredArgsConstructor;
