@@ -21,6 +21,7 @@ public class PriceSuggestionListResponse {
     private Long priceSuggestionId;
     private Long userId;
     private String userName;
+    private String picture;
     private Long itemId;
     private String itemName;
     private int suggestionPrice;
@@ -53,6 +54,7 @@ public class PriceSuggestionListResponse {
                 .priceSuggestionId(priceSuggestion.getId())
                 .userId(priceSuggestion.getUser().getId())
                 .userName(priceSuggestion.getUser().getUsername())
+                .picture(priceSuggestion.getUser().getPicture())
                 .itemId(priceSuggestion.getItem().getId())
                 .itemName(priceSuggestion.getItem().getItemName())
                 .suggestionPrice(priceSuggestion.getSuggestionPrice())
