@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -30,8 +31,9 @@ public class EmailServiceImpl implements EmailService{
     @Override
     public DefaultResponse sendSimpleMessage(String email) throws Exception {
 
-        userService.validateIsAlreadyRegisteredUser(email);
         User user = userService.validateEmail(email);
+        userService.validateIsAlreadyRegisteredUser(user);
+        validateIsAlreadyExistEmail(email);
 
         MimeMessage message = createMessage(email);
         try{
@@ -106,6 +108,15 @@ public class EmailServiceImpl implements EmailService{
         }
 
         return key.toString();
+    }
+
+    /**
+     * validate email
+     */
+
+    private void validateIsAlreadyExistEmail(String email) {
+        Optional<EmailAuth> findEmail = emailAuthRepository.findByEmail(email);
+        if(findEmail.isPresent()) emailAuthRepository.delete(findEmail.get());
     }
 
 }

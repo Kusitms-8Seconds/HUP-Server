@@ -253,10 +253,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     }
 
-    public void validateIsAlreadyRegisteredUser(String email) {
-        userRepository.findByEmailAndLoginTypeAndEmailAuthActivated(email, ELoginType.eApp, true)
-                .ifPresent(u -> { throw new AlreadyRegisteredUserException(EUserServiceImpl
-                        .eAlreadyRegisteredUserExceptionMessage.getValue()); });
+    public void validateIsAlreadyRegisteredUser(User user) {
+        if(user.isEmailAuthActivated()) throw new AlreadyRegisteredUserException(EUserServiceImpl
+                        .eAlreadyRegisteredUserExceptionMessage.getValue());
     }
 
     @Override

@@ -19,7 +19,7 @@ public interface UserService {
     User getUserByUserId(Long userId);
     User validateUserId(Long userId);
     UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest);
-    void validateIsAlreadyRegisteredUser(String email);
+    void validateIsAlreadyRegisteredUser(User user);
     DefaultResponse validateLoginId(String loginId);
     ReissueResponse reissueToken(ReissueRequest reissueRequest) throws Exception;
     UpdateProfileResponse updateProfileImage(MultipartFile file, String userId) throws IOException;
