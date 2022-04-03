@@ -1,5 +1,7 @@
 package eightseconds.domain.user.entity;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import eightseconds.domain.chatmessage.entity.ChatMessage;
 import eightseconds.domain.chatroom.entity.UserChatRoom;
