@@ -37,7 +37,7 @@
 
 ## :books: HUP Swagger API Docs
 
-<a href="http://52.78.175.27:8080/swagger-ui/index.html#/">HUP Swagger API Docs</a><br>
+<a href="http://www.hurryuphup.me/swagger-ui/index.html#/">HUP Swagger API Docs</a><br>
 
 ## :electric_plug: Development environment
 
