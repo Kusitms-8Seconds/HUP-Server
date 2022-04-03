@@ -198,7 +198,6 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         TokenInfoResponse tokenInfoResponse = tokenProvider.createToken(auth);
         updateTargetToken(user, oAuth2NaverLoginRequest.getTargetToken());
         return LoginResponse.from(user.getId(), tokenInfoResponse);
-
     }
 
     private HashMap<String, Object> getNaverUserInfo(String responseBody) {
@@ -231,7 +230,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
         HttpURLConnection con = connect(apiUrl);
         try {
             con.setRequestMethod(EOAuth2UserServiceImpl.eNaverGetMethod.getValue());
-            for(Map.Entry<String, String> header :requestHeaders.entrySet()) {
+            for(Map.Entry<String, String> header : requestHeaders.entrySet()) {
                 con.setRequestProperty(header.getKey(), header.getValue());
             }
 

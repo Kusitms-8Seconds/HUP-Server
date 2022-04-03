@@ -178,3 +178,6 @@ firebase:
     credentials:
       api:
         url: ENC(7Q7g4eiRP2a9Ee+/r7nrS74BxpHujwXlZml5Wqkug7MYoK+7ppKMdB4eRHYDEeWChiHFFTNrhHc=)
+
+server:
+  port: 80
