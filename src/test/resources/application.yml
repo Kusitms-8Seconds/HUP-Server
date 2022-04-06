@@ -1,6 +1,5 @@
 spring:
   profiles: test
-    include: oauth
   session:
     store-type: jdbc
   datasource:
