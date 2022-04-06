@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: prod
 
 ---
 
@@ -13,8 +13,8 @@ spring:
     username: ENC(/lVE+C9aOThU0R+5svbX4w==)
     password: ENC(JzeeGqZ3GE8GTOFeoiTTmg==)
     driver-class-name: org.mariadb.jdbc.Driver
-      initialize: true
-      initialization-mode: always
+#      initialize: true
+#      initialization-mode: always
 
   jpa:
     hibernate:
@@ -25,7 +25,7 @@ spring:
         format_sql: true
         #default_batch_fetch_size: 100
     #open-in-view: false
-      defer-datasource-initialization: true
+#      defer-datasource-initialization: true
 
   data:
     web:
@@ -35,7 +35,7 @@ spring:
         #one-indexed-parameters: true
 
   redis:
-    host: redis
+    host: localhot
     port: 6379
 
   security:
@@ -103,16 +103,20 @@ spring:
     username: ENC(/lVE+C9aOThU0R+5svbX4w==)
     password: ENC(JzeeGqZ3GE8GTOFeoiTTmg==)
     driver-class-name: org.mariadb.jdbc.Driver
+    initialize: true
+    initialization-mode: always
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         #default_batch_fetch_size: 100
     #open-in-view: false
+    defer-datasource-initialization: true
+
 
   data:
     web:
