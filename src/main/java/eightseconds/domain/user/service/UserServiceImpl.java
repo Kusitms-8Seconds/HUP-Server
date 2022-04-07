@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .loginId(signUpRequest.getLoginId())
                 .email(signUpRequest.getEmail())
                 .username(signUpRequest.getUsername())
-                .password(passwordEncoder.encode(signUpRequest.getPassword())) // 개인정보 보호로, 비밀번호는 단방향 암호화
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .phoneNumber(signUpRequest.getPhoneNumber())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
@@ -89,6 +89,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Transactional
+    @Override
     public LoginResponse loginUser(LoginRequest loginRequest) {
         User user = getUserByLoginId(loginRequest.getLoginId());
         validateEmailAuth(user);
@@ -129,60 +130,34 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return validateUserId(userId);
     }
 
-    public ReissueResponse reissueToken(ReissueRequest reissue) throws Exception {
-        // 1. Refresh Token 검증
+    public ReissueResponse reissueToken(ReissueRequest reissue){
         if (!tokenProvider.validateToken(reissue.getRefreshToken())) {
             throw new NotValidRefreshTokenException(EUserServiceImpl.eNotValidRefreshTokenExceptionMessage.getValue());}
-
-        // 2. Access Token 에서 User email 을 가져옵니다.
         Authentication authentication = tokenProvider.getAuthentication(reissue.getAccessToken());
-
-        // 3. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
         String refreshToken = (String) redisTemplate.opsForValue().get(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName());
-        // (추가) 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
-        if(ObjectUtils.isEmpty(refreshToken)) {
+        if(ObjectUtils.isEmpty(refreshToken))
             throw new WrongRefreshTokenRequestException(EUserServiceImpl.eWrongRefreshTokenRequestExceptionMessage.getValue());
-        }
-        if(!refreshToken.equals(reissue.getRefreshToken())) {
+        if(!refreshToken.equals(reissue.getRefreshToken()))
             throw new NotMatchRefreshTokenException(EUserServiceImpl.eNotMatchRefreshTokenExceptionMessage.getValue());
-        }
-
-        // 4. 새로운 토큰 생성
         TokenInfoResponse tokenInfoResponse = tokenProvider.createToken(authentication);
-
-        // 5. RefreshToken Redis 업데이트
         redisTemplate.opsForValue()
                 .set(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName(),
                         tokenInfoResponse.getRefreshToken(), tokenInfoResponse.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
-
         return ReissueResponse.from(tokenInfoResponse.getGrantType(), tokenInfoResponse.getAccessToken(),
                 tokenInfoResponse.getRefreshToken(), tokenInfoResponse.getRefreshTokenExpirationTime());
     }
 
     @Transactional
-    public DefaultResponse logout(LogoutRequest logoutRequest) throws Exception {
-        // 1. Access Token 검증
-        if (!tokenProvider.validateToken(logoutRequest.getAccessToken())) {
+    public DefaultResponse logout(LogoutRequest logoutRequest){
+        if (!tokenProvider.validateToken(logoutRequest.getAccessToken()))
             throw new NotValidAccessTokenException(EUserServiceImpl.eNotValidAccessTokenExceptionMessage.getValue());
-        }
-
-        // 2. Access Token 에서 User email 을 가져옵니다.
         Authentication authentication = tokenProvider.getAuthentication(logoutRequest.getAccessToken());
-
-        // 3. Redis 에서 해당 User email 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
-        if (redisTemplate.opsForValue().get(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName()) != null) {
-            // Refresh Token 삭제
+        if (redisTemplate.opsForValue().get(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName()) != null)
             redisTemplate.delete(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName());
-        }
-
-        // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
         Long expiration = tokenProvider.getExpiration(logoutRequest.getAccessToken());
         redisTemplate.opsForValue()
                 .set(logoutRequest.getAccessToken(), EUserServiceImpl.eLogout.getValue(), expiration, TimeUnit.MILLISECONDS);
-
         deleteTargetToken(userRepository.findUserByLoginId(authentication.getName()).get());
-
-
         return DefaultResponse.from(EUserServiceImpl.eLogoutMessage.getValue());
     }
 
@@ -218,7 +193,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public TokenInfoResponse validateLogin(LoginRequest loginRequest) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequest.getLoginId(), loginRequest.getPassword());
-        // authenticate 메서드가 실행될때 loadUserByUsername가 실행된다.
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         TokenInfoResponse tokenInfoResponse = tokenProvider.createToken(authentication);
@@ -226,7 +200,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .set(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName(),
                         tokenInfoResponse.getRefreshToken(), tokenInfoResponse.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
         return tokenInfoResponse;
-
     }
 
     private void validateEmailAuth(User user) {
@@ -239,7 +212,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .findAny()
                 .orElseThrow(() -> new NotFoundRegisteredUserException(EUserServiceImpl
                         .eNotFoundRegisteredUserExceptionMessage.getValue()));
-
     }
 
     public void validateIsAlreadyRegisteredUser(User user) {

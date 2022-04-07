@@ -36,7 +36,7 @@ public class TokenProvider implements InitializingBean {
             @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
         this.secret = secret;
         this.accessTokenValidityTime = tokenValidityInSeconds * 1;
-        this.refreshTokenValidityTime = tokenValidityInSeconds * 60 * 24 * 14;
+        this.refreshTokenValidityTime = tokenValidityInSeconds * 2;
     }
 
     @Override
@@ -71,18 +71,12 @@ public class TokenProvider implements InitializingBean {
     }
 
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts
-                .parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
 
+        Claims claims = parseClaims(token);
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-
         User principal = new User(claims.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
@@ -107,10 +101,16 @@ public class TokenProvider implements InitializingBean {
         }
     }
 
+    private Claims parseClaims(String accessToken) {
+        try {
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
+    }
+
     public Long getExpiration(String accessToken) {
-        // accessToken 남은 유효시간
         Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody().getExpiration();
-        // 현재 시간
         Long now = new Date().getTime();
         return (expiration.getTime() - now);
     }

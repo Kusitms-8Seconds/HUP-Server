@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface UserService {
 
     SignUpResponse saveUser(SignUpRequest signUpRequest);
+    LoginResponse loginUser(LoginRequest loginRequest);
     TokenInfoResponse validateLogin(LoginRequest loginRequest);
     User getUserByLoginId(String loginId);
     UserInfoResponse getUserInfoByUserId(Long userId);
