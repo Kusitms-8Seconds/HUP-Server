@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     public ReissueResponse reissueToken(ReissueRequest reissue){
-        if (!tokenProvider.validateToken(reissue.getRefreshToken())) {
+        if (!tokenProvider.validateRefreshToken(reissue.getRefreshToken())) {
             throw new NotValidRefreshTokenException(EUserServiceImpl.eNotValidRefreshTokenExceptionMessage.getValue());}
         Authentication authentication = tokenProvider.getAuthentication(reissue.getAccessToken());
         String refreshToken = (String) redisTemplate.opsForValue().get(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName());
