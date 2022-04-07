@@ -1,7 +1,5 @@
 package eightseconds.domain.user.entity;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import eightseconds.domain.chatmessage.entity.ChatMessage;
 import eightseconds.domain.chatroom.entity.UserChatRoom;
@@ -10,7 +8,12 @@ import eightseconds.domain.notice.entity.Notice;
 import eightseconds.domain.notification.entity.Notification;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.scrap.entity.Scrap;
+import eightseconds.domain.user.constant.UserConstants.EGoogleUser;
+import eightseconds.domain.user.constant.UserConstants.EKakaoUser;
+import eightseconds.domain.user.constant.UserConstants.ENaverUser;
+import eightseconds.domain.user.constant.UserConstants.EUser;
 import eightseconds.domain.user.constant.UserConstants.ELoginType;
+import eightseconds.domain.user.constant.UserConstants.EAuthority;
 import eightseconds.domain.user.dto.UpdateUserRequest;
 import eightseconds.global.entity.BaseTimeEntity;
 import eightseconds.infra.email.entity.EmailAuth;
@@ -50,8 +53,8 @@ public class User extends BaseTimeEntity {
 
     private boolean emailAuthActivated;
 
-    // oAuth2관련
     private String picture;
+
     @Enumerated(EnumType.STRING)
     private ELoginType loginType;
 
@@ -104,17 +107,12 @@ public class User extends BaseTimeEntity {
         notice.setUser(this);
     }
 
-
     public void getAuthority(Long id){
         for (Iterator<Authority> itr = authorities.iterator(); itr.hasNext();) {
             Authority authority = itr.next();
         }
     }
 
-
-    // Google Builder
-
-    // Google Update Profile
     public User update(String username, String picture) {
         this.username = username;
         this.picture = picture;
@@ -122,47 +120,38 @@ public class User extends BaseTimeEntity {
     }
 
     public static User toEntity(OAuth2User oAuth2User) {
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
-                .build();
         Map<String, Object> attributes = oAuth2User.getAttributes();
         return User.builder()
-                .email((String)attributes.get("email"))
-                .username((String)attributes.get("name"))
-                .picture((String)attributes.get("picture"))
-                .authorities(Collections.singleton(authority))
+                .email((String)attributes.get(EUser.eEmailAttribute.getValue()))
+                .username((String)attributes.get(EUser.eNameAttribute.getValue()))
+                .picture((String)attributes.get(EUser.ePictureAttribute.getValue()))
+                .authorities(Collections.singleton(toRoleUserAuthority()))
                 .activated(true)
                 .emailAuthActivated(false)
                 .loginType(ELoginType.eApp)
                 .build();
     }
 
-    public static User toEntityOfGoogleUser(Payload payload){
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
-                .build();
+    public static User toGoogleUserEntity(Payload payload){
         return User.builder()
-                .loginId("google"+payload.getEmail())
+                .loginId(EGoogleUser.eGoogle.getValue()+payload.getEmail())
                 .email(payload.getEmail())
-                .username((String)payload.get("name"))
-                .picture((String)payload.get("picture"))
-                .authorities(Collections.singleton(authority))
+                .username((String)payload.get(EGoogleUser.eGoogleNameAttribute.getValue()))
+                .picture((String)payload.get(EGoogleUser.eGooglePictureAttribute.getValue()))
+                .authorities(Collections.singleton(toRoleUserAuthority()))
                 .activated(true)
                 .emailAuthActivated(true)
                 .loginType(ELoginType.eGoogle)
                 .build();
     }
 
-    public static User toEntityOfKakaoUser(HashMap<String, Object> userInfo) {
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
-                .build();
+    public static User toKakaoUserEntity(HashMap<String, Object> userInfo) {
         return User.builder()
-                .loginId("kakao"+userInfo.get("email").toString())
-                .email(userInfo.get("email").toString())
-                .username(userInfo.get("nickname").toString())
-                .picture(userInfo.get("profile_image_url").toString())
-                .authorities(Collections.singleton(authority))
+                .loginId(EKakaoUser.eKakao.getValue()+userInfo.get(EKakaoUser.eKakaoEmailAttribute.getValue()).toString())
+                .email(userInfo.get(EKakaoUser.eKakaoEmailAttribute.getValue()).toString())
+                .username(userInfo.get(EKakaoUser.eKakaoNickNameAttribute.getValue()).toString())
+                .picture(userInfo.get(EKakaoUser.eKakaoProfile.getValue()).toString())
+                .authorities(Collections.singleton(toRoleUserAuthority()))
                 .activated(true)
                 .emailAuthActivated(true)
                 .loginType(ELoginType.eKakao)
@@ -170,18 +159,21 @@ public class User extends BaseTimeEntity {
     }
 
     public static User toEntityOfNaverUser(HashMap<String, Object> userInfo) {
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
-                .build();
         return User.builder()
-                .loginId("naver"+userInfo.get("email").toString())
-                .email(userInfo.get("email").toString())
-                .username(userInfo.get("name").toString())
-                .picture(userInfo.get("profile_image").toString())
-                .authorities(Collections.singleton(authority))
+                .loginId(ENaverUser.eNaver.getValue()+userInfo.get(ENaverUser.eNaverEmailAttribute.getValue()).toString())
+                .email(userInfo.get(ENaverUser.eNaverEmailAttribute.getValue()).toString())
+                .username(userInfo.get(ENaverUser.eNaverNameAttribute.getValue()).toString())
+                .picture(userInfo.get(ENaverUser.eNaverProfileImageAttribute.getValue()).toString())
+                .authorities(Collections.singleton(toRoleUserAuthority()))
                 .activated(true)
                 .emailAuthActivated(true)
                 .loginType(ELoginType.eNaver)
+                .build();
+    }
+
+    private static Authority toRoleUserAuthority() {
+        return Authority.builder()
+                .authorityName(EAuthority.eRoleUser.getValue())
                 .build();
     }
 

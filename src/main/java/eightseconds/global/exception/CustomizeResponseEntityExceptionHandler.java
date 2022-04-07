@@ -10,24 +10,22 @@ import eightseconds.domain.notice.exception.NotFoundNoticeException;
 import eightseconds.domain.pricesuggestion.exception.*;
 import eightseconds.domain.scrap.exception.AlreadyScrapException;
 import eightseconds.domain.scrap.exception.NotExistingScrapOfUserException;
-import eightseconds.domain.user.exception.*;
+import eightseconds.domain.user.exception.app.*;
+import eightseconds.domain.user.exception.oauth2.*;
 import eightseconds.global.dto.ExceptionResponse;
 import eightseconds.infra.email.exception.ExpiredAuthCodeTimeException;
 import eightseconds.infra.email.exception.InvalidAuthCodeException;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,12 +86,6 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(InvalidIdToken.class)
-    public final ResponseEntity<Object> handleInvalidIdTokenException(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
-        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
-    }
-
     @ExceptionHandler(NotActivatedEmailAuthException.class)
     public final ResponseEntity<Object> handleNotActivatedEmailAuthException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
@@ -132,6 +124,56 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
 
     @ExceptionHandler(NotValidAccessTokenException.class)
     public final ResponseEntity<Object> handleNotValidAccessTokenException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * Naver User Domain Exception
+     */
+
+    @ExceptionHandler(NaverApiResponseException.class)
+    public final ResponseEntity<Object> handleNaverApiResponseException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(NaverApiUrlException.class)
+    public final ResponseEntity<Object> handleNaverApiUrlException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(NaverConnectionException.class)
+    public final ResponseEntity<Object> handleNaverConnectionException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(NaverAuthenticationFailedException.class)
+    public final ResponseEntity<Object> handleNaverAuthenticationFailedException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(NaverPermissionException.class)
+    public final ResponseEntity<Object> handleNaverPermissionException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.FORBIDDEN.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(NaverNotFoundException.class)
+    public final ResponseEntity<Object> handleNaverNotFoundException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Google User Domain Exception
+     */
+
+    @ExceptionHandler(InvalidIdTokenException.class)
+    public final ResponseEntity<Object> handleInvalidIdTokenException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }

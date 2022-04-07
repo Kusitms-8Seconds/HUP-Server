@@ -7,7 +7,7 @@ import eightseconds.domain.user.constant.UserConstants.EUserServiceImpl;
 import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.Authority;
 import eightseconds.domain.user.entity.User;
-import eightseconds.domain.user.exception.*;
+import eightseconds.domain.user.exception.app.*;
 import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.jwt.TokenProvider;
