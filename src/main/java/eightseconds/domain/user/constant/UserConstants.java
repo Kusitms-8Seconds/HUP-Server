@@ -1,6 +1,5 @@
 package eightseconds.domain.user.constant;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -33,19 +32,29 @@ public class UserConstants {
         eNaver("네이버"),
         eKakao("카카오"),
         eApp("앱");
-
         private final String name;
-
-        @JsonCreator
-        public static ELoginType from(String s) {
-            return ELoginType.valueOf(s);
-        }
     }
 
     @Getter
     @AllArgsConstructor
-    public enum EOAuth2UserServiceImpl{
-        eRoleUser("ROLE_USER"),
+    public enum EAuthority{
+        eRoleUser("ROLE_USER");
+        private final String value;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum EUser{
+        eNameAttribute("name"),
+        eEmailAttribute("email"),
+        ePictureAttribute("picture");
+        private final String value;
+    }
+
+
+    @Getter
+    @AllArgsConstructor
+    public enum EGoogleUser{
         eGoogleIdAttribute("id"),
         eGoogleKeyAttribute("key"),
         eGoogleNameAttribute("name"),
@@ -53,7 +62,13 @@ public class UserConstants {
         eGooglePictureAttribute("picture"),
         eGoogleSub("sub"),
         eGoogle("google"),
-        eGoogleInvalidIdTokenMessage("ID token이 유효하지 않습니다."),
+        eGoogleInvalidIdTokenExceptionMessage("ID token이 유효하지 않습니다.");
+        private final String value;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum EKakaoUser{
         eKakaoKeyAttribute("key"),
         eKakaoProfile("profile"),
         eKakaoNickNameAttribute("nickname"),
@@ -68,7 +83,13 @@ public class UserConstants {
         eKakaoEmpty(""),
         eKakaoPropertiesAttribute("properties"),
         eKakaoAccountAttribute("kakao_account"),
-        eKakao("kakao"),
+        eKakao("kakao");
+        private final String value;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum ENaverUser{
         eNaverNameAttribute("name"),
         eNaverEmailAttribute("email"),
         eNaverProfileImageAttribute("profile_image"),
@@ -78,18 +99,14 @@ public class UserConstants {
         eNaverElement("element"),
         eNaverAuthorization("Authorization"),
         eNaverBearer("Bearer "),
-        eNaverApiUrlException("API URL이 잘못되었습니다. : "),
-        eNaverConnectionException("연결이 실패했습니다. : "),
-        eNaverApiResponseException("API 응답을 읽는데 실패했습니다."),
-        eNaverNull(null),
-        eNaver("naver");
-
+        eNaver("naver"),
+        eNaverApiResponseException("NAVER API 응답을 읽는데 실패했습니다."),
+        eNaverAuthenticationFailedException("Naver 인증에 실패했습니다."),
+        eNaverPermissionException("Naver API 호출 권한이 없습니다."),
+        eNotFoundException("Naver API 검색 결과가 없습니다."),
+        eNaverApiUrlException("NAVER API URL이 잘못되었습니다. : "),
+        eNaverConnectionException("NAVER와의 연결이 실패했습니다. : ");
         private final String value;
-
-        @JsonCreator
-        public static EOAuth2UserServiceImpl from(String s) {
-            return EOAuth2UserServiceImpl.valueOf(s);
-        }
     }
 
     @Getter
@@ -112,7 +129,7 @@ public class UserConstants {
         eLogoutMessage("로그아웃 되었습니다."),
         eTrue(true),
         eAuthorityRoleUser("ROLE_USER"),
-        eBaseFileURL("http://52.78.175.27:8080/api/v1/files/"),
+        eBaseFileURL("http://www.hurryuphup.me/api/v1/files/"),
         eBasePicture("https://firebasestorage.googleapis.com/v0/b/auctionapp-f3805.appspot.com/o/profile.png?alt=media&token=655ed158-b464-4e5e-aa56-df3d7f12bdc8");
 
         private boolean check;
