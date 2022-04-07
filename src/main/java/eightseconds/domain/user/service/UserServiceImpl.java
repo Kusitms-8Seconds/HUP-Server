@@ -5,7 +5,6 @@ import eightseconds.domain.file.service.FileService;
 import eightseconds.domain.user.constant.UserConstants.ELoginType;
 import eightseconds.domain.user.constant.UserConstants.EUserServiceImpl;
 import eightseconds.domain.user.dto.*;
-import eightseconds.domain.user.entity.Authority;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.exception.app.*;
 import eightseconds.domain.user.repository.UserRepository;
@@ -29,7 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -46,26 +46,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public SignUpResponse saveUser(SignUpRequest signUpRequest) {
-        if (userRepository.findOneWithAuthoritiesByLoginId(signUpRequest.getLoginId()).orElse(null) != null) {
-                throw new AlreadyRegisteredUserException(EUserServiceImpl.eAlreadyRegisteredUserExceptionMessage.getValue()); }
-
-        Authority authority = Authority.builder()
-                .authorityName(EUserServiceImpl.eAuthorityRoleUser.getValue())
-                .build();
-        User user = User.builder()
-                .loginId(signUpRequest.getLoginId())
-                .email(signUpRequest.getEmail())
-                .username(signUpRequest.getUsername())
-                .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                .phoneNumber(signUpRequest.getPhoneNumber())
-                .authorities(Collections.singleton(authority))
-                .activated(true)
-                .picture(EUserServiceImpl.eBasePicture.getValue())
-                .loginType(ELoginType.eApp)
-                .build();
-
-        User savedUser = this.userRepository.save(user);
-
+        if (userRepository.findOneWithAuthoritiesByLoginId(signUpRequest.getLoginId()).orElse(null) != null)
+                throw new AlreadyRegisteredUserException(EUserServiceImpl.eAlreadyRegisteredUserExceptionMessage.getValue());
+        validateAlreadyRegisteredEmail(signUpRequest.getEmail());
+        User savedUser = this.userRepository.save(User.toEntity(signUpRequest, passwordEncoder));
         return SignUpResponse.from(savedUser.getId(), savedUser.getLoginId(), EUserServiceImpl.eSuccessSignUpMessage.getValue());
     }
 
@@ -206,12 +190,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (!user.isEmailAuthActivated()) throw new NotActivatedEmailAuthException(EUserServiceImpl.eNotActivatedEmailAuthExceptionMessage.getValue());
     }
 
-    public User validateEmail(String email) {
+    public User validateNotRegisteredEmail(String email) {
         return userRepository.findByEmailAndLoginType(email, ELoginType.eApp)
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new NotFoundRegisteredUserException(EUserServiceImpl
                         .eNotFoundRegisteredUserExceptionMessage.getValue()));
+    }
+
+    public void validateAlreadyRegisteredEmail(String email) {
+        userRepository.findByEmailAndLoginType(email, ELoginType.eApp)
+                .stream()
+                .findAny()
+                .ifPresent((u -> { throw new AlreadyRegisteredEmailException(EUserServiceImpl
+                        .eAlreadyRegisteredEmailExceptionMessage.getValue()); }));
     }
 
     public void validateIsAlreadyRegisteredUser(User user) {

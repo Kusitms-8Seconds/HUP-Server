@@ -128,6 +128,22 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(AlreadyRegisteredEmailException.class)
+    public final ResponseEntity<Object> handleAlreadyRegisteredEmailException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * Google User Domain Exception
+     */
+
+    @ExceptionHandler(InvalidIdTokenException.class)
+    public final ResponseEntity<Object> handleInvalidIdTokenException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+
     /**
      * Naver User Domain Exception
      */
@@ -166,16 +182,6 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<Object> handleNaverNotFoundException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * Google User Domain Exception
-     */
-
-    @ExceptionHandler(InvalidIdTokenException.class)
-    public final ResponseEntity<Object> handleInvalidIdTokenException(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
-        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 
     /**

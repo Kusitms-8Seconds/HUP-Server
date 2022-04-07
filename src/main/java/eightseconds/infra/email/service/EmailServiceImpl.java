@@ -31,7 +31,7 @@ public class EmailServiceImpl implements EmailService{
     @Override
     public DefaultResponse sendSimpleMessage(String email) throws Exception {
 
-        User user = userService.validateEmail(email);
+        User user = userService.validateNotRegisteredEmail(email);
         userService.validateIsAlreadyRegisteredUser(user);
         validateIsAlreadyExistEmail(email);
 
