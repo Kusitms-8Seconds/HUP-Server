@@ -8,16 +8,19 @@ import eightseconds.domain.notice.entity.Notice;
 import eightseconds.domain.notification.entity.Notification;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.scrap.entity.Scrap;
+import eightseconds.domain.user.constant.UserConstants;
 import eightseconds.domain.user.constant.UserConstants.EGoogleUser;
 import eightseconds.domain.user.constant.UserConstants.EKakaoUser;
 import eightseconds.domain.user.constant.UserConstants.ENaverUser;
 import eightseconds.domain.user.constant.UserConstants.EUser;
 import eightseconds.domain.user.constant.UserConstants.ELoginType;
 import eightseconds.domain.user.constant.UserConstants.EAuthority;
+import eightseconds.domain.user.dto.SignUpRequest;
 import eightseconds.domain.user.dto.UpdateUserRequest;
 import eightseconds.global.entity.BaseTimeEntity;
 import eightseconds.infra.email.entity.EmailAuth;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.*;
@@ -119,18 +122,20 @@ public class User extends BaseTimeEntity {
         return this;
     }
 
-    public static User toEntity(OAuth2User oAuth2User) {
-        Map<String, Object> attributes = oAuth2User.getAttributes();
+    public static User toEntity(SignUpRequest signUpRequest, PasswordEncoder passwordEncoder){
         return User.builder()
-                .email((String)attributes.get(EUser.eEmailAttribute.getValue()))
-                .username((String)attributes.get(EUser.eNameAttribute.getValue()))
-                .picture((String)attributes.get(EUser.ePictureAttribute.getValue()))
+                .loginId(signUpRequest.getLoginId())
+                .email(signUpRequest.getEmail())
+                .username(signUpRequest.getUsername())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .phoneNumber(signUpRequest.getPhoneNumber())
                 .authorities(Collections.singleton(toRoleUserAuthority()))
                 .activated(true)
-                .emailAuthActivated(false)
+                .picture(UserConstants.EUserServiceImpl.eBasePicture.getValue())
                 .loginType(ELoginType.eApp)
                 .build();
     }
+
 
     public static User toGoogleUserEntity(Payload payload){
         return User.builder()
