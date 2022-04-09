@@ -67,13 +67,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/websocket").permitAll()
-                .antMatchers("/websocket/websocket").permitAll()
-                .antMatchers("/hup/**").permitAll()
-                .antMatchers("/oauth2/authorization/google").permitAll()
-                .antMatchers("/token/expired").permitAll()
-                .antMatchers("/googleOAuth/tokenVerify").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/webjars/**").permitAll()
@@ -98,11 +91,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/items/statuses/**").permitAll()
                 .antMatchers("/api/v1/items/categories/**").permitAll()
                 .antMatchers("/api/fcm").permitAll()
+
+                .antMatchers("/api/v1/scraps/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/api/v1/priceSuggestions/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/api/v1/notifications/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/api/v1/notices/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/api/v1/items/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/api/v1/files/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/api/v1/chatRooms/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/api/v1/chatMessages/**").access("hasRole('ROLE_USER')")
+
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider))
                 .and()
-                .oauth2Login().loginPage("/token/expired")
+                .oauth2Login()
                 .userInfoEndpoint().userService(customOAuth2UserService);
     }
 }

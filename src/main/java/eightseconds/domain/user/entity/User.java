@@ -129,7 +129,7 @@ public class User extends BaseTimeEntity {
                 .username(signUpRequest.getUsername())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .phoneNumber(signUpRequest.getPhoneNumber())
-                .authorities(Collections.singleton(toRoleUserAuthority()))
+                .authorities(Collections.singleton(toRoleDisabledUserAuthority()))
                 .activated(true)
                 .picture(UserConstants.EUserServiceImpl.eBasePicture.getValue())
                 .loginType(ELoginType.eApp)
@@ -176,7 +176,13 @@ public class User extends BaseTimeEntity {
                 .build();
     }
 
-    private static Authority toRoleUserAuthority() {
+    public static Authority toRoleDisabledUserAuthority() {
+        return Authority.builder()
+                .authorityName(EAuthority.eRoleDisabledUser.getValue())
+                .build();
+    }
+
+    public static Authority toRoleUserAuthority() {
         return Authority.builder()
                 .authorityName(EAuthority.eRoleUser.getValue())
                 .build();

@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
