@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public LoginResponse loginUser(LoginRequest loginRequest) {
         User user = getUserByLoginId(loginRequest.getLoginId());
-        validateEmailAuth(user);
+        //validateEmailAuth(user);
         TokenInfoResponse tokenInfoResponse = validateLogin(loginRequest);
         updateTargetToken(user, loginRequest.getTargetToken());
         return LoginResponse.from(user.getId(), tokenInfoResponse);
@@ -186,22 +186,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return tokenInfoResponse;
     }
 
-    private void validateEmailAuth(User user) {
-        if (!user.isEmailAuthActivated()) throw new NotActivatedEmailAuthException(EUserServiceImpl.eNotActivatedEmailAuthExceptionMessage.getValue());
-    }
+//    private void validateEmailAuth(User user) {
+//        if (!user.isEmailAuthActivated()) throw new NotActivatedEmailAuthException(EUserServiceImpl.eNotActivatedEmailAuthExceptionMessage.getValue());
+//    }
 
     public User validateNotRegisteredEmail(String email) {
         return userRepository.findByEmailAndLoginType(email, ELoginType.eApp)
-                .stream()
-                .findAny()
                 .orElseThrow(() -> new NotFoundRegisteredUserException(EUserServiceImpl
                         .eNotFoundRegisteredUserExceptionMessage.getValue()));
     }
 
     public void validateAlreadyRegisteredEmail(String email) {
         userRepository.findByEmailAndLoginType(email, ELoginType.eApp)
-                .stream()
-                .findAny()
                 .ifPresent((u -> { throw new AlreadyRegisteredEmailException(EUserServiceImpl
                         .eAlreadyRegisteredEmailExceptionMessage.getValue()); }));
     }
@@ -214,8 +210,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public DefaultResponse validateLoginId(String loginId) {
         userRepository.findUserByLoginId(loginId)
-                .stream()
-                .findAny()
                 .ifPresent((u -> { throw new AlreadyRegisteredUserException(EUserServiceImpl
                         .eAlreadyRegisteredLoginIdExceptionMessage.getValue()); }));
         return DefaultResponse.from(EUserServiceImpl.eNotDuplicatedLoginIdMessage.getValue());

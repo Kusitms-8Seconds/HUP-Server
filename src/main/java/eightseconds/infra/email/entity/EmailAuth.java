@@ -10,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 
 @Entity
 @Getter
@@ -52,5 +53,10 @@ public class EmailAuth extends BaseTimeEntity {
         LocalDateTime currentDateTime = LocalDateTime.now();
         if (createdDateTime.until(currentDateTime, ChronoUnit.MINUTES) > EEmailAuth.eEmailValidationTime.getMinutes()) throw new ExpiredAuthCodeTimeException(
                 EEmailAuth.eExpiredAuthCodeTimeExceptionMessage.getValue());
+    }
+
+    public void completedAuth() {
+        this.getUser().setEmailAuthActivated(true);
+        this.getUser().setAuthorities(Collections.singleton(User.toRoleUserAuthority()));
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Random;
 
@@ -53,7 +54,7 @@ public class EmailServiceImpl implements EmailService{
         EmailAuth emailAuth = emailAuthRepository.findByAuthCode(authCode)
                 .orElseThrow(() -> new InvalidAuthCodeException(EEmailServiceImpl.eInvalidAuthCodeExceptionMessage.getValue()));
         emailAuth.validateValidPeriod(emailAuth);
-        emailAuth.getUser().setEmailAuthActivated(true);
+        emailAuth.completedAuth();
         return DefaultResponse.from(EEmailServiceImpl.eCompleteAuthMessage.getValue());
     }
 

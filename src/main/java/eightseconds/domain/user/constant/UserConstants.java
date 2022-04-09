@@ -38,6 +38,7 @@ public class UserConstants {
     @Getter
     @AllArgsConstructor
     public enum EAuthority{
+        eRoleDisabledUser("ROLE_DISABLED_USER"),
         eRoleUser("ROLE_USER");
         private final String value;
     }
