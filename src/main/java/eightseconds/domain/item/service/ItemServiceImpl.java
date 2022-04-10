@@ -112,8 +112,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public PaginationDto<List<ItemDetailsResponse>> getAllItemsByCategory(Pageable pageable, String category) {
         validateCategory(category);
-        validateExistingItemsByCategory(pageable, ECategory.from(category));
-        Page<Item> page = itemRepository.findAllByCategory(pageable, ECategory.from(category));
+        Category returnCategory = categoryService.getCategoryByEItemCategory(ECategory.from(category));
+        validateExistingItemsByCategory(pageable, returnCategory.getId());
+        Page<Item> page = itemRepository.findAllByCategoryId(pageable, returnCategory.getId());
         List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -165,8 +166,8 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new InvalidCategoryException(EItemServiceImpl.eInvalidCategoryExceptionMessage.getValue()));
     }
 
-    private void validateExistingItemsByCategory(Pageable pageable, ECategory category) {
-        itemRepository.findAllByCategory(pageable, category)
+    private void validateExistingItemsByCategory(Pageable pageable, Long categoryId) {
+        itemRepository.findAllByCategoryId(pageable, categoryId)
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new NotFoundItemException(EItemServiceImpl.eNotFoundItemExceptionForCategoryMessage.getValue()));
