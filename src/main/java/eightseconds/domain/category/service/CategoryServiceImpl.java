@@ -1,13 +1,16 @@
 package eightseconds.domain.category.service;
 
+import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import eightseconds.domain.category.constant.CategoryConstants.ECategoryServiceImpl;
 import eightseconds.domain.category.dto.InterestCategoryRequest;
+import eightseconds.domain.category.dto.UserInterestCategoryResponse;
 import eightseconds.domain.category.entity.Category;
 import eightseconds.domain.category.entity.UserCategory;
 import eightseconds.domain.category.exeception.NotFoundCategoryException;
+import eightseconds.domain.category.exeception.NotFoundUserInterestCategoryException;
 import eightseconds.domain.category.repository.CategoryRepository;
-import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import eightseconds.domain.category.repository.UserCategoryRepository;
+import eightseconds.domain.item.exception.NotFoundItemException;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.DefaultResponse;
@@ -44,6 +47,14 @@ public class CategoryServiceImpl implements CategoryService{
             this.userCategoryRepository.save(userCategory);
         }
         return DefaultResponse.from(ECategoryServiceImpl.eFinishChangeUserCategoriesMessage.getValue());
+    }
+
+    @Override
+    public UserInterestCategoryResponse getUserCategories(Long userId) {
+        this.userService.validateUserId(userId);
+        List<UserCategory> userCategories = this.userCategoryRepository.findAllByUserId(userId).get();
+        if(userCategories.size()==0){ throw new NotFoundUserInterestCategoryException(ECategoryServiceImpl.eNotFoundUserInterestCategoryException.getValue());}
+        return UserInterestCategoryResponse.from(userCategories);
     }
 
     private void deleteAlreadyUserCategories(Long userId) {

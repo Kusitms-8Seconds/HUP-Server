@@ -15,11 +15,10 @@ import java.util.Optional;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("select i from Item i where i.soldStatus = :soldStatus")
     Page<Item> findAllByStatus(Pageable pageable, @Param("soldStatus") EItemSoldStatus soldStatus);
-    Page<Item> findAllByCategory(Pageable pageable, ECategory category);
     Optional<Item> findById(Long itemId);
     @Query("select i from Item i where i.user.id = :userId and i.soldStatus = :soldStatus")
     Page<Item> findAllByStatusAndUserId(Pageable pageable, @Param("soldStatus") EItemSoldStatus soldStatus, @Param("userId") Long userId);
     @Query("select i from Item i where i.soldStatus = :soldStatus")
     List<Item> findAllItemsByStatus(@Param("soldStatus") EItemSoldStatus soldStatus);
-
+    Page<Item> findAllByCategoryId(Pageable pageable, Long categoryId);
 }
