@@ -1,5 +1,6 @@
 package eightseconds.global.exception;
 
+import eightseconds.domain.category.exeception.NotFoundCategoryException;
 import eightseconds.domain.chatroom.exception.AlreadyEnterException;
 import eightseconds.domain.chatroom.exception.NotFoundChatRoomException;
 import eightseconds.domain.chatroom.exception.NotFoundUserChatRoomException;
@@ -349,5 +350,15 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
     public final ResponseEntity<Object> handleAlreadyEnterException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.CONFLICT.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * Category Exception
+     */
+
+    @ExceptionHandler(NotFoundCategoryException.class)
+    public final ResponseEntity<Object> handleNotFoundCategoryException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 }
