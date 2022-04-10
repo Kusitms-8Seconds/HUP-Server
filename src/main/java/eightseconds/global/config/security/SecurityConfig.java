@@ -100,6 +100,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/files/**").access("hasRole('ROLE_USER')")
                 .antMatchers("/api/v1/chatRooms/**").access("hasRole('ROLE_USER')")
                 .antMatchers("/api/v1/chatMessages/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/api/v1/categories/**").access("hasRole('ROLE_USER')")
                 .antMatchers("/websocket/websocket/**").access("hasRole('ROLE_USER')")
 
                 .anyRequest().authenticated()
