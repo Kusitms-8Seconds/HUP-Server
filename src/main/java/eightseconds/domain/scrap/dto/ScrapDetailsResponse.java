@@ -3,6 +3,7 @@ package eightseconds.domain.scrap.dto;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
+import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import eightseconds.domain.scrap.entity.Scrap;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class ScrapDetailsResponse {
     @NotNull private Long userId;
     @NotNull private Long itemId;
     @NotNull private String itemName;
-    @NotNull @Enumerated(EnumType.STRING) private ItemConstants.EItemCategory category;
+    @NotNull @Enumerated(EnumType.STRING) private ECategory category;
     @NotNull private int initPrice;
     private int soldPrice;
     @NotNull private LocalDateTime buyDate;
@@ -57,7 +58,7 @@ public class ScrapDetailsResponse {
                 .userId(scrap.getUser().getId())
                 .itemId(scrap.getItem().getId())
                 .itemName(scrap.getItem().getItemName())
-                .category(scrap.getItem().getCategory())
+                .category(scrap.getItem().getCategory().getCategory())
                 .initPrice(scrap.getItem().getInitPrice())
                 .soldPrice(scrap.getItem().getSoldPrice())
                 .buyDate(scrap.getItem().getBuyDate())

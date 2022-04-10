@@ -1,6 +1,7 @@
 package eightseconds.domain.item.dto;
 
-import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
+import eightseconds.domain.category.constant.CategoryConstants.ECategory;
+import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.item.entity.Item;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,7 +29,7 @@ public class RegisterItemRequest {
 
     @NotBlank(message = "등록하고자 하는 상품의 카테고리를 입력해주세요.")
     @ApiModelProperty(notes = "상품 카테고리를 입력해 주세요.")
-    private EItemCategory category;
+    private ECategory category;
 
     @NotBlank(message = "등록하고자 하는 상품의 초기가격을 입력해주세요.")
     @ApiModelProperty(notes = "상품의 초기가격을 입력해 주세요.")
@@ -61,7 +62,7 @@ public class RegisterItemRequest {
 
         return RegisterItemRequest.builder()
                 .itemName(itemName)
-                .category(EItemCategory.valueOf(category))
+                .category(ECategory.valueOf(category))
                 .initPrice(Integer.valueOf(initPrice))
                 .buyDate(buyDateFormatted)
                 .itemStatePoint(Integer.valueOf(itemStatePoint))
@@ -74,7 +75,6 @@ public class RegisterItemRequest {
     public Item toEntity(){
         return Item.builder()
                 .itemName(itemName)
-                .category(EItemCategory.from(category.toString()))
                 .initPrice(initPrice)
                 .buyDate(buyDate)
                 .itemStatePoint(itemStatePoint)

@@ -1,10 +1,13 @@
 package eightseconds.domain.item.service;
 
+import eightseconds.domain.category.entity.Category;
+import eightseconds.domain.category.service.CategoryService;
 import eightseconds.domain.chatroom.service.ChatRoomService;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.file.service.FileService;
 import eightseconds.domain.item.constant.ItemConstants.EItemServiceImpl;
-import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
+import eightseconds.domain.category.constant.CategoryConstants.ECategory;
+
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.entity.Item;
@@ -38,13 +41,16 @@ public class ItemServiceImpl implements ItemService {
     private final UserService userService;
     private final NotificationService notificationService;
     private final ChatRoomService chatRoomService;
+    private final CategoryService categoryService;
 
     @Override
     @Transactional
     public RegisterItemResponse saveItem(Long userId, @Valid RegisterItemRequest registerItemRequest) throws IOException {
         validateCreateSoldOutTime(registerItemRequest.getAuctionClosingDate());
-        Item item = registerItemRequest.toEntity();
         User user = userService.getUserByUserId(userId);
+        Item item = registerItemRequest.toEntity();
+        Category category = categoryService.getCategoryByEItemCategory(registerItemRequest.getCategory());
+        item.setCategory(category);
         item.setUser(user);
         List<MyFile> saveFiles = new ArrayList<>();
         List<MultipartFile> files = registerItemRequest.getFiles();
@@ -106,8 +112,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public PaginationDto<List<ItemDetailsResponse>> getAllItemsByCategory(Pageable pageable, String category) {
         validateCategory(category);
-        validateExistingItemsByCategory(pageable, EItemCategory.from(category));
-        Page<Item> page = itemRepository.findAllByCategory(pageable, EItemCategory.from(category));
+        validateExistingItemsByCategory(pageable, ECategory.from(category));
+        Page<Item> page = itemRepository.findAllByCategory(pageable, ECategory.from(category));
         List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -153,13 +159,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void validateCategory(String category) {
-        Arrays.stream(EItemCategory.values())
+        Arrays.stream(ECategory.values())
                 .filter(eItemCategory -> category.equals(eItemCategory.name()))
                 .findAny()
                 .orElseThrow(() -> new InvalidCategoryException(EItemServiceImpl.eInvalidCategoryExceptionMessage.getValue()));
     }
 
-    private void validateExistingItemsByCategory(Pageable pageable, EItemCategory category) {
+    private void validateExistingItemsByCategory(Pageable pageable, ECategory category) {
         itemRepository.findAllByCategory(pageable, category)
                 .stream()
                 .findAny()

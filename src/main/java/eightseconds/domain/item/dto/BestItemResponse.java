@@ -4,6 +4,7 @@ import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
+import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +23,7 @@ public class BestItemResponse {
     private Long id;
     private Long userId;
     private String itemName;
-    private ItemConstants.EItemCategory category;
+    private ECategory category;
     private int initPrice;
     private LocalDateTime buyDate;
     private int itemStatePoint;
@@ -53,7 +54,7 @@ public class BestItemResponse {
                 .id(item.getId())
                 .userId(item.getUser().getId())
                 .itemName(item.getItemName())
-                .category(item.getCategory())
+                .category(item.getCategory().getCategory())
                 .initPrice(item.getInitPrice())
                 .buyDate(item.getBuyDate())
                 .itemStatePoint(item.getItemStatePoint())

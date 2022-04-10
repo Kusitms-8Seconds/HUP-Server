@@ -1,9 +1,10 @@
 package eightseconds.domain.item.entity;
 
+import eightseconds.domain.category.entity.Category;
 import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants.EItem;
-import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
+import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.exception.NotBidItemException;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
@@ -31,8 +32,8 @@ public class Item extends BaseTimeEntity {
 
     private String itemName;
 
-    @Enumerated(EnumType.STRING)
-    private EItemCategory category;
+//    @Enumerated(EnumType.STRING)
+//    private EItemCategory category;
     private int initPrice;
     private int soldPrice;
     private LocalDateTime buyDate;
@@ -58,11 +59,14 @@ public class Item extends BaseTimeEntity {
     @OneToMany(mappedBy = "item", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @Builder
-    public Item(String itemName, EItemCategory category, int initPrice,
+    public Item(String itemName, ECategory category, int initPrice,
                 LocalDateTime buyDate, int itemStatePoint, String description, LocalDateTime auctionClosingDate) {
         this.itemName = itemName;
-        this.category = category;
         this.initPrice = initPrice;
         this.buyDate = buyDate;
         this.itemStatePoint = itemStatePoint;
@@ -86,6 +90,11 @@ public class Item extends BaseTimeEntity {
     public void setChatRoom(ChatRoom chatRoom) {
         this.chatRooms.add(chatRoom);
         chatRoom.setItem(this);
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+        category.setItem(this);
     }
 
     // 비즈니스 로직
