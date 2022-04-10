@@ -1,7 +1,7 @@
 package eightseconds.domain.item.dto;
 
 import eightseconds.domain.file.entity.MyFile;
-import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
+import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.entity.Item;
 import io.swagger.annotations.ApiModel;
@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class RegisterItemResponse {
     private Long id;
     private Long userId;
     private final String itemName;
-    private EItemCategory category;
+    private ECategory category;
     private int initPrice;
     private LocalDateTime buyDate;
     private int itemStatePoint;
@@ -45,7 +44,7 @@ public class RegisterItemResponse {
                 .id(item.getId())
                 .userId(item.getUser().getId())
                 .itemName(item.getItemName())
-                .category(item.getCategory())
+                .category(item.getCategory().getCategory())
                 .initPrice(item.getInitPrice())
                 .buyDate(item.getBuyDate())
                 .itemStatePoint(item.getItemStatePoint())

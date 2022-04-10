@@ -35,7 +35,7 @@ spring:
         #one-indexed-parameters: true
 
   redis:
-    host: localhost
+    host: redis
     port: 6379
 
   security:

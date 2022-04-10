@@ -1,12 +1,10 @@
 package eightseconds.domain.item.dto;
 
-import eightseconds.domain.chatroom.entity.ChatRoom;
+import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import eightseconds.domain.file.entity.MyFile;
-import eightseconds.domain.item.constant.ItemConstants.EItemCategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
-import eightseconds.domain.scrap.entity.Scrap;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +26,7 @@ public class ItemDetailsResponse {
     @NotNull private Long id;
     @NotNull private Long userId;
     @NotNull private String itemName;
-    @NotNull @Enumerated(EnumType.STRING) private EItemCategory category;
+    @NotNull @Enumerated(EnumType.STRING) private ECategory category;
     @NotNull private int initPrice;
     private int soldPrice;
     @NotNull private LocalDateTime buyDate;
@@ -78,7 +76,7 @@ public class ItemDetailsResponse {
                 .id(item.getId())
                 .userId(item.getUser().getId())
                 .itemName(item.getItemName())
-                .category(item.getCategory())
+                .category(item.getCategory().getCategory())
                 .initPrice(item.getInitPrice())
                 .soldPrice(item.getSoldPrice())
                 .buyDate(item.getBuyDate())
