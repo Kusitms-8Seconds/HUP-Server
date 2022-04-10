@@ -1,6 +1,7 @@
 package eightseconds.domain.user.entity;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import eightseconds.domain.category.entity.UserCategory;
 import eightseconds.domain.chatmessage.entity.ChatMessage;
 import eightseconds.domain.chatroom.entity.UserChatRoom;
 import eightseconds.domain.item.entity.Item;
@@ -93,6 +94,9 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<Notification> notifications = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    private List<UserCategory> userCategories = new ArrayList<>();
+
     private String targetToken;
 
 
@@ -108,6 +112,11 @@ public class User extends BaseTimeEntity {
     public void updateNotice(Notice notice) {
         this.notices.add(notice);
         notice.setUser(this);
+    }
+
+    public void setCategory(UserCategory userCategory) {
+        this.userCategories.add(userCategory);
+        userCategory.setUser(this);
     }
 
     public void getAuthority(Long id){
@@ -195,5 +204,4 @@ public class User extends BaseTimeEntity {
         setPhoneNumber(userRequest.getPhoneNumber());
         return this;
     }
-
 }

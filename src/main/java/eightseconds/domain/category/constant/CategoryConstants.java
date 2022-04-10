@@ -11,7 +11,8 @@ public class CategoryConstants {
     @AllArgsConstructor
     @NoArgsConstructor
     public enum ECategoryServiceImpl {
-        eNotFoundCategoryException("해당하는 카테고리를 찾을 수 없습니다.");
+        eNotFoundCategoryException("해당하는 카테고리를 찾을 수 없습니다."),
+        eFinishChangeUserCategoriesMessage("관심 카테고리 변경이 완료되었습니다.");
         private String value;
     }
 
