@@ -72,6 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/v3/api-docs").permitAll()
                 .antMatchers("/image/**").permitAll()
+                .antMatchers("/websocket/websocket").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/email/send").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/email/verify").permitAll()
@@ -100,7 +101,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/chatRooms/**").access("hasRole('ROLE_USER')")
                 .antMatchers("/api/v1/chatMessages/**").access("hasRole('ROLE_USER')")
                 .antMatchers("/api/v1/categories/**").access("hasRole('ROLE_USER')")
-                .antMatchers("/websocket/websocket/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/websocket/websocket/pub/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/websocket/websocket/sub/**").access("hasRole('ROLE_USER')")
 
                 .anyRequest().authenticated()
                 .and()
