@@ -18,7 +18,7 @@ import javax.persistence.*;
 public class Notification extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id")
     private Long id;
 

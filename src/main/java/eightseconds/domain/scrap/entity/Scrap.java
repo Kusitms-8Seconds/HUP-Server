@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class Scrap extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "scrap_id")
     private Long id;
 
