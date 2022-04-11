@@ -31,9 +31,6 @@ public class Item extends BaseTimeEntity {
     private Long id;
 
     private String itemName;
-
-//    @Enumerated(EnumType.STRING)
-//    private EItemCategory category;
     private int initPrice;
     private int soldPrice;
     private LocalDateTime buyDate;
@@ -64,7 +61,7 @@ public class Item extends BaseTimeEntity {
     private Category category;
 
     @Builder
-    public Item(String itemName, ECategory category, int initPrice,
+    public Item(String itemName, int initPrice,
                 LocalDateTime buyDate, int itemStatePoint, String description, LocalDateTime auctionClosingDate) {
         this.itemName = itemName;
         this.initPrice = initPrice;
