@@ -36,7 +36,7 @@ import java.util.*;
 public class User extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
 
@@ -140,6 +140,7 @@ public class User extends BaseTimeEntity {
                 .phoneNumber(signUpRequest.getPhoneNumber())
                 .authorities(Collections.singleton(toRoleDisabledUserAuthority()))
                 .activated(true)
+                .emailAuthActivated(false)
                 .picture(UserConstants.EUserServiceImpl.eBasePicture.getValue())
                 .loginType(ELoginType.eApp)
                 .build();

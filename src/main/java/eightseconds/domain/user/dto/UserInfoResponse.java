@@ -22,6 +22,7 @@ public class UserInfoResponse {
     private String phoneNumber;
     private String picture;
     private boolean activated;
+    private boolean emailAuthActivated;
     private ELoginType loginType;
 
     public static UserInfoResponse from(User user) {
@@ -33,6 +34,7 @@ public class UserInfoResponse {
                 .phoneNumber(user.getPhoneNumber())
                 .picture(user.getPicture())
                 .activated(user.isActivated())
+                .emailAuthActivated(user.isEmailAuthActivated())
                 .loginType(user.getLoginType())
                 .build();
     }
