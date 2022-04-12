@@ -21,11 +21,11 @@
   
 ## 🛠 Back-End Architecture
   
- <p align="center"><img src="https://user-images.githubusercontent.com/61726631/156703353-11492745-0ff9-4d2b-9608-b518fda902bb.jpg"/><p>  
+ <p align="center"><img src="https://user-images.githubusercontent.com/61726631/162979421-670caab1-1d26-4a63-bed2-0fe6e2b9d670.jpg"/><p>  
 
 ## :rocket: Back-End CI/CD
   
- <p align="center"><img src="https://user-images.githubusercontent.com/61726631/154832711-fc4a02d6-6b44-4448-a451-b000eaf81bf5.jpg"/><p>
+ <p align="center"><img src="https://user-images.githubusercontent.com/61726631/162979595-a274de71-a531-432c-a377-0a4250d63551.jpg"/><p>
 
  <h3>Back-End CI/CD는 다음과 같은 절차로 작동합니다.</br></h3>
  1. Local에서 Github로 푸쉬합니다.</br>
