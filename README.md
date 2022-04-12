@@ -17,7 +17,7 @@
   
 ## ⚙️ ERD
   
- <p align="center"><img src="https://user-images.githubusercontent.com/61726631/156703272-4727da13-cd08-4f80-a5f5-bcd6ab49c528.png"/><p>  
+ <p align="center"><img src="https://user-images.githubusercontent.com/61726631/162927187-6eb367bd-f7b2-4f6c-9d6d-f643368370ef.png"/><p>  
   
 ## 🛠 Back-End Architecture
   
@@ -35,9 +35,10 @@
  5. 운영용 EC2가 받은 각종 배포에 필요한 파일들에는 DockerHub에서 이미지를 받아오고, 실행시키는 코드가 담겨있습니다.</br>
  6. 마지막으로, 운영용 EC2에서 배포에 필요한 파일들을 실행하여 Docker로 SpringBoot, MariaDB, Redis를 띄웁니다.</br>
 
-## :books: HUP Swagger API Docs
+## :books: HUP API Docs
 
-<a href="http://www.hurryuphup.me/swagger-ui/index.html#/">HUP Swagger API Docs</a><br>
+<a href="http://www.hurryuphup.me/swagger-ui/index.html#/">HUP Swagger REST API Docs</a><br>
+<a href="https://expensive-cowbell-87c.notion.site/0a16957c3cdb42ccb9681d16ee1311b9?v=3d543e845738431bb16e11ca359ffede">HUP STOMP API Docs</a><br>
 
 ## :electric_plug: Development environment
 
