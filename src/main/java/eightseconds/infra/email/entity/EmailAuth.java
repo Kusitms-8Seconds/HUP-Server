@@ -29,6 +29,8 @@ public class EmailAuth extends BaseTimeEntity {
     @OneToOne(mappedBy = "emailAuth", fetch = FetchType.LAZY)
     private User user;
 
+    private boolean passwordCheck;
+
     // 연관관계 메서드
     public void setUser(User user) {
         this.user = user;

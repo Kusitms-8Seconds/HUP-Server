@@ -4,6 +4,7 @@ import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserServiceImpl;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.infra.email.constant.EmailConstants.EEmailServiceImpl;
+import eightseconds.infra.email.dto.EmailResetPasswordResponse;
 import eightseconds.infra.email.entity.EmailAuth;
 import eightseconds.infra.email.exception.InvalidAuthCodeException;
 import eightseconds.infra.email.repository.EmailAuthRepository;
@@ -48,14 +49,30 @@ public class EmailServiceImpl implements EmailService{
         return DefaultResponse.from(EEmailServiceImpl.eSendAuthCodeMessage.getValue());
     }
 
-    @Override
-    @Transactional
-    public DefaultResponse checkAuthCode(String authCode) {
+    public EmailAuth checkAuthCode(String authCode) {
         EmailAuth emailAuth = emailAuthRepository.findByAuthCode(authCode)
                 .orElseThrow(() -> new InvalidAuthCodeException(EEmailServiceImpl.eInvalidAuthCodeExceptionMessage.getValue()));
         emailAuth.validateValidPeriod(emailAuth);
-        emailAuth.completedAuth();
+        return emailAuth;
+    }
+
+    @Override
+    @Transactional
+    public EmailResetPasswordResponse resetPasswordAuthCode(String authCode) {
+        EmailAuth emailAuth = checkAuthCode(authCode);
+        emailAuth.setPasswordCheck(true);
+        return EmailResetPasswordResponse.from(emailAuth.getUser(), EEmailServiceImpl.eCompleteAuthMessage.getValue());
+    }
+
+    @Override
+    @Transactional
+    public DefaultResponse activateUserAuthCode(String authCode) {
+        activateEmailUserActivate(checkAuthCode(authCode));
         return DefaultResponse.from(EEmailServiceImpl.eCompleteAuthMessage.getValue());
+    }
+
+    private void activateEmailUserActivate(EmailAuth emailAuth) {
+        emailAuth.completedAuth();
     }
 
     private MimeMessage createMessage(String to) throws Exception{

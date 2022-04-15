@@ -142,6 +142,24 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(NotSamePasswordException.class)
+    public final ResponseEntity<Object> handleNotSamePasswordException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotAuthenticationForPasswordException.class)
+    public final ResponseEntity<Object> handleNotAuthenticationPasswordException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(NotSendEmailException.class)
+    public final ResponseEntity<Object> handleNotSendEmailException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+
     /**
      * Google User Domain Exception
      */

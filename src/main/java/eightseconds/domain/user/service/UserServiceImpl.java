@@ -10,6 +10,7 @@ import eightseconds.domain.user.exception.app.*;
 import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.jwt.TokenProvider;
+import eightseconds.infra.email.entity.EmailAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -169,6 +170,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .orElseThrow(NotFoundRegisteredEmailException::new));
     }
 
+    @Override
+    @Transactional
+    public ResetPasswordResponse resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        this.validateSamePassword(resetPasswordRequest);
+        User user = this.getUserByUserId(resetPasswordRequest.getUserId());
+        this.validateEmailAuthForResetPassword(user);
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
+        user.getEmailAuth().setPasswordCheck(false);
+        return ResetPasswordResponse.from(user);
+    }
+
+
     /**
      * validate
      */
@@ -220,5 +233,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                         .eAlreadyRegisteredLoginIdExceptionMessage.getValue()); }));
         return DefaultResponse.from(EUserServiceImpl.eNotDuplicatedLoginIdMessage.getValue());
     }
+
+    private void validateSamePassword(ResetPasswordRequest resetPasswordRequest) {
+        if(!resetPasswordRequest.getPassword().equals(resetPasswordRequest.getCheckPassword())){
+            throw new NotSamePasswordException();}
+    }
+
+    private void validateEmailAuthForResetPassword(User user) {
+        if (user.getEmailAuth()==null) throw new NotSendEmailException();
+        else if(!user.getEmailAuth().isPasswordCheck()) throw new NotAuthenticationForPasswordException();}
 
 }

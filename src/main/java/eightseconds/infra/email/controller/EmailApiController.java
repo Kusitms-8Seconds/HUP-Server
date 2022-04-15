@@ -3,6 +3,7 @@ package eightseconds.infra.email.controller;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.infra.email.dto.CheckAuthCodeRequest;
 import eightseconds.infra.email.dto.EmailAuthCodeRequest;
+import eightseconds.infra.email.dto.EmailResetPasswordResponse;
 import eightseconds.infra.email.service.EmailService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,8 @@ public class EmailApiController {
 
     private final EmailService emailService;
 
-    @PostMapping("/send")
     @ApiOperation(value = "회원 가입시 이메일 인증", notes = "기존사용하고 있는 이메일을 통해 인증")
+    @PostMapping("/send")
     public ResponseEntity<EntityModel<DefaultResponse>> sendEmailAuthCode(
             @Valid @RequestBody @ApiParam(value="이메일정보", required = true) EmailAuthCodeRequest emailAuthCodeRequest) throws Exception {
         DefaultResponse defaultResponse = emailService.sendSimpleMessage(emailAuthCodeRequest.getEmail());
@@ -38,12 +39,21 @@ public class EmailApiController {
                 .add(linkTo(methodOn(this.getClass()).verifyAuthCode(null)).withRel("get"))));
     }
 
-    @PostMapping("/verify")
-    @ApiOperation(value = "인증코드 검증", notes = "해당 유저의 Email로 보낸 인증코드와 입력한 인증코드가 맞는지 여부 검사")
+    @PostMapping("/activate-user")
+    @ApiOperation(value = "유저 활성화 하기 위한 인증코드 검증", notes = "해당 유저의 Email로 보낸 인증코드와 입력한 인증코드가 맞는지 여부 검사")
+    public ResponseEntity<?> verifyActivateUser(
+            @Valid @RequestBody @ApiParam(value="인증 코드", required = true) CheckAuthCodeRequest checkAuthCodeRequest){
+        DefaultResponse defaultResponse = emailService.activateUserAuthCode(checkAuthCodeRequest.getAuthCode());
+        return ResponseEntity.ok((EntityModel.of(defaultResponse)
+                .add(linkTo(methodOn(this.getClass()).verifyAuthCode(checkAuthCodeRequest)).withSelfRel())));
+    }
+
+    @PostMapping("/reset-password")
+    @ApiOperation(value = "비밀번호 재설정을 위한 인증코드 검증", notes = "해당 유저의 Email로 보낸 인증코드와 입력한 인증코드가 맞는지 여부 검사")
     public ResponseEntity<?> verifyAuthCode(
             @Valid @RequestBody @ApiParam(value="인증 코드", required = true) CheckAuthCodeRequest checkAuthCodeRequest){
-        DefaultResponse defaultResponse = emailService.checkAuthCode(checkAuthCodeRequest.getAuthCode());
-        return ResponseEntity.ok((EntityModel.of(defaultResponse)
+        EmailResetPasswordResponse emailResetPasswordResponse = emailService.resetPasswordAuthCode(checkAuthCodeRequest.getAuthCode());
+        return ResponseEntity.ok((EntityModel.of(emailResetPasswordResponse)
                 .add(linkTo(methodOn(this.getClass()).verifyAuthCode(checkAuthCodeRequest)).withSelfRel())));
     }
 
