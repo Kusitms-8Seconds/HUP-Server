@@ -136,6 +136,12 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(NotFoundRegisteredEmailException.class)
+    public final ResponseEntity<Object> handleNotFoundRegisteredEmailException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
     /**
      * Google User Domain Exception
      */
