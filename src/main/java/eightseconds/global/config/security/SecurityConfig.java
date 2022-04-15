@@ -86,6 +86,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/users/kakao-login").permitAll()
                 .antMatchers("/api/v1/users/naver-login").permitAll()
                 .antMatchers("/api/v1/users/check/**").permitAll()
+                .antMatchers("/api/v1/users/find-id").permitAll()
+                .antMatchers("/api/v1/users/reset-password").permitAll()
                 .antMatchers("/api/v1/priceSuggestions/maximumPrice/**").permitAll()
                 .antMatchers("/api/v1/priceSuggestions/participants/**").permitAll()
                 .antMatchers("/api/v1/scraps/hearts/**").permitAll()

@@ -24,4 +24,5 @@ public interface UserService {
     DefaultResponse validateLoginId(String loginId);
     ReissueResponse reissueToken(ReissueRequest reissueRequest) throws Exception;
     UpdateProfileResponse updateProfileImage(MultipartFile file, String userId) throws IOException;
+    FindLoginIdResponse findLoginId(FindLoginIdRequest findLoginIdRequest);
 }

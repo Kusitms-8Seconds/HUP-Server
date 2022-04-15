@@ -117,4 +117,10 @@ public class UserApiController {
                                                                            @RequestPart(value = "userId") String userId) throws IOException {
         return ResponseEntity.ok(EntityModel.of(userService.updateProfileImage(file, userId)));
     }
+
+    @ApiOperation(value = "유저 아이디 찾기", notes = "유저의 아이디를 찾습니다.")
+    @PostMapping("/find-id")
+    public ResponseEntity<FindLoginIdResponse> findLoginId(@Valid @RequestBody FindLoginIdRequest findLoginIdRequest) throws IOException {
+        return ResponseEntity.ok(userService.findLoginId(findLoginIdRequest));
+    }
 }

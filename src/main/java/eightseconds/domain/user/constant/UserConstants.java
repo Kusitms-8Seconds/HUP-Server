@@ -128,6 +128,7 @@ public class UserConstants {
         eWrongRefreshTokenRequestExceptionMessage("잘못된 요청입니다."),
         eLogout("logout"),
         eNotValidAccessTokenExceptionMessage("잘못된 요청입니다."),
+        eNotFoundRegisteredEmailExceptionMessage("해당 이메일로 가입된 유저가 없습니다."),
         eLogoutMessage("로그아웃 되었습니다."),
         eTrue(true),
         eAuthorityRoleUser("ROLE_USER"),

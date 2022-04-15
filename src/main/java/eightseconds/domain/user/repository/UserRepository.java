@@ -1,5 +1,6 @@
 package eightseconds.domain.user.repository;
 
+import eightseconds.domain.user.constant.UserConstants;
 import eightseconds.domain.user.constant.UserConstants.ELoginType;
 import eightseconds.domain.user.entity.User;
 import org.springframework.data.jpa.repository.EntityGraph;

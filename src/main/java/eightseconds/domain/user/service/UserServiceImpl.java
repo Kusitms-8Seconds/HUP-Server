@@ -163,6 +163,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return UpdateProfileResponse.from(fileURL);
     }
 
+    @Override
+    public FindLoginIdResponse findLoginId(FindLoginIdRequest findLoginIdRequest) {
+        return FindLoginIdResponse.from(this.userRepository.findByEmailAndLoginType(findLoginIdRequest.getEmail(), ELoginType.eApp)
+                .orElseThrow(NotFoundRegisteredEmailException::new));
+    }
+
     /**
      * validate
      */
