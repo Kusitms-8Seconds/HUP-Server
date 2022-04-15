@@ -25,4 +25,6 @@ public interface UserService {
     ReissueResponse reissueToken(ReissueRequest reissueRequest) throws Exception;
     UpdateProfileResponse updateProfileImage(MultipartFile file, String userId) throws IOException;
     FindLoginIdResponse findLoginId(FindLoginIdRequest findLoginIdRequest);
+    ResetPasswordResponse resetPassword(ResetPasswordRequest resetPasswordRequest);
+
 }

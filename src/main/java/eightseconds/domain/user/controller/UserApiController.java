@@ -120,7 +120,13 @@ public class UserApiController {
 
     @ApiOperation(value = "유저 아이디 찾기", notes = "유저의 아이디를 찾습니다.")
     @PostMapping("/find-id")
-    public ResponseEntity<FindLoginIdResponse> findLoginId(@Valid @RequestBody FindLoginIdRequest findLoginIdRequest) throws IOException {
+    public ResponseEntity<FindLoginIdResponse> findLoginId(@Valid @RequestBody FindLoginIdRequest findLoginIdRequest){
         return ResponseEntity.ok(userService.findLoginId(findLoginIdRequest));
+    }
+
+    @ApiOperation(value = "유저 비밀번호 재설정", notes = "유저의 비밀번호를 재설정합니다.")
+    @PostMapping("/reset-password")
+    public ResponseEntity<ResetPasswordResponse> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest){
+        return ResponseEntity.ok(userService.resetPassword(resetPasswordRequest));
     }
 }
