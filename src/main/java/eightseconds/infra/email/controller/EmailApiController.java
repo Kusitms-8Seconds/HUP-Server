@@ -30,7 +30,7 @@ public class EmailApiController {
     private final EmailService emailService;
 
     @ApiOperation(value = "회원 가입시 이메일 인증", notes = "기존사용하고 있는 이메일을 통해 인증")
-    @PostMapping("/send/activate")
+    @PostMapping("/send/activate-user")
     public ResponseEntity<EntityModel<DefaultResponse>> sendSimpleMessageForActivateUser(
             @Valid @RequestBody @ApiParam(value="이메일정보", required = true) EmailAuthCodeRequest emailAuthCodeRequest) throws Exception {
         DefaultResponse defaultResponse = emailService.sendSimpleMessageForActivateUser(emailAuthCodeRequest.getEmail());
@@ -40,7 +40,7 @@ public class EmailApiController {
     }
 
     @ApiOperation(value = "비밀번호 재설정을 위한 이메일 인증", notes = "비밀번호 재설정을 위한 이메일 인증")
-    @PostMapping("/send/reset")
+    @PostMapping("/send/reset-password")
     public ResponseEntity<EntityModel<DefaultResponse>> sendSimpleMessageForResetPassword(
             @Valid @RequestBody @ApiParam(value="이메일정보", required = true) EmailAuthCodeRequest emailAuthCodeRequest) throws Exception {
         DefaultResponse defaultResponse = emailService.sendSimpleMessageForResetPassword(emailAuthCodeRequest.getEmail());
@@ -49,7 +49,7 @@ public class EmailApiController {
                 .add(linkTo(methodOn(this.getClass()).verifyAuthCode(null)).withRel("get"))));
     }
 
-    @PostMapping("/activate-user")
+    @PostMapping("/verify/activate-user")
     @ApiOperation(value = "유저 활성화 하기 위한 인증코드 검증", notes = "해당 유저의 Email로 보낸 인증코드와 입력한 인증코드가 맞는지 여부 검사")
     public ResponseEntity<?> verifyActivateUser(
             @Valid @RequestBody @ApiParam(value="인증 코드", required = true) CheckAuthCodeRequest checkAuthCodeRequest){
@@ -58,7 +58,7 @@ public class EmailApiController {
                 .add(linkTo(methodOn(this.getClass()).verifyAuthCode(checkAuthCodeRequest)).withSelfRel())));
     }
 
-    @PostMapping("/reset-password")
+    @PostMapping("/verify/reset-password")
     @ApiOperation(value = "비밀번호 재설정을 위한 인증코드 검증", notes = "해당 유저의 Email로 보낸 인증코드와 입력한 인증코드가 맞는지 여부 검사")
     public ResponseEntity<?> verifyAuthCode(
             @Valid @RequestBody @ApiParam(value="인증 코드", required = true) CheckAuthCodeRequest checkAuthCodeRequest){
