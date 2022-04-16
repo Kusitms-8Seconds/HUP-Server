@@ -30,12 +30,22 @@ public class EmailApiController {
     private final EmailService emailService;
 
     @ApiOperation(value = "회원 가입시 이메일 인증", notes = "기존사용하고 있는 이메일을 통해 인증")
-    @PostMapping("/send")
-    public ResponseEntity<EntityModel<DefaultResponse>> sendEmailAuthCode(
+    @PostMapping("/send/activate")
+    public ResponseEntity<EntityModel<DefaultResponse>> sendSimpleMessageForActivateUser(
             @Valid @RequestBody @ApiParam(value="이메일정보", required = true) EmailAuthCodeRequest emailAuthCodeRequest) throws Exception {
-        DefaultResponse defaultResponse = emailService.sendSimpleMessage(emailAuthCodeRequest.getEmail());
+        DefaultResponse defaultResponse = emailService.sendSimpleMessageForActivateUser(emailAuthCodeRequest.getEmail());
         return ResponseEntity.ok((EntityModel.of(defaultResponse)
-                .add(linkTo(methodOn(this.getClass()).sendEmailAuthCode(emailAuthCodeRequest)).withSelfRel())
+                .add(linkTo(methodOn(this.getClass()).sendSimpleMessageForActivateUser(emailAuthCodeRequest)).withSelfRel())
+                .add(linkTo(methodOn(this.getClass()).verifyAuthCode(null)).withRel("get"))));
+    }
+
+    @ApiOperation(value = "비밀번호 재설정을 위한 이메일 인증", notes = "비밀번호 재설정을 위한 이메일 인증")
+    @PostMapping("/send/reset")
+    public ResponseEntity<EntityModel<DefaultResponse>> sendSimpleMessageForResetPassword(
+            @Valid @RequestBody @ApiParam(value="이메일정보", required = true) EmailAuthCodeRequest emailAuthCodeRequest) throws Exception {
+        DefaultResponse defaultResponse = emailService.sendSimpleMessageForResetPassword(emailAuthCodeRequest.getEmail());
+        return ResponseEntity.ok((EntityModel.of(defaultResponse)
+                .add(linkTo(methodOn(this.getClass()).sendSimpleMessageForResetPassword(emailAuthCodeRequest)).withSelfRel())
                 .add(linkTo(methodOn(this.getClass()).verifyAuthCode(null)).withRel("get"))));
     }
 

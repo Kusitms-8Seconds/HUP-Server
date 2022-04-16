@@ -31,12 +31,29 @@ public class EmailServiceImpl implements EmailService{
     public String authCode;
 
     @Override
-    public DefaultResponse sendSimpleMessage(String email) throws Exception {
+    public DefaultResponse sendSimpleMessageForActivateUser(String email) throws Exception {
 
         User user = userService.validateNotRegisteredEmail(email);
         userService.validateIsAlreadyRegisteredUser(user);
         validateIsAlreadyExistEmail(email);
 
+        MimeMessage message = createMessage(email);
+        try{
+            emailSender.send(message);
+            EmailAuth emailAuth = EmailAuth.createEmailAuth(email, authCode, user);
+            emailAuthRepository.save(emailAuth);
+        }catch(MailException es){
+            es.printStackTrace();
+            throw new IllegalArgumentException();
+        }
+        return DefaultResponse.from(EEmailServiceImpl.eSendAuthCodeMessage.getValue());
+    }
+
+
+    @Override
+    public DefaultResponse sendSimpleMessageForResetPassword(String email) throws Exception {
+        User user = userService.validateNotRegisteredEmail(email);
+        validateIsAlreadyExistEmail(email);
         MimeMessage message = createMessage(email);
         try{
             emailSender.send(message);
