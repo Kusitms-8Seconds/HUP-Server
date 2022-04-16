@@ -37,7 +37,7 @@ public class EmailServiceImpl implements EmailService{
         userService.validateIsAlreadyRegisteredUser(user);
         validateIsAlreadyExistEmail(email);
 
-        MimeMessage message = createMessage(email);
+        MimeMessage message = createMessageForActivateUser(email);
         try{
             emailSender.send(message);
             EmailAuth emailAuth = EmailAuth.createEmailAuth(email, authCode, user);
@@ -54,7 +54,7 @@ public class EmailServiceImpl implements EmailService{
     public DefaultResponse sendSimpleMessageForResetPassword(String email) throws Exception {
         User user = userService.validateNotRegisteredEmail(email);
         validateIsAlreadyExistEmail(email);
-        MimeMessage message = createMessage(email);
+        MimeMessage message = createMessageForResetPassword(email);
         try{
             emailSender.send(message);
             EmailAuth emailAuth = EmailAuth.createEmailAuth(email, authCode, user);
@@ -92,7 +92,7 @@ public class EmailServiceImpl implements EmailService{
         emailAuth.completedAuth();
     }
 
-    private MimeMessage createMessage(String to) throws Exception{
+    private MimeMessage createMessageForActivateUser(String to) throws Exception{
         MimeMessage message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);
@@ -104,12 +104,40 @@ public class EmailServiceImpl implements EmailService{
         msgg+= EEmailServiceImpl.eSendMessage1.getValue();
         msgg+= EEmailServiceImpl.eSendMessage2.getValue();
         msgg+= EEmailServiceImpl.eSendMessage3.getValue();
-        msgg+= EEmailServiceImpl.eSendMessage4.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage41.getValue();
         msgg+= EEmailServiceImpl.eSendMessage5.getValue();
         msgg+= EEmailServiceImpl.eSendMessage6.getValue();
         msgg+= EEmailServiceImpl.eSendMessage7.getValue();
         msgg+= EEmailServiceImpl.eSendMessage8.getValue();
-        msgg+= EEmailServiceImpl.eSendMessage9.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage91.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage10.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage11.getValue();
+        msgg+= authCode + EEmailServiceImpl.eSendMessage12.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage13.getValue();
+        message.setText(msgg, EEmailServiceImpl.eSendMessageCharset.getValue(), EEmailServiceImpl.eSendMessageSubType.getValue());//내용
+        message.setFrom(new InternetAddress(EEmailServiceImpl.eSendMessageAddress.getValue(),EEmailServiceImpl.eSendMessagePersonal.getValue()));//보내는 사람
+
+        return message;
+    }
+
+    private MimeMessage createMessageForResetPassword(String to) throws Exception{
+        MimeMessage message = emailSender.createMimeMessage();
+
+        message.addRecipients(RecipientType.TO, to);
+        message.setSubject(EEmailServiceImpl.eSubject.getValue());
+
+        authCode = createKey();
+
+        String msgg=EEmailServiceImpl.eEmpty.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage1.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage2.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage3.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage42.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage5.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage6.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage7.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage8.getValue();
+        msgg+= EEmailServiceImpl.eSendMessage92.getValue();
         msgg+= EEmailServiceImpl.eSendMessage10.getValue();
         msgg+= EEmailServiceImpl.eSendMessage11.getValue();
         msgg+= authCode + EEmailServiceImpl.eSendMessage12.getValue();
