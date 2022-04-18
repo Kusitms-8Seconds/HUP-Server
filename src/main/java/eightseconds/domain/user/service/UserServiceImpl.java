@@ -85,8 +85,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     public User getUserByLoginId(String loginId) {
-        Optional<User> user = this.userRepository.findUserByLoginId(loginId);
-        return user.get();
+        return this.userRepository.findUserByLoginId(loginId).orElseThrow(NotFoundLoginIdException::new);
     }
 
     public UserInfoResponse getUserInfoByUserId(Long userId) {
