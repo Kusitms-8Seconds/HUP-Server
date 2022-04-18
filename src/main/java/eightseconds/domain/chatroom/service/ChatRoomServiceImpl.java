@@ -37,8 +37,8 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
     @Override
     public List<ChatRoomResponse> getAllChatRooms(Long userId) {
-        User user = userService.getUserByUserId(userId);
-        List<UserChatRoom> listUserChatRoom = userChatRoomRepository.findAllByUser(user);
+        User user = this.userService.getUserByUserId(userId);
+        List<UserChatRoom> listUserChatRoom = this.userChatRoomRepository.findAllByUser(user);
         validateUserChatRoomCountIsZero(listUserChatRoom);
         List<ChatRoomResponse> chatRoomResponses = new ArrayList<>();
         for (UserChatRoom userChatRoom : listUserChatRoom) {
@@ -64,15 +64,15 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     public void createChatRoom(PriceSuggestion priceSuggestion, Item item) {
         ChatRoom chatRoom = new ChatRoom();
         item.setChatRoom(chatRoom);
-        chatRoomRepository.save(chatRoom);
+        this.chatRoomRepository.save(chatRoom);
         UserChatRoom userChatRoomByBidder = new UserChatRoom();
         UserChatRoom userChatRoomBySeller = new UserChatRoom();
         userChatRoomByBidder.setUser(priceSuggestion.getUser());
         userChatRoomBySeller.setUser(item.getUser());
         userChatRoomByBidder.setChatRoom(chatRoom);
         userChatRoomBySeller.setChatRoom(chatRoom);
-        userChatRoomRepository.save(userChatRoomByBidder);
-        userChatRoomRepository.save(userChatRoomBySeller);
+        this.userChatRoomRepository.save(userChatRoomByBidder);
+        this.userChatRoomRepository.save(userChatRoomBySeller);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
     @Override
     public void deleteChatRoom(UserChatRoom userChatRoom) {
-        userChatRoomRepository.delete(userChatRoom);
+        this.userChatRoomRepository.delete(userChatRoom);
     }
 
     /**
@@ -94,22 +94,22 @@ public class ChatRoomServiceImpl implements ChatRoomService{
      */
 
     private ChatRoom validateChatId(Long chatId) {
-        return chatRoomRepository.findById(chatId).orElseThrow(() ->
+        return this.chatRoomRepository.findById(chatId).orElseThrow(() ->
                 new NotFoundChatRoomException(EChatRoomServiceImpl.eNotFoundChatRoomExceptionMessage.getValue()));
     }
 
     public UserChatRoom validateIsEnter(Long userId, Long chatRoomId) {
-        return userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).orElseThrow(() ->
+        return this.userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).orElseThrow(() ->
                 new NotFoundUserChatRoomException(EChatRoomServiceImpl.eNotFoundUserChatRoomExceptionMessage.getValue()));
     }
 
     public UserChatRoom validateUserIdAndChatRoomId(Long userId, Long chatRoomId) {
-        return userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).orElseThrow(() ->
+        return this.userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).orElseThrow(() ->
                 new NotFoundUserChatRoomException(EChatRoomServiceImpl.eNotFoundUserChatRoomExceptionMessage.getValue()));
     }
 
     public void validateAlreadyEnter(Long userId, Long chatRoomId) {
-        if(userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).get().isEntryCheck()){
+        if(this.userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).get().isEntryCheck()){
             throw new AlreadyEnterException(EChatRoomServiceImpl.eAlreadyEnterExceptionMessage.getValue());
         }
     }

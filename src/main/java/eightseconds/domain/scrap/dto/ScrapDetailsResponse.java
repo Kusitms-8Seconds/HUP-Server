@@ -1,7 +1,7 @@
 package eightseconds.domain.scrap.dto;
 
-import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants;
+import eightseconds.domain.myfile.entity.MyFile;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import eightseconds.domain.scrap.entity.Scrap;
@@ -43,7 +43,7 @@ public class ScrapDetailsResponse {
             List<MyFile> myFiles = scrap.getItem().getMyFiles();
             fileNames = new ArrayList<>();
             for (MyFile myFile : myFiles) {
-                fileNames.add(myFile.getFilename());
+                fileNames.add(myFile.getFileKey());
             }
         }
         int maxPrice = 0;

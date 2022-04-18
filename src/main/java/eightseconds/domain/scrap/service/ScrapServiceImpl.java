@@ -32,14 +32,14 @@ public class ScrapServiceImpl implements ScrapService{
     @Override
     public ScrapRegisterResponse saveScrap(ScrapRegisterRequest scrapRegisterRequest) {
 
-        User user = userService.getUserByUserId(scrapRegisterRequest.getUserId());
-        Item item = itemService.getItemByItemId(scrapRegisterRequest.getItemId());
+        User user = this.userService.getUserByUserId(scrapRegisterRequest.getUserId());
+        Item item = this.itemService.getItemByItemId(scrapRegisterRequest.getItemId());
         validateExistingScrap(user, item.getId());
         Scrap scrap = Scrap.builder()
                 .user(user)
                 .item(item)
                 .build();
-        return ScrapRegisterResponse.from(scrapRepository.save(scrap));
+        return ScrapRegisterResponse.from(this.scrapRepository.save(scrap));
     }
 
     @Override
@@ -47,27 +47,27 @@ public class ScrapServiceImpl implements ScrapService{
         Scrap scrap = validateIsExistingScrap(scrapId);
         scrap.setUser(null);
         scrap.setItem(null);
-        scrapRepository.deleteById(scrap.getId());
+        this.scrapRepository.deleteById(scrap.getId());
     }
 
     @Override
     public PaginationDto<List<ScrapDetailsResponse>> getAllScrapsByUserId(Pageable pageable, Long userId) {
-        userService.validateUserId(userId);
+        this.userService.validateUserId(userId);
         validateExistingScrapByUserId(pageable, userId);
-        Page<Scrap> page = scrapRepository.findAllByUserId(pageable, userId);
+        Page<Scrap> page = this.scrapRepository.findAllByUserId(pageable, userId);
         List<ScrapDetailsResponse> data = page.get().map(ScrapDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
 
     @Override
     public ScrapCountResponse getAllScraps(Long id) {
-        itemService.validateItemId(id);
-        return ScrapCountResponse.from(scrapRepository.findItemCountByItemId(id));
+        this.itemService.validateItemId(id);
+        return ScrapCountResponse.from(this.scrapRepository.findItemCountByItemId(id));
     }
 
     @Override
     public ScrapCheckedResponse isCheckedScrap(ScrapCheckedRequest scrapCheckedRequest) {
-        Optional<Scrap> scrap = scrapRepository.findByUserIdAndItemId(scrapCheckedRequest.getUserId(), scrapCheckedRequest.getItemId());
+        Optional<Scrap> scrap = this.scrapRepository.findByUserIdAndItemId(scrapCheckedRequest.getUserId(), scrapCheckedRequest.getItemId());
         if(scrap.isEmpty()){return ScrapCheckedResponse.from(false, null); }
         else return ScrapCheckedResponse.from(true, scrap.get().getId());
     }
@@ -77,22 +77,22 @@ public class ScrapServiceImpl implements ScrapService{
      */
 
     private Scrap validateIsExistingScrap(Long deleteScrapId) {
-        return scrapRepository.findById(deleteScrapId)
+        return this.scrapRepository.findById(deleteScrapId)
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new NotFoundItemException(ScrapConstants.EScrapServiceImpl.eNotFoundItemExceptionMessage.getValue()));
     }
 
     private void validateExistingScrap(User user, Long itemId) {
-        if (!scrapRepository.findAll().isEmpty()) {
-            List<Scrap> scraps = scrapRepository.findAllByUserId(user.getId());
+        if (!this.scrapRepository.findAll().isEmpty()) {
+            List<Scrap> scraps = this.scrapRepository.findAllByUserId(user.getId());
             for (Scrap scrap : scraps) {
                 if(scrap.getItem().getId() == itemId){
                     throw new AlreadyScrapException(ScrapConstants.EScrapServiceImpl.eAlreadyScrapExceptionMessage.getValue()); } } }
     }
 
     private void validateExistingScrapByUserId(Pageable pageable, Long userId) {
-        if (scrapRepository.findAllByUserId(pageable, userId).isEmpty()) {
+        if (this.scrapRepository.findAllByUserId(pageable, userId).isEmpty()) {
             throw new NotExistingScrapOfUserException(ScrapConstants.EScrapServiceImpl.eNotExistingScrapOfUserExceptionMessage.getValue());
         }
     }

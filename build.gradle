@@ -69,6 +69,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 test {
@@ -82,11 +83,6 @@ querydsl {
 }
 sourceSets {
 	main.java.srcDir querydslDir
-//	main {
-//		resources {
-//			srcDirs "src/main/resources/images/"
-//		}
-//	}
 }
 configurations {
 	querydsl.extendsFrom compileClasspath

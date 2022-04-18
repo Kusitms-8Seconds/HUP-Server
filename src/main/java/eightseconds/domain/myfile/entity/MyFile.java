@@ -1,29 +1,32 @@
-package eightseconds.domain.file.entity;
+package eightseconds.domain.myfile.entity;
 
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.notice.entity.Notice;
 import eightseconds.domain.user.entity.User;
-import eightseconds.global.entity.BaseEntity;
 import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
 
+@Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter
-@Entity(name = "file")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MyFile extends BaseTimeEntity {
 
-    @Getter(AccessLevel.NONE)
+    @Setter(value = AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "file_id")
-    private Long id;
+    private Long myFileId;
+    private String fileKey;
 
-    private String filename;
-    private String fileOriginName;
-    private String fileUrl;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    private boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
@@ -33,10 +36,9 @@ public class MyFile extends BaseTimeEntity {
     @JoinColumn(name = "notice_id")
     private Notice notice;
 
-    @Builder
-    public MyFile(String filename, String fileOriginName, String fileUrl) {
-        this.filename = filename;
-        this.fileOriginName = fileOriginName;
-        this.fileUrl = fileUrl;
+    public static MyFile toEntity(String key) {
+        return MyFile.builder()
+                .fileKey(key)
+                .build();
     }
 }

@@ -1,7 +1,7 @@
 package eightseconds.domain.pricesuggestion.dto;
 
-import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants;
+import eightseconds.domain.myfile.entity.MyFile;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -38,7 +38,7 @@ public class PriceSuggestionListResponse {
             List<MyFile> myFiles = priceSuggestion.getItem().getMyFiles();
             fileNames = new ArrayList<>();
             for (MyFile myFile : myFiles) {
-                fileNames.add(myFile.getFilename());
+                fileNames.add(myFile.getFileKey());
             }
         }
         Long chatRoomId = null;

@@ -1,18 +1,16 @@
 package eightseconds.domain.item.service;
 
+import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import eightseconds.domain.category.entity.Category;
 import eightseconds.domain.category.service.CategoryService;
 import eightseconds.domain.chatroom.service.ChatRoomService;
-import eightseconds.domain.file.entity.MyFile;
-import eightseconds.domain.file.service.FileService;
 import eightseconds.domain.item.constant.ItemConstants.EItemServiceImpl;
-import eightseconds.domain.category.constant.CategoryConstants.ECategory;
-
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.*;
 import eightseconds.domain.item.repository.ItemRepository;
+import eightseconds.domain.myfile.service.MyFileService;
 import eightseconds.domain.notification.service.NotificationService;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.user.entity.User;
@@ -37,7 +35,7 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
 
-    private final FileService fileService;
+    private final MyFileService myFileService;
     private final UserService userService;
     private final NotificationService notificationService;
     private final ChatRoomService chatRoomService;
@@ -45,22 +43,16 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public RegisterItemResponse saveItem(Long userId, @Valid RegisterItemRequest registerItemRequest) throws IOException {
+    public RegisterItemResponse saveItem(Long userId, @Valid RegisterItemRequest registerItemRequest){
         validateCreateSoldOutTime(registerItemRequest.getAuctionClosingDate());
-        User user = userService.getUserByUserId(userId);
+        User user = this.userService.getUserByUserId(userId);
         Item item = registerItemRequest.toEntity();
-        Category category = categoryService.getCategoryByEItemCategory(registerItemRequest.getCategory());
+        Category category = this.categoryService.getCategoryByEItemCategory(registerItemRequest.getCategory());
         item.setCategory(category);
         item.setUser(user);
-        List<MyFile> saveFiles = new ArrayList<>();
         List<MultipartFile> files = registerItemRequest.getFiles();
-        if (files != null) {
-            for (MultipartFile file : files) {
-                if (!file.isEmpty()) {
-                    saveFiles.add(fileService.saveSingleFile(file));}}
-            item.addFiles(saveFiles);}
-
-        itemRepository.save(item);
+        item.addFiles(this.myFileService.saveImages(files));
+        this.itemRepository.save(item);
         return RegisterItemResponse.from(item);
     }
 
@@ -68,25 +60,25 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public void deleteByItemId(Long id) {
         validateItemId(id);
-        itemRepository.deleteById(id);
+        this.itemRepository.deleteById(id);
     }
 
     @Override
     public ItemDetailsResponse getItem(Long id) {
         validateItemId(id);
-        return ItemDetailsResponse.from(itemRepository.getById(id));
+        return ItemDetailsResponse.from(this.itemRepository.getById(id));
     }
 
     @Override
     public Item getItemByItemId(Long id) {
         validateItemId(id);
-        return itemRepository.getById(id);
+        return this.itemRepository.getById(id);
     }
 
     @Override
     public PaginationDto<List<ItemDetailsResponse>> getAllItemsByItemSoldStatus(Pageable pageable, String itemSoldStatus) {
         validateItemSoldStatus(itemSoldStatus);
-        Page<Item> page = itemRepository.findAllByStatus(pageable, EItemSoldStatus.from(itemSoldStatus));
+        Page<Item> page = this.itemRepository.findAllByStatus(pageable, EItemSoldStatus.from(itemSoldStatus));
         List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -94,7 +86,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<BestItemResponse> getAllBestItemsByItemSoldStatus(String itemSoldStatus) {
         validateItemSoldStatus(itemSoldStatus);
-        List<Item> items = itemRepository.findAllItemsByStatus(EItemSoldStatus.from(itemSoldStatus));
+        List<Item> items = this.itemRepository.findAllItemsByStatus(EItemSoldStatus.from(itemSoldStatus));
         List<BestItemResponse> bestItems = new ArrayList<>();
         for (Item item : items) { bestItems.add(BestItemResponse.from(item, item.getScraps().size())); }
         Collections.sort(bestItems, new ItemComparator());
@@ -112,18 +104,18 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public PaginationDto<List<ItemDetailsResponse>> getAllItemsByCategory(Pageable pageable, String category) {
         validateCategory(category);
-        Category returnCategory = categoryService.getCategoryByEItemCategory(ECategory.from(category));
+        Category returnCategory = this.categoryService.getCategoryByEItemCategory(ECategory.from(category));
         validateExistingItemsByCategory(pageable, returnCategory.getId());
-        Page<Item> page = itemRepository.findAllByCategoryId(pageable, returnCategory.getId());
+        Page<Item> page = this.itemRepository.findAllByCategoryId(pageable, returnCategory.getId());
         List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
 
     @Override
     public PaginationDto<List<ItemDetailsResponse>> getAllItemsOfUser(Pageable pageable, ItemOfUserRequest itemOfUserRequest) {
-        User user = userService.validateUserId(itemOfUserRequest.getUserId());
+        User user = this.userService.validateUserId(itemOfUserRequest.getUserId());
         validateItemSoldStatus(itemOfUserRequest.getSoldStatus().toString());
-        Page<Item> page = itemRepository.findAllByStatusAndUserId(pageable, itemOfUserRequest.getSoldStatus(), user.getId());
+        Page<Item> page = this.itemRepository.findAllByStatusAndUserId(pageable, itemOfUserRequest.getSoldStatus(), user.getId());
         List<ItemDetailsResponse> data = page.get().map(ItemDetailsResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -140,10 +132,10 @@ public class ItemServiceImpl implements ItemService {
         priceSuggestion.setAcceptState(true);
         item.setSoldPrice(priceSuggestion.getSuggestionPrice());
 
-        notificationService.sendMessageToBidder(priceSuggestion);
-        notificationService.sendMessageToSeller(item);
+        this.notificationService.sendMessageToBidder(priceSuggestion);
+        this.notificationService.sendMessageToSeller(item);
 
-        chatRoomService.createChatRoom(priceSuggestion, item);
+        this.chatRoomService.createChatRoom(priceSuggestion, item);
 
         return SoldResponse.from(item, priceSuggestion);
     }
@@ -167,7 +159,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void validateExistingItemsByCategory(Pageable pageable, Long categoryId) {
-        itemRepository.findAllByCategoryId(pageable, categoryId)
+        this.itemRepository.findAllByCategoryId(pageable, categoryId)
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new NotFoundItemException(EItemServiceImpl.eNotFoundItemExceptionForCategoryMessage.getValue()));
@@ -175,13 +167,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item validateItemId(Long itemId) {
-        return itemRepository.findById(itemId).orElseThrow(() ->
+        return this.itemRepository.findById(itemId).orElseThrow(() ->
                 new NotFoundItemException(EItemServiceImpl.eNotFoundItemExceptionForDefaultMessage.getValue()));
     }
 
     @Override
     public void validateSoldStatusByItemId(Long itemId) {
-        Optional<Item> item = itemRepository.findById(itemId);
+        Optional<Item> item = this.itemRepository.findById(itemId);
         if (!item.get().getSoldStatus().equals(EItemSoldStatus.eOnGoing)) {
             throw new NotOnGoingException(EItemServiceImpl.eNotOnGoingExceptionMessage.getValue());
         }

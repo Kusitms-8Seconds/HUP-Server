@@ -1,6 +1,6 @@
 package eightseconds.domain.notice.entity;
 
-import eightseconds.domain.file.entity.MyFile;
+import eightseconds.domain.myfile.entity.MyFile;
 import eightseconds.domain.user.entity.User;
 import eightseconds.global.entity.BaseTimeEntity;
 import lombok.*;

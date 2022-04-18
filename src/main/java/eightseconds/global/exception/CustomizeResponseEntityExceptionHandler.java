@@ -5,9 +5,8 @@ import eightseconds.domain.category.exeception.NotFoundUserInterestCategoryExcep
 import eightseconds.domain.chatroom.exception.AlreadyEnterException;
 import eightseconds.domain.chatroom.exception.NotFoundChatRoomException;
 import eightseconds.domain.chatroom.exception.NotFoundUserChatRoomException;
-import eightseconds.domain.file.exception.FileNotFoundException;
-import eightseconds.domain.file.exception.FileToSaveNotExistException;
 import eightseconds.domain.item.exception.*;
+import eightseconds.domain.myfile.exception.NotFoundMyFileException;
 import eightseconds.domain.notice.exception.NotFoundNoticeException;
 import eightseconds.domain.pricesuggestion.exception.*;
 import eightseconds.domain.scrap.exception.AlreadyScrapException;
@@ -274,19 +273,13 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
 
 
     /**
-     * File Exception
+     * MyFile Domain Exception
      */
 
-    @ExceptionHandler(FileNotFoundException.class)
-    public final ResponseEntity<Object> handleFileNotFoundException(Exception ex, WebRequest request) {
+    @ExceptionHandler(NotFoundMyFileException.class)
+    public final ResponseEntity<Object> handleNotFoundMyFileException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(FileToSaveNotExistException.class)
-    public final ResponseEntity<Object> handleFileToSaveNotExistException(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.PRECONDITION_FAILED.toString(), Arrays.asList(ex.getMessage()));
-        return new ResponseEntity(exceptionResponse, HttpStatus.PRECONDITION_FAILED);
     }
 
     /**

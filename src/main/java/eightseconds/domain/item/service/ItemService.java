@@ -1,7 +1,5 @@
 package eightseconds.domain.item.service;
 
-import eightseconds.domain.file.entity.MyFile;
-import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.entity.Item;
 import eightseconds.global.dto.PaginationDto;

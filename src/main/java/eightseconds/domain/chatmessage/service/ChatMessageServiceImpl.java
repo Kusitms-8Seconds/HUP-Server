@@ -32,8 +32,8 @@ public class ChatMessageServiceImpl implements ChatMessageService{
 
     @Override
     public PaginationDto<List<ChatMessageResponse>> getAllChatMessages(Pageable pageable, Long chatRoomId) {
-        ChatRoom chatRoom = chatRoomService.getChatRoomByChatId(chatRoomId);
-        Page<ChatMessage> page = chatMessageRepository.findByChatRoom(pageable, chatRoom);
+        ChatRoom chatRoom = this.chatRoomService.getChatRoomByChatId(chatRoomId);
+        Page<ChatMessage> page = this.chatMessageRepository.findByChatRoom(pageable, chatRoom);
         List<ChatMessageResponse> data = page.get().map(ChatMessageResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -43,11 +43,11 @@ public class ChatMessageServiceImpl implements ChatMessageService{
     public ChatMessageResponse createSendMessage(ChatMessageRequest chatMessageRequest) {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setMessage(chatMessageRequest.getMessage());
-        User user = userService.getUserByUserId(chatMessageRequest.getUserId());
-        ChatRoom chatRoom = chatRoomService.getChatRoomByChatId(chatMessageRequest.getChatRoomId());
+        User user = this.userService.getUserByUserId(chatMessageRequest.getUserId());
+        ChatRoom chatRoom = this.chatRoomService.getChatRoomByChatId(chatMessageRequest.getChatRoomId());
         chatMessage.setUser(user);
         chatMessage.setChatRoom(chatRoom);
-        chatMessageRepository.save(chatMessage);
+        this.chatMessageRepository.save(chatMessage);
         return ChatMessageResponse.from(chatMessage);
     }
 
@@ -56,26 +56,26 @@ public class ChatMessageServiceImpl implements ChatMessageService{
     public ChatMessageResponse createEnterMessage(ChatMessageRequest chatMessageRequest) {
         Long userId = chatMessageRequest.getUserId();
         Long chatRoomId = chatMessageRequest.getChatRoomId();
-        User user = userService.getUserByUserId(userId);
-        ChatRoom chatRoom = chatRoomService.getChatRoomByChatId(chatRoomId);
-        UserChatRoom userChatRoom = chatRoomService.validateIsEnter(userId, chatRoomId);
-        chatRoomService.validateAlreadyEnter(userId, chatRoomId);
+        User user = this.userService.getUserByUserId(userId);
+        ChatRoom chatRoom = this.chatRoomService.getChatRoomByChatId(chatRoomId);
+        UserChatRoom userChatRoom = this.chatRoomService.validateIsEnter(userId, chatRoomId);
+        this.chatRoomService.validateAlreadyEnter(userId, chatRoomId);
         userChatRoom.setEntryCheck(true);
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setMessage(user.getUsername()+EChatMessageServiceImpl.eChatRoomEnterMessage.getValue());
         chatMessage.setUser(user);
         chatMessage.setChatRoom(chatRoom);
-        chatMessageRepository.save(chatMessage);
+        this.chatMessageRepository.save(chatMessage);
         return ChatMessageResponse.from(chatMessage);
     }
 
     @Override
     @Transactional
     public ChatMessageResponse deleteChatRoom(DeleteChatRoomRequest deleteChatRoomRequest) {
-        User user = userService.getUserByUserId(deleteChatRoomRequest.getUserId());
-        ChatRoom chatRoom = chatRoomService.getChatRoomByChatId(deleteChatRoomRequest.getChatRoomId());
-        UserChatRoom userChatRoom = chatRoomService.getUserChatRoomByUserIdAndChatRoomId(user.getId(), chatRoom.getId());
-        chatRoomService.deleteChatRoom(userChatRoom);
+        User user = this.userService.getUserByUserId(deleteChatRoomRequest.getUserId());
+        ChatRoom chatRoom = this.chatRoomService.getChatRoomByChatId(deleteChatRoomRequest.getChatRoomId());
+        UserChatRoom userChatRoom = this.chatRoomService.getUserChatRoomByUserIdAndChatRoomId(user.getId(), chatRoom.getId());
+        this.chatRoomService.deleteChatRoom(userChatRoom);
         return createSendMessage(ChatMessageRequest.of(chatRoom.getId(), user.getId(), user.getUsername() + ChatRoomConstants.EChatRoomServiceImpl.eOutUserChatRoomMessage.getValue()));
     }
 
