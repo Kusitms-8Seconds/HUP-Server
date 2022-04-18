@@ -92,6 +92,18 @@ firebase:
       api:
         url: ENC(7Q7g4eiRP2a9Ee+/r7nrS74BxpHujwXlZml5Wqkug7MYoK+7ppKMdB4eRHYDEeWChiHFFTNrhHc=)
 
+cloud:
+  aws:
+    s3:
+      bucket: hup-bucket
+    credentials:
+      access-key: AKIAVKTYRMM64SB6SDUI
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
 ---
 
 spring:
@@ -106,7 +118,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true
@@ -178,3 +190,15 @@ firebase:
     credentials:
       api:
         url: ENC(7Q7g4eiRP2a9Ee+/r7nrS74BxpHujwXlZml5Wqkug7MYoK+7ppKMdB4eRHYDEeWChiHFFTNrhHc=)
+
+cloud:
+  aws:
+    s3:
+      bucket: hup-bucket
+    credentials:
+      access-key: AKIAVKTYRMM64SB6SDUI
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

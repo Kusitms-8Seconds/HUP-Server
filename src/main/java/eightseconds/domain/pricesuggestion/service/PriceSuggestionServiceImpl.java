@@ -37,9 +37,9 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
 
     @Override
     public PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByItemId(Pageable pageable, Long itemId) {
-        itemService.validateItemId(itemId);
-        itemService.validateSoldStatusByItemId(itemId);
-        Page<PriceSuggestion> page = priceSuggestionRepository.findAllByItemId(pageable, itemId);
+        this.itemService.validateItemId(itemId);
+        this.itemService.validateSoldStatusByItemId(itemId);
+        Page<PriceSuggestion> page = this.priceSuggestionRepository.findAllByItemId(pageable, itemId);
         List<PriceSuggestionListResponse> data = page.get().map(PriceSuggestionListResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
@@ -53,23 +53,23 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         int suggestionPrice = priceSuggestionRequest.getSuggestionPrice();
 
         PriceSuggestion resultPriceSuggestion;
-        User user = userService.validateUserId(userId);
-        Item item = itemService.validateItemId(itemId);
+        User user = this.userService.validateUserId(userId);
+        Item item = this.itemService.validateItemId(itemId);
         validatePriceSuggestionsItemId(itemId);
         validateInitPrice(itemId, suggestionPrice);
         validatePriceSuggestionPrice(itemId, suggestionPrice);
         validateRegisteredItemByUser(item.getUser().getId(), userId);
         validateAuctionClosingTime(item);
 
-        Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getByUserIdAndItemId(userId, itemId);
-        ItemConstants.EItemSoldStatus soldStatus = itemService.getItem(itemId).getSoldStatus();
+        Optional<PriceSuggestion> priceSuggestion = this.priceSuggestionRepository.getByUserIdAndItemId(userId, itemId);
+        ItemConstants.EItemSoldStatus soldStatus = this.itemService.getItem(itemId).getSoldStatus();
         if(!priceSuggestion.isEmpty()){
             validatePrice(priceSuggestion.get().getSuggestionPrice(), suggestionPrice);
             priceSuggestion.get().setSuggestionPrice(suggestionPrice);
             resultPriceSuggestion = priceSuggestion.get(); }
 
         else{ PriceSuggestion entity = PriceSuggestion.toEntity(user, item, suggestionPrice);
-            priceSuggestionRepository.save(entity);
+            this.priceSuggestionRepository.save(entity);
             resultPriceSuggestion = entity; }
 
         int maximumPrice = getMaximumPrice(itemId).getMaximumPrice();
@@ -81,37 +81,37 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
 
     @Override
     public MaximumPriceResponse getMaximumPrice(Long itemId) {
-        itemService.validateItemId(itemId);
-        itemService.validateSoldStatusByItemId(itemId);
-        Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getMaximumPriceByItemId(itemId);
+        this.itemService.validateItemId(itemId);
+        this.itemService.validateSoldStatusByItemId(itemId);
+        Optional<PriceSuggestion> priceSuggestion = this.priceSuggestionRepository.getMaximumPriceByItemId(itemId);
         if(priceSuggestion.isEmpty()) return MaximumPriceResponse.from(0);
         else return MaximumPriceResponse.from(priceSuggestion.get().getSuggestionPrice());
     }
 
     @Override
     public ParticipantsResponse getParticipants(Long itemId) {
-        itemService.validateItemId(itemId);
-        itemService.validateSoldStatusByItemId(itemId);
-        return ParticipantsResponse.from(priceSuggestionRepository.findPriceSuggestionCountByItemId(itemId));
+        this.itemService.validateItemId(itemId);
+        this.itemService.validateSoldStatusByItemId(itemId);
+        return ParticipantsResponse.from(this.priceSuggestionRepository.findPriceSuggestionCountByItemId(itemId));
     }
 
     @Override
     public PaginationDto<List<PriceSuggestionListResponse>> getAllPriceSuggestionsByUserId(Pageable pageable, Long userId) {
-        userService.validateUserId(userId);
-        Page<PriceSuggestion> page = priceSuggestionRepository.findAllByUserId(pageable, userId);
+        this.userService.validateUserId(userId);
+        Page<PriceSuggestion> page = this.priceSuggestionRepository.findAllByUserId(pageable, userId);
         List<PriceSuggestionListResponse> data = page.get().map(PriceSuggestionListResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }
 
     @Override
     public BidderResponse getBidder(Long itemId) {
-        Optional<PriceSuggestion> priceSuggestion = priceSuggestionRepository.getMaximumPriceByItemId(itemId);
+        Optional<PriceSuggestion> priceSuggestion = this.priceSuggestionRepository.getMaximumPriceByItemId(itemId);
         return BidderResponse.from(priceSuggestion.get().getUser().getUsername());
     }
 
     public void deletePriceSuggestion(Long priceSuggestionId) {
         validatePriceSuggestionId(priceSuggestionId);
-        priceSuggestionRepository.deleteById(priceSuggestionId);
+        this.priceSuggestionRepository.deleteById(priceSuggestionId);
     }
 
     /**
@@ -119,7 +119,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
      */
 
     private void validatePriceSuggestionPrice(Long itemId, int suggestionPrice) {
-        Optional<PriceSuggestion> maximumPriceByItemId = priceSuggestionRepository.getMaximumPriceByItemId(itemId);
+        Optional<PriceSuggestion> maximumPriceByItemId = this.priceSuggestionRepository.getMaximumPriceByItemId(itemId);
         if(!maximumPriceByItemId.isEmpty()){
             if(maximumPriceByItemId.get().getSuggestionPrice() >= suggestionPrice){
                 throw new PriorPriceSuggestionException(EPriceSuggestionServiceImpl.ePriorPriceSuggestionExceptionMessage.getValue()); }
@@ -145,14 +145,14 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     }
 
     private void validatePriceSuggestionsItemId(Long itemId) {
-        List<PriceSuggestion> priceSuggestions= priceSuggestionRepository.findAllByItemId(itemId);
-        Item item = itemService.getItemByItemId(itemId);
+        List<PriceSuggestion> priceSuggestions= this.priceSuggestionRepository.findAllByItemId(itemId);
+        Item item = this.itemService.getItemByItemId(itemId);
         validateOnGoingItem(item);
         validateAcceptStatusPriceSuggestion(priceSuggestions);
     }
 
     private void validatePriceSuggestionId(Long priceSuggestionId) {
-        priceSuggestionRepository.findById(priceSuggestionId)
+        this.priceSuggestionRepository.findById(priceSuggestionId)
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new NotFoundPriceSuggestionException(EPriceSuggestionServiceImpl.eNotFoundPriceSuggestionExceptionMessage.getValue()));
@@ -164,7 +164,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
     }
 
     private void validateInitPrice(Long itemId, int suggestionPrice) {
-        int initPrice = itemService.getItemByItemId(itemId).getInitPrice();
+        int initPrice = this.itemService.getItemByItemId(itemId).getInitPrice();
         if (suggestionPrice < initPrice) {
             throw new InitPriceException(EPriceSuggestionServiceImpl.eInitPriceExceptionMessage.getValue());}
     }

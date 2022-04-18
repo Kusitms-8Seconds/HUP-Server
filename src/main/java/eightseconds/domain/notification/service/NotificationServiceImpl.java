@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,23 +28,23 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public void sendMessageToBidder(PriceSuggestion priceSuggestion) throws IOException {
         Notification notification = Notification.toEntityFromPriceSuggestion(priceSuggestion);
-        notificationRepository.save(notification);
-        firebaseCloudMessageService.sendMessageTo(notification.getTargetToken(),
+        this.notificationRepository.save(notification);
+        this.firebaseCloudMessageService.sendMessageTo(notification.getTargetToken(),
                 notification.getENotificationCategory().getValue(), notification.getMessage());
     }
 
     @Override
     public void sendMessageToSeller(Item item) throws IOException {
         Notification notification = Notification.toEntityFromItem(item);
-        notificationRepository.save(notification);
-        firebaseCloudMessageService.sendMessageTo(notification.getTargetToken(),
+        this.notificationRepository.save(notification);
+        this.firebaseCloudMessageService.sendMessageTo(notification.getTargetToken(),
                 notification.getENotificationCategory().getValue(), notification.getMessage());
     }
 
     @Override
     public PaginationDto<List<NotificationListResponse>> getAllNotifications(Pageable pageable, Long userId) {
-        userService.validateUserId(userId);
-        Page<Notification> page = notificationRepository.findAllByUserId(pageable, userId);
+        this.userService.validateUserId(userId);
+        Page<Notification> page = this.notificationRepository.findAllByUserId(pageable, userId);
         List<NotificationListResponse> data = page.get().map(NotificationListResponse::from).collect(Collectors.toList());
         return PaginationDto.of(page, data);
     }

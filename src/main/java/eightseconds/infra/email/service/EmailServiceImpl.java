@@ -33,15 +33,15 @@ public class EmailServiceImpl implements EmailService{
     @Override
     public DefaultResponse sendSimpleMessageForActivateUser(String email) throws Exception {
 
-        User user = userService.validateNotRegisteredEmail(email);
-        userService.validateIsAlreadyRegisteredUser(user);
+        User user = this.userService.validateNotRegisteredEmail(email);
+        this.userService.validateIsAlreadyRegisteredUser(user);
         validateIsAlreadyExistEmail(email);
 
         MimeMessage message = createMessageForActivateUser(email);
         try{
-            emailSender.send(message);
-            EmailAuth emailAuth = EmailAuth.createEmailAuth(email, authCode, user);
-            emailAuthRepository.save(emailAuth);
+            this.emailSender.send(message);
+            EmailAuth emailAuth = EmailAuth.createEmailAuth(email, this.authCode, user);
+            this.emailAuthRepository.save(emailAuth);
         }catch(MailException es){
             es.printStackTrace();
             throw new IllegalArgumentException();
@@ -52,13 +52,13 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     public DefaultResponse sendSimpleMessageForResetPassword(String email) throws Exception {
-        User user = userService.validateNotRegisteredEmail(email);
+        User user = this.userService.validateNotRegisteredEmail(email);
         validateIsAlreadyExistEmail(email);
         MimeMessage message = createMessageForResetPassword(email);
         try{
-            emailSender.send(message);
-            EmailAuth emailAuth = EmailAuth.createEmailAuth(email, authCode, user);
-            emailAuthRepository.save(emailAuth);
+            this.emailSender.send(message);
+            EmailAuth emailAuth = EmailAuth.createEmailAuth(email, this.authCode, user);
+            this.emailAuthRepository.save(emailAuth);
         }catch(MailException es){
             es.printStackTrace();
             throw new IllegalArgumentException();
@@ -67,7 +67,7 @@ public class EmailServiceImpl implements EmailService{
     }
 
     public EmailAuth checkAuthCode(String authCode) {
-        EmailAuth emailAuth = emailAuthRepository.findByAuthCode(authCode)
+        EmailAuth emailAuth = this.emailAuthRepository.findByAuthCode(authCode)
                 .orElseThrow(() -> new InvalidAuthCodeException(EEmailServiceImpl.eInvalidAuthCodeExceptionMessage.getValue()));
         emailAuth.validateValidPeriod(emailAuth);
         return emailAuth;
@@ -93,12 +93,12 @@ public class EmailServiceImpl implements EmailService{
     }
 
     private MimeMessage createMessageForActivateUser(String to) throws Exception{
-        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessage message = this.emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);
         message.setSubject(EEmailServiceImpl.eSubject.getValue());
 
-        authCode = createKey();
+        this.authCode = createKey();
 
         String msgg=EEmailServiceImpl.eEmpty.getValue();
         msgg+= EEmailServiceImpl.eSendMessage1.getValue();
@@ -121,12 +121,12 @@ public class EmailServiceImpl implements EmailService{
     }
 
     private MimeMessage createMessageForResetPassword(String to) throws Exception{
-        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessage message = this.emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);
         message.setSubject(EEmailServiceImpl.eSubject.getValue());
 
-        authCode = createKey();
+        this.authCode = createKey();
 
         String msgg=EEmailServiceImpl.eEmpty.getValue();
         msgg+= EEmailServiceImpl.eSendMessage1.getValue();
@@ -140,7 +140,7 @@ public class EmailServiceImpl implements EmailService{
         msgg+= EEmailServiceImpl.eSendMessage92.getValue();
         msgg+= EEmailServiceImpl.eSendMessage10.getValue();
         msgg+= EEmailServiceImpl.eSendMessage11.getValue();
-        msgg+= authCode + EEmailServiceImpl.eSendMessage12.getValue();
+        msgg+= this.authCode + EEmailServiceImpl.eSendMessage12.getValue();
         msgg+= EEmailServiceImpl.eSendMessage13.getValue();
         message.setText(msgg, EEmailServiceImpl.eSendMessageCharset.getValue(), EEmailServiceImpl.eSendMessageSubType.getValue());//내용
         message.setFrom(new InternetAddress(EEmailServiceImpl.eSendMessageAddress.getValue(),EEmailServiceImpl.eSendMessagePersonal.getValue()));//보내는 사람
@@ -178,8 +178,8 @@ public class EmailServiceImpl implements EmailService{
      */
 
     private void validateIsAlreadyExistEmail(String email) {
-        Optional<EmailAuth> findEmail = emailAuthRepository.findByEmail(email);
-        if(findEmail.isPresent()) emailAuthRepository.delete(findEmail.get());
+        Optional<EmailAuth> findEmail = this.emailAuthRepository.findByEmail(email);
+        if(findEmail.isPresent()) this.emailAuthRepository.delete(findEmail.get());
     }
 
 }

@@ -1,8 +1,8 @@
 package eightseconds.domain.item.dto;
 
-import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.constant.ItemConstants;
 import eightseconds.domain.item.entity.Item;
+import eightseconds.domain.myfile.entity.MyFile;
 import eightseconds.domain.pricesuggestion.entity.PriceSuggestion;
 import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import io.swagger.annotations.ApiModel;
@@ -40,7 +40,7 @@ public class BestItemResponse {
             List<MyFile> myFiles = item.getMyFiles();
             fileNames = new ArrayList<>();
             for (MyFile myFile : myFiles) {
-                fileNames.add(myFile.getFilename());
+                fileNames.add(myFile.getFileKey());
             }
         }
         int maxPrice = 0;

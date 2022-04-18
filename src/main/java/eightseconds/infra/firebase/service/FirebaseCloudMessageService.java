@@ -51,14 +51,14 @@ public class FirebaseCloudMessageService {
                                 .image(IMAGE_API_URL)
                                 .build()
                         ).build()).validateOnly(false).build();
-        return objectMapper.writeValueAsString(fcmMessage);
+        return this.objectMapper.writeValueAsString(fcmMessage);
     }
 
     private String getAccessToken() throws IOException {
         String firebaseConfigPath = "firebase/firebase_service_key.json";
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
-                .createScoped(List.of(GOOGLE_CREDENTIALS_API_URL));
+                .createScoped(List.of(this.GOOGLE_CREDENTIALS_API_URL));
         googleCredentials.refreshIfExpired();
         return googleCredentials.getAccessToken().getTokenValue();
     }

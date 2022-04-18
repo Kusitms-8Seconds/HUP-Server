@@ -1,6 +1,6 @@
 package eightseconds.domain.notice.dto;
 
-import eightseconds.domain.file.entity.MyFile;
+import eightseconds.domain.myfile.entity.MyFile;
 import eightseconds.domain.notice.entity.Notice;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
@@ -29,7 +29,7 @@ public class UpdateNoticeResponse {
             List<MyFile> myFiles = notice.getMyFiles();
             fileNames = new ArrayList<>();
             for (MyFile myFile : myFiles) {
-                fileNames.add(myFile.getFilename());
+                fileNames.add(myFile.getFileKey());
             }
         }
 

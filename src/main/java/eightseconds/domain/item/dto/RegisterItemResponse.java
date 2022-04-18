@@ -1,9 +1,9 @@
 package eightseconds.domain.item.dto;
 
-import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.entity.Item;
+import eightseconds.domain.myfile.entity.MyFile;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +37,7 @@ public class RegisterItemResponse {
             List<MyFile> myFiles = item.getMyFiles();
             fileNames = new ArrayList<>();
             for (MyFile myFile : myFiles) {
-                fileNames.add(myFile.getFilename());
+                fileNames.add(myFile.getFileKey());
             }
         }
         return RegisterItemResponse.builder()

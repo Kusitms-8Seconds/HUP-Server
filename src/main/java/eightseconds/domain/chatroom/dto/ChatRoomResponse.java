@@ -2,8 +2,8 @@ package eightseconds.domain.chatroom.dto;
 
 import eightseconds.domain.chatmessage.entity.ChatMessage;
 import eightseconds.domain.chatroom.entity.UserChatRoom;
-import eightseconds.domain.file.entity.MyFile;
 import eightseconds.domain.item.entity.Item;
+import eightseconds.domain.myfile.entity.MyFile;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,7 +34,7 @@ public class ChatRoomResponse {
             List<MyFile> myFiles = item.getMyFiles();
             fileNames = new ArrayList<>();
             for (MyFile myFile : myFiles) {
-                fileNames.add(myFile.getFilename());
+                fileNames.add(myFile.getFileKey());
             }
         }
         List<ChatMessage> chatMessages = userChatRoom.getChatRoom().getChatMessages();
@@ -62,7 +62,7 @@ public class ChatRoomResponse {
             List<MyFile> myFiles = item.getMyFiles();
             fileNames = new ArrayList<>();
             for (MyFile myFile : myFiles) {
-                fileNames.add(myFile.getFilename());
+                fileNames.add(myFile.getFileKey());
             }
         }
         List<ChatMessage> chatMessages = userChatRoom.getChatRoom().getChatMessages();
