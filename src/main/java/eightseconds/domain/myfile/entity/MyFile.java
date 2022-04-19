@@ -16,7 +16,6 @@ import javax.persistence.*;
 @Builder
 public class MyFile extends BaseTimeEntity {
 
-    @Setter(value = AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long myFileId;
