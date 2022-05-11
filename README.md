@@ -7,9 +7,11 @@
 
 - 큐시즘 학술제 2조 에잇세컨즈의 HUP!입니다.
 - 경매에 대한 경험이 부족하고, 경매에 부담을 갖고 있는 z세대들에게, 더 쉽게 다가갈 수 있는 방안이 필요했습니다.  따라서, 중고거래의 즐거움을 높이고, 경매 진입장벽은 낮추고, 실시간 거래는 빠른, HUP을 개발했습니다.
-- 서버 레포지토리와 안드로이드 레포지토리로 나뉘어져 있습니다.
-- 현재 레포지토리는 서버 레포지토리이며 안드로이드 레포지토리는 아래 주소에서 확인 가능합니다.
-- [안드로이드 레포지토리](https://github.com/Kusitms-8Seconds/HUP-App)
+- 서버 레포지토리와 안드로이드 레포지토리로 나뉘어져 있습니다. [안드로이드 레포지토리](https://github.com/Kusitms-8Seconds/HUP-App)
+
+## :running: GooglePlayStore
+
+ <p align="center"><img src="https://user-images.githubusercontent.com/61726631/167795373-1a593b38-32ad-4ef3-994f-c98bb50442af.jpg"/><p>
 
 ## :mag_right: ItemPoster
 
