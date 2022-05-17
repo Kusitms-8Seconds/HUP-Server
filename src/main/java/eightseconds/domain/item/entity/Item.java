@@ -3,7 +3,6 @@ package eightseconds.domain.item.entity;
 import eightseconds.domain.category.entity.Category;
 import eightseconds.domain.chatroom.entity.ChatRoom;
 import eightseconds.domain.item.constant.ItemConstants.EItem;
-import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.exception.NotBidItemException;
 import eightseconds.domain.myfile.entity.MyFile;
