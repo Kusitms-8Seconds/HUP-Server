@@ -29,9 +29,8 @@ public class Category{
     @Enumerated(EnumType.STRING)
     private ECategory category;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "category", fetch = FetchType.LAZY)
-    private Item item;
+    @OneToMany(mappedBy = "category", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    private List<Item> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "category", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<UserCategory> userCategories = new ArrayList<>();

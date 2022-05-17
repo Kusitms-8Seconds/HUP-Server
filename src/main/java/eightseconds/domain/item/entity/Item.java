@@ -55,7 +55,7 @@ public class Item extends BaseTimeEntity {
     @OneToMany(mappedBy = "item", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -90,7 +90,7 @@ public class Item extends BaseTimeEntity {
 
     public void setCategory(Category category) {
         this.category = category;
-        category.setItem(this);
+        category.getItems().add(this);
     }
 
     // 비즈니스 로직
