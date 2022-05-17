@@ -33,6 +33,7 @@ import java.util.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class User extends BaseTimeEntity {
 
     @Id
@@ -161,16 +162,17 @@ public class User extends BaseTimeEntity {
     }
 
     public static User toKakaoUserEntity(HashMap<String, Object> userInfo) {
-        return User.builder()
-                .loginId(EKakaoUser.eKakao.getValue()+userInfo.get(EKakaoUser.eKakaoEmailAttribute.getValue()).toString())
+        User user = User.builder()
+                .loginId(EKakaoUser.eKakao.getValue() + userInfo.get(EKakaoUser.eKakaoEmailAttribute.getValue()).toString())
                 .email(userInfo.get(EKakaoUser.eKakaoEmailAttribute.getValue()).toString())
                 .username(userInfo.get(EKakaoUser.eKakaoNickNameAttribute.getValue()).toString())
-                .picture(userInfo.get(EKakaoUser.eKakaoProfile.getValue()).toString())
+                .picture(userInfo.get(EKakaoUser.eKakaoProfileImageAttribute.getValue()).toString())
                 .authorities(Collections.singleton(toRoleUserAuthority()))
                 .activated(true)
                 .emailAuthActivated(true)
                 .loginType(ELoginType.eKakao)
                 .build();
+        return user;
     }
 
     public static User toEntityOfNaverUser(HashMap<String, Object> userInfo) {
