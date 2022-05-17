@@ -48,7 +48,7 @@
 
 ### Back-end 
 
-<p align="center"><img src="https://user-images.githubusercontent.com/61726631/168762569-eaaa819f-fd7b-45e1-bee7-8ee8c3065abd.jpg"/><p>
+<p align="center"><img src="https://user-images.githubusercontent.com/61726631/168896135-e9ce1ade-ce20-4c30-bc61-0075aa27b484.jpg"/><p>
 
 ## :books: HUP API Docs
 
