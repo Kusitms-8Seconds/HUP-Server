@@ -128,7 +128,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
 
     private void validateOnGoingItem(Item item) {
         if(!item.getSoldStatus().equals(ItemConstants.EItemSoldStatus.eOnGoing)){
-            throw new NotOnGoingException(EPriceSuggestionServiceImpl.eNotOnGoingExceptionMessage.getValue());
+            throw new NotOnGoingException();
         }
     }
 

@@ -1,8 +1,6 @@
 package eightseconds.domain.notice.service;
 
-import eightseconds.domain.myfile.entity.MyFile;
 import eightseconds.domain.myfile.service.MyFileService;
-import eightseconds.domain.notice.constant.NoticeConstants.ENoticeServiceImpl;
 import eightseconds.domain.notice.dto.NoticeListResponse;
 import eightseconds.domain.notice.dto.NoticeResponse;
 import eightseconds.domain.notice.dto.UpdateNoticeResponse;
@@ -21,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,7 +82,7 @@ public class NoticeServiceImpl implements NoticeService{
         return this.noticeRepository.findById(noticeId)
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new NotFoundNoticeException(ENoticeServiceImpl.eNotFoundNoticeExceptionMessage.getValue()));
+                .orElseThrow(() -> new NotFoundNoticeException());
 
     }
 

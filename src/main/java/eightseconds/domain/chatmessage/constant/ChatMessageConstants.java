@@ -1,10 +1,10 @@
 package eightseconds.domain.chatmessage.constant;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import eightseconds.domain.item.constant.ItemConstants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 public class ChatMessageConstants {
 
@@ -17,4 +17,5 @@ public class ChatMessageConstants {
         private String value;
 
     }
+
 }

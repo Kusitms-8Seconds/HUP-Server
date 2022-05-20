@@ -2,6 +2,7 @@ package eightseconds.domain.scrap.service;
 
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.NotFoundItemException;
+import eightseconds.domain.item.exception.NotFoundItemForCategoryException;
 import eightseconds.domain.item.service.ItemService;
 import eightseconds.domain.scrap.constant.ScrapConstants;
 import eightseconds.domain.scrap.dto.*;
@@ -78,9 +79,7 @@ public class ScrapServiceImpl implements ScrapService{
 
     private Scrap validateIsExistingScrap(Long deleteScrapId) {
         return this.scrapRepository.findById(deleteScrapId)
-                .stream()
-                .findAny()
-                .orElseThrow(() -> new NotFoundItemException(ScrapConstants.EScrapServiceImpl.eNotFoundItemExceptionMessage.getValue()));
+                .orElseThrow(() -> new NotFoundItemException());
     }
 
     private void validateExistingScrap(User user, Long itemId) {

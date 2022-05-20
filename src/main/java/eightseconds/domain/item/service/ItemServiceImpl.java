@@ -4,7 +4,6 @@ import eightseconds.domain.category.constant.CategoryConstants.ECategory;
 import eightseconds.domain.category.entity.Category;
 import eightseconds.domain.category.service.CategoryService;
 import eightseconds.domain.chatroom.service.ChatRoomService;
-import eightseconds.domain.item.constant.ItemConstants.EItemServiceImpl;
 import eightseconds.domain.item.constant.ItemConstants.EItemSoldStatus;
 import eightseconds.domain.item.dto.*;
 import eightseconds.domain.item.entity.Item;
@@ -148,34 +147,34 @@ public class ItemServiceImpl implements ItemService {
         Arrays.stream(EItemSoldStatus.values())
                 .filter(eItemSoldStatus -> itemSoldStatus.equals(eItemSoldStatus.name()))
                 .findAny()
-                .orElseThrow(() -> new InvalidItemSoldStatusException(EItemServiceImpl.eInvalidItemSoldStatusExceptionMessage.getValue()));
+                .orElseThrow(() -> new InvalidItemSoldStatusException());
     }
 
     private void validateCategory(String category) {
         Arrays.stream(ECategory.values())
                 .filter(eItemCategory -> category.equals(eItemCategory.name()))
                 .findAny()
-                .orElseThrow(() -> new InvalidCategoryException(EItemServiceImpl.eInvalidCategoryExceptionMessage.getValue()));
+                .orElseThrow(() -> new InvalidCategoryException());
     }
 
     private void validateExistingItemsByCategory(Pageable pageable, Long categoryId) {
         this.itemRepository.findAllByCategoryId(pageable, categoryId)
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new NotFoundItemException(EItemServiceImpl.eNotFoundItemExceptionForCategoryMessage.getValue()));
+                .orElseThrow(() -> new NotFoundItemForCategoryException());
     }
 
     @Override
     public Item validateItemId(Long itemId) {
         return this.itemRepository.findById(itemId).orElseThrow(() ->
-                new NotFoundItemException(EItemServiceImpl.eNotFoundItemExceptionForDefaultMessage.getValue()));
+                new NotFoundItemForDefaultException());
     }
 
     @Override
     public void validateSoldStatusByItemId(Long itemId) {
         Optional<Item> item = this.itemRepository.findById(itemId);
         if (!item.get().getSoldStatus().equals(EItemSoldStatus.eOnGoing)) {
-            throw new NotOnGoingException(EItemServiceImpl.eNotOnGoingExceptionMessage.getValue());
+            throw new NotOnGoingException();
         }
     }
 
@@ -183,19 +182,19 @@ public class ItemServiceImpl implements ItemService {
     public void validateSoldOutTime(LocalDateTime auctionClosingDate) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         if (currentDateTime.isBefore(auctionClosingDate)) {
-            throw new NotSoldOutTimeException(EItemServiceImpl.eNotSoldOutTimeExceptionMessage.getValue());
+            throw new NotSoldOutTimeException();
         }
     }
 
     private void validateCreateSoldOutTime(LocalDateTime auctionClosingDate) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         if (currentDateTime.isAfter(auctionClosingDate)) {
-            throw new NotDesirableAuctionEndTimeException(EItemServiceImpl.eNotDesirableAuctionEndTimeExceptionMessage.getValue());
+            throw new NotDesirableAuctionEndTimeException();
         }
     }
 
     private void validatePriceSuggestion(Optional<PriceSuggestion> priceSuggestion) {
         if(priceSuggestion.isEmpty())
-            throw new NotPriceSuggestionContentException(EItemServiceImpl.eNotPriceSuggestionContentExceptionMessage.getValue());
+            throw new NotPriceSuggestionContentException();
     }
 }

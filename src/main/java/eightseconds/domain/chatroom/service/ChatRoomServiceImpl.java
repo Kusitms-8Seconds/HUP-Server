@@ -95,28 +95,28 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
     private ChatRoom validateChatId(Long chatId) {
         return this.chatRoomRepository.findById(chatId).orElseThrow(() ->
-                new NotFoundChatRoomException(EChatRoomServiceImpl.eNotFoundChatRoomExceptionMessage.getValue()));
+                new NotFoundChatRoomException());
     }
 
     public UserChatRoom validateIsEnter(Long userId, Long chatRoomId) {
         return this.userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).orElseThrow(() ->
-                new NotFoundUserChatRoomException(EChatRoomServiceImpl.eNotFoundUserChatRoomExceptionMessage.getValue()));
+                new NotFoundUserChatRoomException());
     }
 
     public UserChatRoom validateUserIdAndChatRoomId(Long userId, Long chatRoomId) {
         return this.userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).orElseThrow(() ->
-                new NotFoundUserChatRoomException(EChatRoomServiceImpl.eNotFoundUserChatRoomExceptionMessage.getValue()));
+                new NotFoundUserChatRoomException());
     }
 
     public void validateAlreadyEnter(Long userId, Long chatRoomId) {
         if(this.userChatRoomRepository.findOneByUserIdAndChatRoomId(userId, chatRoomId).get().isEntryCheck()){
-            throw new AlreadyEnterException(EChatRoomServiceImpl.eAlreadyEnterExceptionMessage.getValue());
+            throw new AlreadyEnterException();
         }
     }
 
     private void validateUserChatRoomCountIsZero(List<UserChatRoom> listUserChatRoom) {
         if (listUserChatRoom.size() == 0) {
-            throw new NotFoundUserChatRoomException(EChatRoomServiceImpl.eNotFoundUserChatRoomExceptionMessage.getValue());}
+            throw new NotFoundUserChatRoomException();}
     }
 
 }
