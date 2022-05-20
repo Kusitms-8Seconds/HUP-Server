@@ -3,6 +3,7 @@ package eightseconds.domain.user.dto;
 import eightseconds.domain.user.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @ApiModel(description = "회원가입을 위한 요청 객체")
+@AllArgsConstructor
 public class SignUpRequest {
 
     @NotBlank(message = "회원의 회원가입Id를 입력해주세요.")

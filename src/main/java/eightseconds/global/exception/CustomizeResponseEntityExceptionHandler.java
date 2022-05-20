@@ -11,6 +11,7 @@ import eightseconds.domain.notice.exception.NotFoundNoticeException;
 import eightseconds.domain.pricesuggestion.exception.*;
 import eightseconds.domain.scrap.exception.AlreadyScrapException;
 import eightseconds.domain.scrap.exception.NotExistingScrapOfUserException;
+import eightseconds.domain.user.exception.app.NotFoundUserException;
 import eightseconds.domain.user.exception.app.*;
 import eightseconds.domain.user.exception.oauth2.*;
 import eightseconds.global.dto.ExceptionResponse;
@@ -88,7 +89,7 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(NotFoundRegisteredUserException.class)
+    @ExceptionHandler(NotFoundRegisteredUserByEmailExceptionMessage.class)
     public final ResponseEntity<Object> handleNotFoundRegisteredUserException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
@@ -130,11 +131,11 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(NotFoundRegisteredEmailException.class)
-    public final ResponseEntity<Object> handleNotFoundRegisteredEmailException(Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
-        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
-    }
+//    @ExceptionHandler(NotFoundRegisteredEmailException.class)
+//    public final ResponseEntity<Object> handleNotFoundRegisteredEmailException(Exception ex, WebRequest request) {
+//        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND.toString(), Arrays.asList(ex.getMessage()));
+//        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+//    }
 
     @ExceptionHandler(NotSamePasswordException.class)
     public final ResponseEntity<Object> handleNotSamePasswordException(Exception ex, WebRequest request) {
@@ -142,7 +143,7 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
         return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(NotAuthenticationForPasswordException.class)
+    @ExceptionHandler(NotAuthenticationForChangePasswordException.class)
     public final ResponseEntity<Object> handleNotAuthenticationPasswordException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);

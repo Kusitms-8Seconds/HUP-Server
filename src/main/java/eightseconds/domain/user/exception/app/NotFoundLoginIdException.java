@@ -1,9 +1,12 @@
 package eightseconds.domain.user.exception.app;
 
-import eightseconds.domain.user.constant.UserConstants.EUserServiceImpl;
+import eightseconds.domain.user.constant.UserConstants.UserExceptionList;
 
-public class NotFoundLoginIdException extends IllegalArgumentException {
+public class NotFoundLoginIdException extends UserException {
     public NotFoundLoginIdException() {
-        super(EUserServiceImpl.eNotFoundLoginIdExceptionMessage.getValue());
+        super(UserExceptionList.NOT_FOUND_LOGIN_ID.getCode(),
+                UserExceptionList.NOT_FOUND_LOGIN_ID.getHttpStatus(),
+                UserExceptionList.NOT_FOUND_LOGIN_ID.getMessage()
+        );
     }
 }

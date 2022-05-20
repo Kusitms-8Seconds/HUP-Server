@@ -1,7 +1,12 @@
 package eightseconds.domain.user.exception.app;
 
-public class NotFoundUserException extends RuntimeException{
-    public NotFoundUserException(String s) {
-        super(s);
+import eightseconds.domain.user.constant.UserConstants.UserExceptionList;
+
+public class NotFoundUserException extends UserException {
+    public NotFoundUserException() {
+        super(UserExceptionList.NOT_FOUND_USER.getCode(),
+                UserExceptionList.NOT_FOUND_USER.getHttpStatus(),
+                UserExceptionList.NOT_FOUND_USER.getMessage()
+        );
     }
 }

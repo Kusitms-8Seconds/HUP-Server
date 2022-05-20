@@ -37,7 +37,6 @@ dependencies {
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.security:spring-security-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'mysql:mysql-connector-java'
 	implementation 'org.apache.commons:commons-collections4:4.4'
 	implementation 'commons-io:commons-io:2.6'
@@ -70,6 +69,7 @@ dependencies {
 
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	testImplementation 'org.assertj:assertj-core:3.22.0'
 }
 
 test {

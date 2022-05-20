@@ -1,9 +1,12 @@
 package eightseconds.domain.user.controller;
 
+import eightseconds.domain.user.constant.UserConstants;
 import eightseconds.domain.user.constant.UserConstants.EUserApiController;
+import eightseconds.domain.user.constant.UserConstants.UserResponseMessage;
 import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.service.UserServiceImpl;
 import eightseconds.global.dto.DefaultResponse;
+import eightseconds.global.dto.ResponseDto;
 import eightseconds.global.jwt.JwtFilter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,13 +37,13 @@ public class UserApiController {
 
     @ApiOperation(value = "사용자 생성", notes = "회원가입을 합니다.")
     @PostMapping
-    public ResponseEntity<EntityModel<SignUpResponse>> createUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<EntityModel<ResponseDto<SignUpResponse>>> createUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         SignUpResponse signUpResponse = userService.saveUser(signUpRequest);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path(EUserApiController.eLocationIdPath.getValue())
                 .buildAndExpand(signUpResponse.getUserId())
                 .toUri();
-        return ResponseEntity.created(location).body(EntityModel.of(signUpResponse)
+        return ResponseEntity.created(location).body(EntityModel.of(ResponseDto.create(UserResponseMessage.SIGN_UP_SUCCESS_MESSAGE.getMessage(), signUpResponse))
                 .add(linkTo(methodOn(this.getClass()).createUser(signUpRequest)).withSelfRel())
                 .add(linkTo(methodOn(this.getClass()).getUser(signUpResponse.getUserId())).withRel(EUserApiController.eGetMethod.getValue()))
                 .add(linkTo(methodOn(this.getClass()).deleteUser(signUpResponse.getUserId())).withRel(EUserApiController.eDeleteMethod.getValue()))
