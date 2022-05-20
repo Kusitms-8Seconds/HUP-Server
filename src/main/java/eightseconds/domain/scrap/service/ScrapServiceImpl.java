@@ -88,12 +88,12 @@ public class ScrapServiceImpl implements ScrapService{
             List<Scrap> scraps = this.scrapRepository.findAllByUserId(user.getId());
             for (Scrap scrap : scraps) {
                 if(scrap.getItem().getId() == itemId){
-                    throw new AlreadyScrapException(ScrapConstants.EScrapServiceImpl.eAlreadyScrapExceptionMessage.getValue()); } } }
+                    throw new AlreadyScrapException(); } } }
     }
 
     private void validateExistingScrapByUserId(Pageable pageable, Long userId) {
         if (this.scrapRepository.findAllByUserId(pageable, userId).isEmpty()) {
-            throw new NotExistingScrapOfUserException(ScrapConstants.EScrapServiceImpl.eNotExistingScrapOfUserExceptionMessage.getValue());
+            throw new NotExistingScrapOfUserException();
         }
     }
 }

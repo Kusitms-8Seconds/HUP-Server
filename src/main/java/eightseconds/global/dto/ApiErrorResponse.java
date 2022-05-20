@@ -15,7 +15,7 @@ public class ApiErrorResponse {
     private String message;
 
     public ApiErrorResponse(String errorCode, String message) {
-        this.timeStamp = LocalDateTime.now();
+        this.timeStamp = LocalDateTime.now().withNano(0);
         this.errorCode = errorCode;
         this.message = message;
     }

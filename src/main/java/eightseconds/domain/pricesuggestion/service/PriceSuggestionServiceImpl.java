@@ -122,7 +122,7 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         Optional<PriceSuggestion> maximumPriceByItemId = this.priceSuggestionRepository.getMaximumPriceByItemId(itemId);
         if(!maximumPriceByItemId.isEmpty()){
             if(maximumPriceByItemId.get().getSuggestionPrice() >= suggestionPrice){
-                throw new PriorPriceSuggestionException(EPriceSuggestionServiceImpl.ePriorPriceSuggestionExceptionMessage.getValue()); }
+                throw new PriorPriceSuggestionException(); }
         }
     }
 
@@ -136,12 +136,12 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         if (priceSuggestions.size() != EPriceSuggestionServiceImpl.eZero.getSize()) {
             for (PriceSuggestion priceSuggestion : priceSuggestions) {
                 if(priceSuggestion.isAcceptState() == true){
-                    throw new AlreadySoldOutException(EPriceSuggestionServiceImpl.eAlreadySoldOutExceptionMessage.getValue()); } } }
+                    throw new AlreadySoldOutException(); } } }
     }
 
     private void validatePrice(int priorSuggestionPrice, int suggestionPrice) {
         if(priorSuggestionPrice >= suggestionPrice){
-            throw new PriorPriceSuggestionException(EPriceSuggestionServiceImpl.ePriorPriceSuggestionExceptionMessage.getValue()); }
+            throw new PriorPriceSuggestionException(); }
     }
 
     private void validatePriceSuggestionsItemId(Long itemId) {
@@ -155,25 +155,24 @@ public class PriceSuggestionServiceImpl implements PriceSuggestionService{
         this.priceSuggestionRepository.findById(priceSuggestionId)
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new NotFoundPriceSuggestionException(EPriceSuggestionServiceImpl.eNotFoundPriceSuggestionExceptionMessage.getValue()));
+                .orElseThrow(() -> new NotFoundPriceSuggestionException());
     }
 
     private void validateRegisteredItemByUser(Long registeredUserId, Long userId) {
         if (registeredUserId.equals(userId)) {
-            throw new SameUserIdException(EPriceSuggestionServiceImpl.eSameUserIdExceptionMessage.getValue());}
+            throw new SameUserIdException();}
     }
 
     private void validateInitPrice(Long itemId, int suggestionPrice) {
         int initPrice = this.itemService.getItemByItemId(itemId).getInitPrice();
         if (suggestionPrice < initPrice) {
-            throw new InitPriceException(EPriceSuggestionServiceImpl.eInitPriceExceptionMessage.getValue());}
+            throw new InitPriceException();}
     }
 
     private void validateAuctionClosingTime(Item item) {
         LocalDateTime closingDate = item.getAuctionClosingDate();
         LocalDateTime currentDateTime = LocalDateTime.now();
-        if (closingDate.isBefore(currentDateTime)) throw new AuctionClosingTimeException(
-                EPriceSuggestionServiceImpl.eAuctionClosingTimeExceptionMessage.getValue());
+        if (closingDate.isBefore(currentDateTime)) throw new AuctionClosingTimeException();
     }
 
 }

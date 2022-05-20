@@ -37,13 +37,13 @@ public class UserApiController {
 
     @ApiOperation(value = "사용자 생성", notes = "회원가입을 합니다.")
     @PostMapping
-    public ResponseEntity<EntityModel<ResponseDto<SignUpResponse>>> createUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<EntityModel<SignUpResponse>> createUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         SignUpResponse signUpResponse = userService.saveUser(signUpRequest);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path(EUserApiController.eLocationIdPath.getValue())
                 .buildAndExpand(signUpResponse.getUserId())
                 .toUri();
-        return ResponseEntity.created(location).body(EntityModel.of(ResponseDto.create(UserResponseMessage.SIGN_UP_SUCCESS_MESSAGE.getMessage(), signUpResponse))
+        return ResponseEntity.created(location).body(EntityModel.of(signUpResponse)
                 .add(linkTo(methodOn(this.getClass()).createUser(signUpRequest)).withSelfRel())
                 .add(linkTo(methodOn(this.getClass()).getUser(signUpResponse.getUserId())).withRel(EUserApiController.eGetMethod.getValue()))
                 .add(linkTo(methodOn(this.getClass()).deleteUser(signUpResponse.getUserId())).withRel(EUserApiController.eDeleteMethod.getValue()))
