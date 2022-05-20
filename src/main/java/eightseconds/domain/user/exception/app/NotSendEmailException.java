@@ -2,11 +2,13 @@ package eightseconds.domain.user.exception.app;
 
 import eightseconds.domain.user.constant.UserConstants.UserExceptionList;
 
+import static eightseconds.domain.user.constant.UserConstants.UserExceptionList.NOT_SEND_EMAIL;
+
 public class NotSendEmailException extends UserException {
     public NotSendEmailException() {
-        super(UserExceptionList.NOT_SEND_EMAIL.getCode(),
-                UserExceptionList.NOT_SEND_EMAIL.getHttpStatus(),
-                UserExceptionList.NOT_SEND_EMAIL.getMessage()
+        super(NOT_SEND_EMAIL.getErrorCode(),
+                NOT_SEND_EMAIL.getHttpStatus(),
+                NOT_SEND_EMAIL.getMessage()
         );
     }
 }

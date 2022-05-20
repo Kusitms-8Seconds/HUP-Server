@@ -177,7 +177,7 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
      * Google User Domain Exception
      */
 
-    @ExceptionHandler(InvalidIdTokenException.class)
+    @ExceptionHandler(GoogleInvalidIdTokenException.class)
     public final ResponseEntity<Object> handleInvalidIdTokenException(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.UNAUTHORIZED.toString(), Arrays.asList(ex.getMessage()));
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);

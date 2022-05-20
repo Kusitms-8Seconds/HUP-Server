@@ -74,7 +74,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
                 .build();
         GoogleIdToken idToken = verifier.verify(oAuth2LoginRequest.getIdToken());
         if(idToken != null) return saveUserOrUpdateByGoogleIdToken(idToken, oAuth2LoginRequest.getTargetToken());
-        else throw new InvalidIdTokenException(EGoogleUser.eGoogleInvalidIdTokenExceptionMessage.getValue());
+        else throw new GoogleInvalidIdTokenException();
     }
 
     public LoginResponse saveUserOrUpdateByGoogleIdToken(GoogleIdToken idToken, String targetToken) {
@@ -247,13 +247,13 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
 
             int responseCode = con.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) return readBody(con.getInputStream());
-            else if(responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) throw new NaverAuthenticationFailedException(ENaverUser.eNaverAuthenticationFailedException.getValue());
-            else if(responseCode == HttpURLConnection.HTTP_FORBIDDEN) throw new NaverPermissionException(ENaverUser.eNaverPermissionException.getValue());
-            else if(responseCode == HttpURLConnection.HTTP_NOT_FOUND) throw new NaverNotFoundException(ENaverUser.eNotFoundException.getValue());
+            else if(responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) throw new NaverAuthenticationFailedException();
+            else if(responseCode == HttpURLConnection.HTTP_FORBIDDEN) throw new NaverPermissionException();
+            else if(responseCode == HttpURLConnection.HTTP_NOT_FOUND) throw new NaverNotFoundException();
             else return readBody(con.getErrorStream());
 
         } catch (IOException e) {
-            throw new NaverApiResponseException(ENaverUser.eNaverApiResponseException.getValue());
+            throw new NaverApiResponseException();
         } finally {
             con.disconnect();
         }
@@ -265,9 +265,9 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
             URL url = new URL(apiUrl);
             return (HttpURLConnection)url.openConnection();
         } catch (MalformedURLException e) {
-            throw new NaverApiUrlException(ENaverUser.eNaverApiUrlException.getValue());
+            throw new NaverApiUrlException();
         } catch (IOException e) {
-            throw new NaverConnectionException(ENaverUser.eNaverConnectionException.getValue());
+            throw new NaverConnectionException();
         }
     }
 
@@ -281,7 +281,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService{
             }
             return responseBody.toString();
         } catch (IOException e) {
-            throw new NaverApiResponseException(ENaverUser.eNaverApiResponseException.getValue());
+            throw new NaverApiResponseException();
         }
     }
 }

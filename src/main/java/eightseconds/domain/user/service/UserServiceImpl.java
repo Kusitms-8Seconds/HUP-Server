@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest) {
         User user = validateUserId(updateUserRequest.getUserId());
         updateUserRequest.setPassword(this.passwordEncoder.encode(updateUserRequest.getPassword()));
-        User updatedUser = this.userRepository.save(user.updateUserByUpdateUserRequest(updateUserRequest));
+        User updatedUser = this.userRepository.save(new User());
         return UpdateUserResponse.from(updatedUser);
     }
 
@@ -181,10 +181,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     public User validateUserId(Long userId){
-        return this.userRepository.findById(userId)
-                .stream()
-                .findAny()
-                .orElseThrow(() -> new NotFoundUserException());
+        return this.userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException());
     }
 
     public TokenInfoResponse validateLogin(LoginRequest loginRequest) {

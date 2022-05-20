@@ -1,5 +1,6 @@
 package eightseconds.domain.user.constant;
 
+import eightseconds.global.exception.ApplicationException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -64,8 +65,7 @@ public class UserConstants {
         eGoogleEmailAttribute("email"),
         eGooglePictureAttribute("picture"),
         eGoogleSub("sub"),
-        eGoogle("google"),
-        eGoogleInvalidIdTokenExceptionMessage("ID token이 유효하지 않습니다.");
+        eGoogle("google");
         private final String value;
     }
 
@@ -102,13 +102,7 @@ public class UserConstants {
         eNaverElement("element"),
         eNaverAuthorization("Authorization"),
         eNaverBearer("Bearer "),
-        eNaver("naver"),
-        eNaverApiResponseException("NAVER API 응답을 읽는데 실패했습니다."),
-        eNaverAuthenticationFailedException("Naver 인증에 실패했습니다."),
-        eNaverPermissionException("Naver API 호출 권한이 없습니다."),
-        eNotFoundException("Naver API 검색 결과가 없습니다."),
-        eNaverApiUrlException("NAVER API URL이 잘못되었습니다. : "),
-        eNaverConnectionException("NAVER와의 연결이 실패했습니다. : ");
+        eNaver("naver");
         private final String value;
     }
 
@@ -160,7 +154,23 @@ public class UserConstants {
         USER_NOT_ACTIVATED("U0013",HttpStatus.CONFLICT,"유저가 활성화되어 있지 않습니다."),
         WRONG_REFRESH_TOKEN_REQUEST("U0014",HttpStatus.BAD_REQUEST,"잘못된 RefreshToken입니다.");
 
-        private final String code;
+        private final String errorCode;
+        private final HttpStatus httpStatus;
+        private final String message;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum OAuth2UserExceptionList {
+        GOOGLE_INVALID_ID_TOKEN("OU0001", HttpStatus.BAD_REQUEST, "ID token이 유효하지 않습니다."),
+        NAVER_API_RESPONSE("OU0002", HttpStatus.INTERNAL_SERVER_ERROR, "NAVER API 응답을 읽는데 실패했습니다."),
+        NAVER_API_URI("OU0003", HttpStatus.INTERNAL_SERVER_ERROR, "NAVER API URL이 잘못되었습니다. : "),
+        NAVER_AUTHENTICATION_FAILED("OU0004", HttpStatus.UNAUTHORIZED, "Naver 인증에 실패했습니다."),
+        NAVER_CONNECTION("OU0005", HttpStatus.UNAUTHORIZED, "NAVER와의 연결이 실패했습니다. : "),
+        NAVER_NOT_FOUND("OU0006", HttpStatus.NOT_FOUND, "Naver API 검색 결과가 없습니다."),
+        NAVER_PERMISSION("OU0006", HttpStatus.FORBIDDEN, "Naver API 호출 권한이 없습니다.");
+
+        private final String errorCode;
         private final HttpStatus httpStatus;
         private final String message;
     }
