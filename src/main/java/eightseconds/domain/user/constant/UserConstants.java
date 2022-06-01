@@ -1,7 +1,10 @@
 package eightseconds.domain.user.constant;
 
+import eightseconds.global.exception.ApplicationException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 public class UserConstants {
 
@@ -62,8 +65,7 @@ public class UserConstants {
         eGoogleEmailAttribute("email"),
         eGooglePictureAttribute("picture"),
         eGoogleSub("sub"),
-        eGoogle("google"),
-        eGoogleInvalidIdTokenExceptionMessage("ID token이 유효하지 않습니다.");
+        eGoogle("google");
         private final String value;
     }
 
@@ -100,13 +102,7 @@ public class UserConstants {
         eNaverElement("element"),
         eNaverAuthorization("Authorization"),
         eNaverBearer("Bearer "),
-        eNaver("naver"),
-        eNaverApiResponseException("NAVER API 응답을 읽는데 실패했습니다."),
-        eNaverAuthenticationFailedException("Naver 인증에 실패했습니다."),
-        eNaverPermissionException("Naver API 호출 권한이 없습니다."),
-        eNotFoundException("Naver API 검색 결과가 없습니다."),
-        eNaverApiUrlException("NAVER API URL이 잘못되었습니다. : "),
-        eNaverConnectionException("NAVER와의 연결이 실패했습니다. : ");
+        eNaver("naver");
         private final String value;
     }
 
@@ -119,20 +115,12 @@ public class UserConstants {
         eUsernameNotFoundExceptionMessage(" -> 유저 이름을 데이터베이스에서 찾을 수 없습니다."),
         eUserNotActivatedExceptionMessage(" -> 유저가 활성화되어 있지 않습니다."),
         eNotFoundUserExceptionMessage("해당 유저아이디로 유저를 찾을 수 없습니다."),
-        eNotFoundRegisteredUserExceptionMessage("해당 이메일로 회원가입된 유저가 없습니다."),
+        eNotFoundRegisteredUserByEmailExceptionMessage("해당 이메일로 회원가입된 유저가 없습니다."),
         eNotActivatedEmailAuthExceptionMessage("이메일 인증이 완료되지 않았습니다."),
         eNotDuplicatedLoginIdMessage("해당 아이디로 회원가입을 할 수 있습니다."),
         eNotFoundLoginIdExceptionMessage("해당 loginId로 가입된 유저가 없습니다."),
         eRefreshToken("RT:"),
-        eNotValidRefreshTokenExceptionMessage("Refresh Token 정보가 유효하지 않습니다."),
-        eNotMatchRefreshTokenExceptionMessage("Refresh Token 정보가 일치하지 않습니다."),
-        eWrongRefreshTokenRequestExceptionMessage("잘못된 요청입니다."),
         eLogout("logout"),
-        eNotValidAccessTokenExceptionMessage("잘못된 요청입니다."),
-        eNotFoundRegisteredEmailExceptionMessage("해당 이메일로 가입된 유저가 없습니다."),
-        eNotSamePasswordExceptionMessage("입력한 비밀번호가 서로 같지 않습니다."),
-        eNotAuthenticationPasswordExceptionMessage("비밀번호 재설정을 위한 이메일 인증이 완료되지 않았습니다."),
-        eNotSendEmailExceptionMessage("비밀번호 재설정을 위한 이메일 전송을 하지 않았습니다."),
         eLogoutMessage("로그아웃 되었습니다."),
         eTrue(true),
         eAuthorityRoleUser("ROLE_USER"),
@@ -147,4 +135,51 @@ public class UserConstants {
 
     }
 
+    @Getter
+    @RequiredArgsConstructor
+    public enum UserExceptionList {
+        NOT_FOUND_USER("U0001", HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."),
+        NOT_FOUND_REGISTERED_USER_BY_EMAIL("U0002",HttpStatus.NOT_FOUND, "해당 이메일로 회원가입된 유저가 없습니다."),
+        NOT_FOUND_LOGIN_ID("U0003",HttpStatus.NOT_FOUND, "해당 loginId로 가입된 유저가 없습니다."),
+        NOT_AUTHENTICATION_FOR_CHANGE_PASSWORD("U0004",HttpStatus.CONFLICT,"비밀번호 재설정을 위한 이메일 인증이 완료되지 않았습니다."),
+        NOT_ACTIVATED_EMAIL_AUTH("U0005",HttpStatus.CONFLICT,"이메일 인증이 완료되지 않았습니다."),
+        ALREADY_REGISTERED_USER("U0006",HttpStatus.CONFLICT,"이미 가입되어 있는 유저입니다."),
+        ALREADY_REGISTERED_LOGIN_ID("U0007",HttpStatus.CONFLICT,"이미 등록되어 있는 아이디입니다."),
+        ALREADY_REGISTERED_EMAIL("U0008",HttpStatus.CONFLICT,"이미 등록되어 있는 이메일입니다."),
+        NOT_MATCH_REFRESH_TOKEN("U0009",HttpStatus.UNAUTHORIZED,"Refresh Token 정보가 일치하지 않습니다."),
+        NOT_SAME_PASSWORD("U0009",HttpStatus.BAD_REQUEST,"입력한 비밀번호가 서로 같지 않습니다."),
+        NOT_SEND_EMAIL("U0010",HttpStatus.INTERNAL_SERVER_ERROR,"비밀번호 재설정을 위한 이메일 전송을 하지 않았습니다."),
+        NOT_VALID_ACCESS_TOKEN("U0011",HttpStatus.BAD_REQUEST,"유효하지 않은 AccessToken입니다."),
+        NOT_VALID_REFRESH_TOKEN("U0012",HttpStatus.BAD_REQUEST,"유효하지 않은 RefreshToken입니다."),
+        USER_NOT_ACTIVATED("U0013",HttpStatus.CONFLICT,"유저가 활성화되어 있지 않습니다."),
+        WRONG_REFRESH_TOKEN_REQUEST("U0014",HttpStatus.BAD_REQUEST,"잘못된 RefreshToken입니다.");
+
+        private final String errorCode;
+        private final HttpStatus httpStatus;
+        private final String message;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum OAuth2UserExceptionList {
+        GOOGLE_INVALID_ID_TOKEN("OU0001", HttpStatus.BAD_REQUEST, "ID token이 유효하지 않습니다."),
+        NAVER_API_RESPONSE("OU0002", HttpStatus.INTERNAL_SERVER_ERROR, "NAVER API 응답을 읽는데 실패했습니다."),
+        NAVER_API_URI("OU0003", HttpStatus.INTERNAL_SERVER_ERROR, "NAVER API URL이 잘못되었습니다. : "),
+        NAVER_AUTHENTICATION_FAILED("OU0004", HttpStatus.UNAUTHORIZED, "Naver 인증에 실패했습니다."),
+        NAVER_CONNECTION("OU0005", HttpStatus.UNAUTHORIZED, "NAVER와의 연결이 실패했습니다. : "),
+        NAVER_NOT_FOUND("OU0006", HttpStatus.NOT_FOUND, "Naver API 검색 결과가 없습니다."),
+        NAVER_PERMISSION("OU0006", HttpStatus.FORBIDDEN, "Naver API 호출 권한이 없습니다.");
+
+        private final String errorCode;
+        private final HttpStatus httpStatus;
+        private final String message;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum UserResponseMessage {
+        SIGN_UP_SUCCESS_MESSAGE("회원가입을 완료했습니다.");
+
+        private final String message;
+    }
 }

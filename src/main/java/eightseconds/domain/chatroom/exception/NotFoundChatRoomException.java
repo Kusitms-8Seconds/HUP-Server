@@ -1,7 +1,12 @@
 package eightseconds.domain.chatroom.exception;
 
-public class NotFoundChatRoomException extends RuntimeException{
-    public NotFoundChatRoomException(String s) {
-        super(s);
+import static eightseconds.domain.chatroom.constant.ChatRoomConstants.ChatRoomExceptionList.NOT_FOUND_CHAT_ROOM;
+
+public class NotFoundChatRoomException extends ChatRoomException {
+    public NotFoundChatRoomException() {
+        super(NOT_FOUND_CHAT_ROOM.getErrorCode(),
+                NOT_FOUND_CHAT_ROOM.getHttpStatus(),
+                NOT_FOUND_CHAT_ROOM.getMessage()
+        );
     }
 }

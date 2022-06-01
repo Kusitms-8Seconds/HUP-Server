@@ -1,7 +1,12 @@
 package eightseconds.domain.item.exception;
 
-public class NotDesirableAuctionEndTimeException extends RuntimeException{
-    public NotDesirableAuctionEndTimeException(String s) {
-        super(s);
+import static eightseconds.domain.item.constant.ItemConstants.ItemExceptionList.NOT_DESIRABLE_AUCTION_END_TIME;
+
+public class NotDesirableAuctionEndTimeException extends ItemException {
+    public NotDesirableAuctionEndTimeException() {
+        super(NOT_DESIRABLE_AUCTION_END_TIME.getErrorCode(),
+                NOT_DESIRABLE_AUCTION_END_TIME.getHttpStatus(),
+                NOT_DESIRABLE_AUCTION_END_TIME.getMessage()
+        );
     }
 }

@@ -5,6 +5,7 @@ import eightseconds.domain.user.constant.UserConstants.ELoginType;
 import eightseconds.domain.user.constant.UserConstants.EUserServiceImpl;
 import eightseconds.domain.user.dto.*;
 import eightseconds.domain.user.entity.User;
+import eightseconds.domain.user.exception.app.NotFoundUserException;
 import eightseconds.domain.user.exception.app.*;
 import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.dto.DefaultResponse;
@@ -28,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -45,11 +45,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public SignUpResponse saveUser(SignUpRequest signUpRequest) {
-        if (this.userRepository.findOneWithAuthoritiesByLoginId(signUpRequest.getLoginId()).orElse(null) != null)
-                throw new AlreadyRegisteredUserException(EUserServiceImpl.eAlreadyRegisteredUserExceptionMessage.getValue());
-        validateAlreadyRegisteredEmail(signUpRequest.getEmail());
+        this.validateAlreadyRegisteredUser(signUpRequest.getLoginId());
+        this.validateAlreadyRegisteredEmail(signUpRequest.getEmail());
         User savedUser = this.userRepository.save(User.toEntity(signUpRequest, this.passwordEncoder));
-        return SignUpResponse.from(savedUser.getId(), savedUser.getLoginId(), EUserServiceImpl.eSuccessSignUpMessage.getValue());
+        return SignUpResponse.from(savedUser);
     }
 
     @Override
@@ -61,7 +60,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
-        if (!user.isActivated()) throw new UserNotActivatedException(username + EUserServiceImpl.eUserNotActivatedExceptionMessage.getValue());
+        if (!user.isActivated()) throw new UserNotActivatedException();
 
         List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
@@ -103,7 +102,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest) {
         User user = validateUserId(updateUserRequest.getUserId());
         updateUserRequest.setPassword(this.passwordEncoder.encode(updateUserRequest.getPassword()));
-        User updatedUser = this.userRepository.save(user.updateUserByUpdateUserRequest(updateUserRequest));
+        User updatedUser = this.userRepository.save(new User());
         return UpdateUserResponse.from(updatedUser);
     }
 
@@ -113,13 +112,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     public ReissueResponse reissueToken(ReissueRequest reissue){
         if (!this.tokenProvider.validateRefreshToken(reissue.getRefreshToken())) {
-            throw new NotValidRefreshTokenException(EUserServiceImpl.eNotValidRefreshTokenExceptionMessage.getValue());}
+            throw new NotValidRefreshTokenException();}
         Authentication authentication = this.tokenProvider.getAuthentication(reissue.getAccessToken());
         String refreshToken = (String) this.redisTemplate.opsForValue().get(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName());
         if(ObjectUtils.isEmpty(refreshToken))
-            throw new WrongRefreshTokenRequestException(EUserServiceImpl.eWrongRefreshTokenRequestExceptionMessage.getValue());
+            throw new WrongRefreshTokenRequestException();
         if(!refreshToken.equals(reissue.getRefreshToken()))
-            throw new NotMatchRefreshTokenException(EUserServiceImpl.eNotMatchRefreshTokenExceptionMessage.getValue());
+            throw new NotMatchRefreshTokenException();
         TokenInfoResponse tokenInfoResponse = this.tokenProvider.createToken(authentication);
         this.redisTemplate.opsForValue()
                 .set(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName(),
@@ -131,7 +130,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public DefaultResponse logout(LogoutRequest logoutRequest){
         if (!this.tokenProvider.validateToken(logoutRequest.getAccessToken()))
-            throw new NotValidAccessTokenException(EUserServiceImpl.eNotValidAccessTokenExceptionMessage.getValue());
+            throw new NotValidAccessTokenException();
         Authentication authentication = this.tokenProvider.getAuthentication(logoutRequest.getAccessToken());
         if (this.redisTemplate.opsForValue().get(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName()) != null)
             this.redisTemplate.delete(EUserServiceImpl.eRefreshToken.getValue() + authentication.getName());
@@ -161,7 +160,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public FindLoginIdResponse findLoginId(FindLoginIdRequest findLoginIdRequest) {
         return FindLoginIdResponse.from(this.userRepository.findByEmailAndLoginType(findLoginIdRequest.getEmail(), ELoginType.eApp)
-                .orElseThrow(NotFoundRegisteredEmailException::new));
+                .orElseThrow(NotFoundRegisteredUserByEmailExceptionMessage::new));
     }
 
     @Override
@@ -180,11 +179,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      * validate
      */
 
+
     public User validateUserId(Long userId){
-        return this.userRepository.findById(userId)
-                .stream()
-                .findAny()
-                .orElseThrow(() -> new NotFoundUserException(EUserServiceImpl.eNotFoundUserExceptionMessage.getValue()));
+        return this.userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException());
     }
 
     public TokenInfoResponse validateLogin(LoginRequest loginRequest) {
@@ -201,26 +198,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     public User validateNotRegisteredEmail(String email) {
         return this.userRepository.findByEmailAndLoginType(email, ELoginType.eApp)
-                .orElseThrow(() -> new NotFoundRegisteredUserException(EUserServiceImpl
-                        .eNotFoundRegisteredUserExceptionMessage.getValue()));
+                .orElseThrow(() -> new NotFoundRegisteredUserByEmailExceptionMessage());
     }
 
     public void validateAlreadyRegisteredEmail(String email) {
         this.userRepository.findByEmailAndLoginType(email, ELoginType.eApp)
-                .ifPresent((u -> { throw new AlreadyRegisteredEmailException(EUserServiceImpl
-                        .eAlreadyRegisteredEmailExceptionMessage.getValue()); }));
+                .ifPresent((u -> { throw new AlreadyRegisteredEmailException(); }));
+    }
+
+    public void validateAlreadyRegisteredUser(String loginId) {
+        this.userRepository.findOneWithAuthoritiesByLoginId(loginId).ifPresent((u -> {
+                throw new AlreadyRegisteredUserException(); }));
     }
 
     public void validateIsAlreadyRegisteredUser(User user) {
-        if(user.isEmailAuthActivated()) throw new AlreadyRegisteredUserException(EUserServiceImpl
-                        .eAlreadyRegisteredUserExceptionMessage.getValue());
+        if(user.isEmailAuthActivated()) throw new AlreadyRegisteredUserException();
     }
 
     @Override
     public DefaultResponse validateLoginId(String loginId) {
         this.userRepository.findUserByLoginId(loginId)
-                .ifPresent((u -> { throw new AlreadyRegisteredUserException(EUserServiceImpl
-                        .eAlreadyRegisteredLoginIdExceptionMessage.getValue()); }));
+                .ifPresent((u -> { throw new AlreadyRegisteredUserException(); }));
         return DefaultResponse.from(EUserServiceImpl.eNotDuplicatedLoginIdMessage.getValue());
     }
 
@@ -231,6 +229,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private void validateEmailAuthForResetPassword(User user) {
         if (user.getEmailAuth()==null) throw new NotSendEmailException();
-        else if(!user.getEmailAuth().isPasswordCheck()) throw new NotAuthenticationForPasswordException();}
+        else if(!user.getEmailAuth().isPasswordCheck()) throw new NotAuthenticationForChangePasswordException();}
 
 }

@@ -2,6 +2,7 @@ package eightseconds.domain.scrap.service;
 
 import eightseconds.domain.item.entity.Item;
 import eightseconds.domain.item.exception.NotFoundItemException;
+import eightseconds.domain.item.exception.NotFoundItemForCategoryException;
 import eightseconds.domain.item.service.ItemService;
 import eightseconds.domain.scrap.constant.ScrapConstants;
 import eightseconds.domain.scrap.dto.*;
@@ -78,9 +79,7 @@ public class ScrapServiceImpl implements ScrapService{
 
     private Scrap validateIsExistingScrap(Long deleteScrapId) {
         return this.scrapRepository.findById(deleteScrapId)
-                .stream()
-                .findAny()
-                .orElseThrow(() -> new NotFoundItemException(ScrapConstants.EScrapServiceImpl.eNotFoundItemExceptionMessage.getValue()));
+                .orElseThrow(() -> new NotFoundItemException());
     }
 
     private void validateExistingScrap(User user, Long itemId) {
@@ -88,12 +87,12 @@ public class ScrapServiceImpl implements ScrapService{
             List<Scrap> scraps = this.scrapRepository.findAllByUserId(user.getId());
             for (Scrap scrap : scraps) {
                 if(scrap.getItem().getId() == itemId){
-                    throw new AlreadyScrapException(ScrapConstants.EScrapServiceImpl.eAlreadyScrapExceptionMessage.getValue()); } } }
+                    throw new AlreadyScrapException(); } } }
     }
 
     private void validateExistingScrapByUserId(Pageable pageable, Long userId) {
         if (this.scrapRepository.findAllByUserId(pageable, userId).isEmpty()) {
-            throw new NotExistingScrapOfUserException(ScrapConstants.EScrapServiceImpl.eNotExistingScrapOfUserExceptionMessage.getValue());
+            throw new NotExistingScrapOfUserException();
         }
     }
 }

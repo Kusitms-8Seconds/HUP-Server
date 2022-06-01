@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 public class CategoryConstants {
 
@@ -11,10 +13,19 @@ public class CategoryConstants {
     @AllArgsConstructor
     @NoArgsConstructor
     public enum ECategoryServiceImpl {
-        eNotFoundCategoryException("해당하는 카테고리를 찾을 수 없습니다."),
-        eNotFoundUserInterestCategoryException("유저의 관심 카테고리를 찾을 수 없습니다."),
         eFinishChangeUserCategoriesMessage("관심 카테고리 변경이 완료되었습니다.");
         private String value;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum CategoryExceptionList {
+        NOT_FOUND_CATEGORY("C0001", HttpStatus.NOT_FOUND, "해당하는 카테고리를 찾을 수 없습니다."),
+        NOT_FOUND_USER_INTEREST_CATEGORY("C0002", HttpStatus.NOT_FOUND, "유저의 관심 카테고리를 찾을 수 없습니다.");
+
+        private final String errorCode;
+        private final HttpStatus httpStatus;
+        private final String message;
     }
 
     @Getter

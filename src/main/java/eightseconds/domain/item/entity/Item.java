@@ -103,7 +103,7 @@ public class Item extends BaseTimeEntity {
                 priceSuggestionByMaximumPrice = priceSuggestion;
             }
         }
-        if (maximumPrice == EItem.eZero.getNumber()) throw new NotBidItemException(EItem.eNotBidItemExceptionMessage.getValue());
+        if (maximumPrice == EItem.eZero.getNumber()) throw new NotBidItemException();
         return priceSuggestionByMaximumPrice;
     }
 

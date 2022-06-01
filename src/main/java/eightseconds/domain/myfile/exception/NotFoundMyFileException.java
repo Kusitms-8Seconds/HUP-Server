@@ -1,10 +1,13 @@
 package eightseconds.domain.myfile.exception;
 
 
-import eightseconds.domain.myfile.constant.MyFileConstants;
+import static eightseconds.domain.notice.constant.NoticeConstants.NoticeExceptionList.NOT_FOUND_NOTICE;
 
-public class NotFoundMyFileException extends IllegalArgumentException{
+public class NotFoundMyFileException extends MyFileException {
     public NotFoundMyFileException() {
-        super(MyFileConstants.EMyFileExceptionMessage.eNotFoundMyFileExceptionMessage.getMessage());
+        super(NOT_FOUND_NOTICE.getErrorCode(),
+                NOT_FOUND_NOTICE.getHttpStatus(),
+                NOT_FOUND_NOTICE.getMessage()
+        );
     }
 }

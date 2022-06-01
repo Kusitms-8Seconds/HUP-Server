@@ -10,7 +10,6 @@ import eightseconds.domain.category.exeception.NotFoundCategoryException;
 import eightseconds.domain.category.exeception.NotFoundUserInterestCategoryException;
 import eightseconds.domain.category.repository.CategoryRepository;
 import eightseconds.domain.category.repository.UserCategoryRepository;
-import eightseconds.domain.item.exception.NotFoundItemException;
 import eightseconds.domain.user.entity.User;
 import eightseconds.domain.user.service.UserService;
 import eightseconds.global.dto.DefaultResponse;
@@ -30,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public Category getCategoryByEItemCategory(ECategory eCategory) {
         return this.categoryRepository.findByCategory(eCategory).orElseThrow(()
-                -> new NotFoundCategoryException(ECategoryServiceImpl.eNotFoundCategoryException.getValue()));
+                -> new NotFoundCategoryException());
     }
 
     @Override
@@ -53,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService{
     public UserInterestCategoryResponse getUserCategories(Long userId) {
         this.userService.validateUserId(userId);
         List<UserCategory> userCategories = this.userCategoryRepository.findAllByUserId(userId).get();
-        if(userCategories.size()==0){ throw new NotFoundUserInterestCategoryException(ECategoryServiceImpl.eNotFoundUserInterestCategoryException.getValue());}
+        if(userCategories.size()==0){ throw new NotFoundUserInterestCategoryException();}
         return UserInterestCategoryResponse.from(userCategories);
     }
 

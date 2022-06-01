@@ -1,9 +1,14 @@
 package eightseconds.domain.user.exception.app;
 
-import eightseconds.domain.user.constant.UserConstants;
+import eightseconds.domain.user.constant.UserConstants.UserExceptionList;
 
-public class NotSamePasswordException extends IllegalArgumentException {
+import static eightseconds.domain.user.constant.UserConstants.UserExceptionList.NOT_SAME_PASSWORD;
+
+public class NotSamePasswordException extends UserException {
     public NotSamePasswordException() {
-        super(UserConstants.EUserServiceImpl.eNotSamePasswordExceptionMessage.getValue());
+        super(NOT_SAME_PASSWORD.getErrorCode(),
+                NOT_SAME_PASSWORD.getHttpStatus(),
+                NOT_SAME_PASSWORD.getMessage()
+        );
     }
 }
