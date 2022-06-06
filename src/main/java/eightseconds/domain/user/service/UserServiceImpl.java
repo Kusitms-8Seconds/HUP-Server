@@ -11,6 +11,7 @@ import eightseconds.domain.user.repository.UserRepository;
 import eightseconds.global.dto.DefaultResponse;
 import eightseconds.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
@@ -61,7 +63,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
         if (!user.isActivated()) throw new UserNotActivatedException();
-
         List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
                 .collect(Collectors.toList());
