@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -68,5 +69,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ApiErrorResponse(INTERNAL_SERVER_ERROR_CODE, "런타임 에러가 발생했습니다."));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiErrorResponse> badCredentialsException(BadCredentialsException e) {
+        log.warn(
+                LOG_FORMAT,
+                e.getClass().getSimpleName(),
+                INTERNAL_SERVER_ERROR_CODE,
+                e.getMessage()
+        );
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiErrorResponse(INTERNAL_SERVER_ERROR_CODE, e.getMessage()));
     }
 }
